@@ -169,6 +169,8 @@ def run(directory, exe, case, instrumented):
     directory.mkdir()
     config = (ROOT / "examples" / f"{case}.inp").read_text()
     assert config.count("DETAILED_REPORT=FALSE") == 1
+    # Replay the archived refactor comparison on its original inlet stencil.
+    config += "inlet_velocity_order=1\n"
     (directory / "case.inp").write_text(config.replace("DETAILED_REPORT=FALSE", "DETAILED_REPORT=TRUE"))
     with (directory / "stdout.log").open("wb") as stdout, (directory / "trace.log").open("wb") as trace:
         subprocess.run([str(exe), "case.inp"], cwd=directory, stdout=stdout, stderr=trace,

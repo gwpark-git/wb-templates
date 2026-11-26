@@ -8,7 +8,7 @@ example and checks its outputs against the built-in Level 2 unity closures.
 The [[file:../modern-lv2/src/case_driver.h][C++ case driver header]] declares
 =EquilibriumTransport=. The [[file:../modern-lv2/src/dispersion_properties.cpp][closure dispatch]]
 uses it for paired =LIVE= diffusivity and viscosity selections. The retained native BD–MC/mBLA
-benchmark exercised live and pretabulated providers for a 5 kPa, 10 nm non-cake
+benchmark predates the inlet correction. It exercised live and pretabulated providers for a 5 kPa, 10 nm non-cake
 case at low particle Péclet number. The cached linear provider reproduced
 all 250 axial and 1,440 radial printed values from the live provider in
 the matched case. The [[file:../README.md][modernization overview]] summarizes the observed scope.
@@ -26,7 +26,7 @@ by its own law.
 
 The RK radial march in [[file:../modern-lv2/src/ported_lib.cpp][ported_lib.cpp]]
 evaluates trial concentrations as well as accepted physical states.
-A checked 5 kPa, 10 nm non-cake case on the small 25 × 120 grid queried
+A pre-correction 5 kPa, 10 nm non-cake case on the small 25 × 120 grid queried
 outside =[0, phi_freeze]=. A provider that rejects every such query stopped
 at its first negative trial. An injected unity provider with a defined value
 for every finite trial reproduced the built-in unity law byte-for-byte

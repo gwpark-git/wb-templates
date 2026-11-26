@@ -174,6 +174,8 @@ def main():
     warmup_seconds = None
     for name, fixture, nr, n_iter, status in cases:
         config = (ROOT / "examples" / f"{fixture}.inp").read_text().replace("Nr=120", f"Nr={nr}")
+        # Capture the same inlet edition as the archived inner-search benchmark.
+        config += "inlet_velocity_order=1\n"
         if n_iter:
             lines = [f"N_iter={n_iter}" if line.startswith("N_iter=") else line
                      for line in config.splitlines()]

@@ -48,9 +48,26 @@ Each nonempty line is key=value; whitespace and # comments are allowed. N_iter c
 | fcn_Dc_div_D0, fcn_eta_div_eta0, fcn_Pi | Named closure or property-table filename |
 | fout | Main output destination; existing file is overwritten |
 
-Optional inlet_BC defaults to pressure; velocity is the other supported value. CONT, DETAILED_REPORT and ACCOUNT_CAKE_THICKNESS default to FALSE and accept only TRUE/FALSE. CONT=TRUE requires FN_CONT: a finite rectangular table with exactly Nz rows and >=2 columns; column 2 initializes the wall concentration. The caller must ensure matching axial coordinates/physical conditions. ACCOUNT_CAKE_THICKNESS=TRUE requires positive membrane_thickness (metres). Without this flag, resistance is still calculated; geometric cake thickness stays zero. Numerical limits are Nz<=400, Nr<=4000 and N_iter<=100000. These are finite default bounds, not a performance guarantee; select smaller limits and a time/data budget in a destination.
+Optional inlet_BC defaults to pressure; velocity is the other supported value.
+The axial pressure equation uses a second-order FDM. With prescribed
+inlet pressure, the default =inlet_velocity_order=2= reconstructs the inlet
+axial velocity factor from a three-point, second-order forward difference
+of the solved pressure. Use =inlet_velocity_order=1= for the historical
+first-order inlet axial velocity reconstruction in the frozen fixtures.
+With a velocity inlet the solver uses the prescribed inlet value.
+[[file:VALIDATION.org][Verification and legacy replay]]
 
-TOL_phiw is applied to RMS differences of phi_wall/phi_bulk, including the fixed inlet (whose increment is zero), even though the inherited log labels it like a relative norm. TOL_delta_f enters resistance increment/search and relative outlet-resistance stopping. The inherited stopping flag can latch before the mandatory minimum iteration count. Exit 0/MBLA_STATUS=converged therefore names the inherited stopping event only. Exit 3/iteration_limit means exhausted iterations; output is retained for diagnosis. Invalid input/output (including a failed write, flush or close), nonfinite numerics or a stalled cake search fail with exit 2. Do not equate any exit-0 result with conservation or grid acceptance.
+ CONT, DETAILED_REPORT and ACCOUNT_CAKE_THICKNESS default to FALSE and accept only TRUE/FALSE. CONT=TRUE requires FN_CONT: a finite rectangular table with exactly Nz rows and >=2 columns; column 2 initializes the wall concentration. The caller must ensure matching axial coordinates/physical conditions. ACCOUNT_CAKE_THICKNESS=TRUE requires positive membrane_thickness (metres). Without this flag, resistance is still calculated; geometric cake thickness stays zero. Numerical limits are Nz<=400, Nr<=4000 and N_iter<=100000. These are finite default bounds, not a performance guarantee; select smaller limits and a time/data budget in a destination.
+
+=TOL_phiw= bounds the RMS change in =phi_wall/phi_bulk=, including
+the fixed inlet. =TOL_delta_f= is used in the resistance search and in the
+relative outlet-resistance change test when cake is present at the outlet.
+The criterion can latch before the minimum break index. Exit 0 and
+=MBLA_STATUS=converged= report the latch. The optional sidecars are written
+when the minimum break index has also been reached. An exhausted run
+without a latch returns exit 3 and retains the main table for diagnosis.
+Input, output and numerical errors return exit 2. Conservation, mesh
+accuracy and scientific applicability require separate checks.
 
 * Constitutive choices and tables
 Diffusion supports SPHS/HS (both mapped to the inherited SPHS diffusion), SID and CT (unity). Viscosity supports SPHS, HS, TEST, TEST_EQ and CT. TEST variants are inherited shear-stress-dependent research options, not separately validated production models. Osmotic pressure supports CS and NO, or a table. The code preserves the source's high-frequency-viscosity expression; it does not replace its multiplication by a published denominator or unify the HS/SPHS variants.
@@ -77,7 +94,15 @@ The main file is whitespace-delimited, no header, one axial sample per row, with
 
 Recover Rcake/Rmem by dividing column 8 by the configured radius. Hydraulic permeability is Lp/(1+Rcake/Rmem); thus a useful independently reconstructed printed-value check is v_wall=Lp*(column9-column6)/(1+column8/R).
 
-With DETAILED_REPORT=TRUE, inherited .Rout has six columns: yt/R_channel, phi, dimensionless shear rate, dimensionless shear stress, D/D0 and eta/eta0. yt already means y/R; the extra division makes its first column y/R^2 (1/m). Multiply by R_channel to recover y/R. This known source mistake is retained. .Fval has z/L, F1, F2 and modified F2. These sidecars describe the iteration state before final analysis and can lag its final recomputation; they are not a complete synchronized 2D field export. Inspect that contract before adapting.
+With =DETAILED_REPORT=TRUE=, the detail report writes =.Rout= with six
+columns at the outlet. They give =y/R^2=, volume fraction, dimensionless
+shear rate, dimensionless shear stress, =D_c/D_0= and =eta/eta0=. The
+first column has units of inverse metres because the inherited emitter
+divides the already reduced coordinate =y/R= by the radius in metres.
+Multiply column 1 by that radius to recover =y/R=. The =.Fval= columns are
+=z/L=, =F1=, =F2= and modified =F2=. Both sidecars describe the iteration
+before final analysis recomputes the main table. Their axial and radial
+records have distinct coordinates and calculation phases.
 
 * Documentation provenance
 Equations and source ownership remain with the researcher.

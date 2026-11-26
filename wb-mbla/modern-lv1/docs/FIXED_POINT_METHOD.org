@@ -3,7 +3,9 @@
 #+language: en
 
 * Scientific scope and ownership
-This note explains the inherited C++ algorithm; it does not introduce a generalized cake model. The researcher clarified that the present method has an applicability limit where the physical wall-concentration profile is non-monotonic, and associated that behavior with their JCP 2020 analysis. That statement owns the intended scientific scope. No new equation number or detailed paper citation is inferred from this clarification. The existing researcher-established non-cake Python/C++ agreement remains prior reported verification; a newly chosen coarse comparison and its new allowance do not replace that history. Python has no cake extension.
+This note explains the inherited C++ algorithm; it does not introduce a generalized cake model. The researcher clarified that the present method has an applicability limit where the physical wall-concentration profile is non-monotonic, and associated that behavior with their JCP 2020 analysis. That statement owns the intended scientific scope. See the [[file:VALIDATION.org][validation guide]] for the controlled pressure-inlet
+comparison with the semi-analytic non-cake Python solver. The separately
+reported historical Python/C++ comparison used an earlier setup.
 
 The model is a dispersion-averaged continuum calculation. Concentration-dependent constitutive properties enter the flow/transport update. The history-dependent cake rule below belongs to this implementation of that calculation, not a particle-resolved simulation or a universal treatment of all possible cake configurations.
 
@@ -59,7 +61,12 @@ physical observables separately in cases with downstream onset or no cake,
 subject to the established model scope.
 
 * Floating-point and branch sensitivity
-Existing controlled experiments found a demanding-cake output difference after a bounds-only engineering edit under the checked default contraction policy. A common -ffp-contract=off build restores printed original/modern parity for the selected cases, and remains the explicit maintained policy. That result does not reproduce the original default-FMA output or identify a uniquely correct physical edition.
+Existing controlled experiments found a demanding-cake output difference after a bounds-only engineering edit under the checked default contraction policy. The historical comparison used second-order pressure FDM and first-order
+inlet axial velocity reconstruction under prescribed inlet pressure. It
+gave identical printed outputs for both builds under =-ffp-contract=off=.
+The maintained build uses that floating-point policy. The frozen fixtures
+use =inlet_velocity_order=1=. With prescribed inlet pressure, the current
+default reconstructs the inlet axial velocity with a second-order stencil.
 
 Freeze comparisons, the history-safety predicate, search residual sign/trend tests and the latched stopping event are plausible amplification sites for small arithmetic differences. Actual first branch divergence was not traced. Treat a claim that any one of these mechanisms caused the observed FMA difference or flux drift as a hypothesis until it has direct evidence. Instrumentation can itself affect optimization, so any later finite branch-trace experiment must keep its actual source/build identity and compare its outputs before interpreting the trace.
 
@@ -68,7 +75,10 @@ The retained standard-case counter can establish that the safeguard executed, no
 * Fast checks and what they establish
 The standard unit executable uses independently specified hyperbolic solutions of the zero-osmotic axial pressure equation on uniform 25- and 49-node axial grids over the same endpoints. It checks the original pressure/pressure boundary case, a prescribed uniform cake-permeability coefficient Ln=1/4, and the velocity/pressure inlet alternative. Both coordinate order and spacing are explicit: z/L=i/(Nz−1), with h halved between the two grids. These quick checks detect sign, coefficient and inlet-row errors and require second-order pressure-error reduction at the existing independently chosen bounds.
 
-These are linear pressure boundary-value tests, not nonlinear cake-onset or full-model grid convergence. They neither reproduce the logarithmic transverse sampling of a publication calculation nor establish the applicability of a monotonic cake method. The immutable small non-cake/mild-cake/demanding-cake regressions separately protect the selected strict-FP outputs and exercise the active safeguard. More costly scientifically matched cases require their own grid, physical-regime, stopping, conservation and duration contract; no longer campaign is implied by this note.
+These are linear pressure boundary-value tests, not nonlinear cake-onset or full-model grid convergence. They neither reproduce the logarithmic transverse sampling of a publication calculation nor establish the applicability of a monotonic cake method. The manufactured cubic separately checks the inlet velocity reconstruction.
+The immutable non-cake, mild-cake and demanding-cake fixtures protect
+the selected strict-FP outputs with first-order inlet axial velocity
+reconstruction and exercise the active safeguard. More costly scientifically matched cases require their own grid, physical-regime, stopping, conservation and duration contract; no longer campaign is implied by this note.
 
 * Engineering corrections kept separate
 The late-write failure correction checks write/flush/close success for the main table and both sidecars before the CLI can report success. A solver that reaches its stopping event but loses output now reports an execution error. It does not change how the state is calculated. The iteration-count correction consumes the same full finite integral value already accepted by configuration validation, including 2.4e3 and 0x960 for 2400. It does not change the iteration limit for ordinary decimal inputs.

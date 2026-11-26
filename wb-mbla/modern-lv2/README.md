@@ -7,8 +7,7 @@ points, local CLI installation, unit comparisons and frozen regression cases.
 Level 2 keeps the serial case driver, fixed-point update, numerical kernels
 and output formats. It clarifies case execution, wall and cake updates, and
 termination. The [operation map and trace procedure](docs/LEVEL_2.org) describe
-the former and current implementation. This is internal research
-preparation; **redistribution of the inherited unpublished source needs review**.
+the former and current implementation.
 See [license scope](LICENSE), [notices](NOTICE) and
 [third-party evidence](THIRD_PARTY_NOTICES.org).
 
@@ -23,6 +22,12 @@ CASE1/CASE2 TMP conditions at 200 × 400, including full axial profiles in
 the admitted domain and the CASE2 reference setting b = 1.
 See the [Level 2 evidence and limits](docs/LEVEL_2.org).
 
+The pressure equation uses a second-order FDM. With prescribed inlet
+pressure, the solver reconstructs inlet axial velocity with a second-order
+forward difference by default. Frozen original-source outputs use
+`inlet_velocity_order=1` to select the historical first-order reconstruction. The quickstart input uses the verified 49 × 240
+grid at nominal TMP 5 kPa. [Validation and legacy replay](docs/VALIDATION.org)
+
 From this folder, build, test and install into a new directory. The standard
 workflow uses a C++17 compiler, CMake 3.16+, GSL 2+, Python 3 and GNU Make.
 
@@ -30,7 +35,7 @@ workflow uses a C++17 compiler, CMake 3.16+, GSL 2+, Python 3 and GNU Make.
 work_dir="$(mktemp -d "${TMPDIR:-/tmp}/mbla-lv2.XXXXXX")"
 make test install BUILD_DIR="$work_dir/build" PREFIX="$work_dir/install"
 mkdir "$work_dir/run"
-cp examples/cake-mild.inp "$work_dir/run/case.inp"
+cp examples/pressure-inlet.inp "$work_dir/run/case.inp"
 (cd "$work_dir/run" && "$work_dir/install/bin/mbla" case.inp)
 ```
 
@@ -50,7 +55,8 @@ cmake --install "$work_dir/cli-build" --prefix "$work_dir/cli-install"
 - `mbla_units` checks matrix ownership and bounds, compares numerical
   components against specified values or independent formulas, and checks
   fixed-point guard, threshold and stopping semantics.
-- `mbla_regression` compares the solver's ten-column outputs for non-cake,
+- `mbla_regression` uses historical first-order inlet axial velocity reconstruction to compare the
+solver's ten-column outputs for non-cake,
   mild-cake and demanding-cake cases with frozen original-source fixtures
   under the declared common floating-point policy. The documented output
   precision determines the regression allowance.
@@ -58,7 +64,7 @@ cmake --install "$work_dir/cli-build" --prefix "$work_dir/cli-install"
   batch termination, input errors and late write failures in the main output
   and sidecars.
 
-The [package check receipt](provenance/PACKAGE_CHECKS.json) records the tested
+The [pre-correction package check receipt](provenance/PACKAGE_CHECKS.json) records the tested
 toolchain, intermediate-state comparisons and checks through the installed
 executable. The standalone tests use the included examples and frozen fixtures.
 
@@ -108,8 +114,8 @@ The inherited output has mixed normalization in its cake column; read the
 
 [Fixed-point method](docs/FIXED_POINT_METHOD.org) explains the history-dependent
 cake safety rule and the researcher-stated limit for non-monotonic wall profiles.
-[Validation](docs/VALIDATION.org) records current-source equivalence under an
-explicit common floating-point policy, independent checks, observed failures
-and limits.
-Historical Python/C++ non-cake agreement remains established researcher-reported
-evidence. Fresh Python comparisons are separate; Python has no cake extension.
+[Validation](docs/VALIDATION.org) describes the inlet axial velocity checks
+and the historical first-order velocity reconstruction used by the frozen fixtures. The 1 kPa
+comparison uses a separate semi-analytic Python solver for non-cake
+conditions. The Level 2 Python/Numba implementation covers the inner
+cake search.

@@ -247,22 +247,24 @@ int get_uz_div_u0_arr_with_fouling(MATRIX& uz_div_u0_arr, MATRIX& z_div_L_arr, M
 {
   double dP = 0.;
   double h = PARS.dz/PARS.L_channel;
-  // for i=0: forward difference
+  // With a prescribed velocity, the boundary value is supplied directly.
   if (PARS.inlet_BC == "velocity")
     {
       uz_div_u0_arr(0) = 1.;
-
-
-      // dP = (P_div_DLP_arr(2) - P_div_DLP_arr(0))/(2.*h);       // centeral difference
-      // uz_div_u0_arr(1) = -dP;
     }
   else
     {
-      dP = (P_div_DLP_arr(1) - P_div_DLP_arr(0))/h;
+      // Reconstruct -d(P/DLP)/d(z/L) on the uniform grid. Differences between
+      // adjacent pressures cancel the absolute pressure offset before weighting.
+      const double first_step = P_div_DLP_arr(1) - P_div_DLP_arr(0);
+      if (PARS.legacy_inlet_velocity)
+        dP = first_step/h;
+      else
+        {
+          const double second_step = P_div_DLP_arr(2) - P_div_DLP_arr(1);
+          dP = (3.*first_step - second_step)/(2.*h);
+        }
       uz_div_u0_arr(0) = -dP;
-
-      // dP = (P_div_DLP_arr(2) - P_div_DLP_arr(1))/h;
-      // uz_div_u0_arr(1) = -dP;
     }
 
   // 1<=i<=PARS.Nz-2: centeral difference

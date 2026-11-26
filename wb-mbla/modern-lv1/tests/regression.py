@@ -40,6 +40,8 @@ def main():
 
     for name in ('noncake', 'cake', 'cake-mild'):
         config = (ROOT / 'examples' / f'{name}.inp').read_text()
+        # The frozen outputs were generated with the historical inlet reconstruction.
+        config += 'inlet_velocity_order=1\n'
         directory, seconds = run(name, config)
         actual = read_table(directory / 'result.dat')
         expected = read_table(ROOT / 'tests' / 'fixtures' / f'{name}-strict.dat')
@@ -106,6 +108,7 @@ def main():
         'nonfinite': base.replace('weight=0.1', 'weight=nan'),
         'bad_integer': base.replace('Nz=25', 'Nz=25oops'),
         'small_stencil': base.replace('Nz=25', 'Nz=2'),
+        'bad_inlet_velocity_order': base + 'inlet_velocity_order=3\n',
         'duplicate': base + 'Nz=40\n',
         'typo': base + 'inlet_BCC=velocity\n',
         'unavailable_law': base.replace('fcn_Dc_div_D0=SPHS', 'fcn_Dc_div_D0=absent.dat'),
@@ -123,7 +126,8 @@ def main():
         run(name, config, expected=2)
     _, seconds = run('iteration_limit', base.replace('N_iter=2400', 'N_iter=1'), expected=3)
     # The accepted config grammar includes spaces and comments, unlike the old parser.
-    _, seconds = run('whitespace', base.replace('N_iter=2400', ' N_iter = 2400 # maximum iterations'))
+    spaced, _ = run('whitespace', base_ct.replace('N_iter=2400', ' N_iter = 2400 # maximum iterations'))
+    assert (spaced/'result.dat').read_bytes() == (inline_ct/'result.dat').read_bytes()
     summary = {'cases': results, 'invalid_input_cases_rejected': len(failures),
                'iteration_limit_status': 'passed', 'whitespace_status': 'passed',
                'constant_table_equivalence': 'passed', 'detailed_output_schema': 'passed',

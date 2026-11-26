@@ -1,78 +1,136 @@
 #+title: mBLA C++ — checks, numerical sensitivities and limits
-#+date: 2026-11-14
+#+date: 2026-11-26
 #+language: en
 
-* What is established
-The C++17/GSL template runs independently of the originating workspace. Under a declared common no-contraction floating-point policy, the copied original and modern implementation produce identical printed output for the checked non-cake, mild-cake and demanding-cake cases. Independent arithmetic/linear checks and invalid-input boundaries pass. This establishes bounded engineering preservation, not complete physical validation or historical reproduction.
+* Second-order pressure FDM and inlet axial velocity reconstruction
+The axial pressure equation uses second-order finite differences in both
+editions. With prescribed inlet pressure, the default
+=inlet_velocity_order=2= uses a three-point forward difference to
+reconstruct the inlet axial velocity factor. The
+pressure boundary rows and interior/outlet velocity formulas retain their
+existing discretizations. Prescribed inlet velocity uses the imposed value.
 
-The researcher's prior Python/C++ non-cake agreement is established reported evidence. Its exact historical source/inputs/tolerance were not recovered in this task. The source README's uncertainty about its copied history remains. No new failed check retroactively invalidates the researcher's prior work. Python has no cake extension; no cake symmetry/parity is asserted.
+The manufactured cubic tests the velocity stencil at 25 and 49 axial nodes.
+The clean pressure-driven solve gives observed inlet axial velocity orders
+of 1.970 and 1.985 across 25, 49 and 97 axial nodes. In the 1 kPa non-cake comparison
+against the separate semi-analytic Python solver, the maximum full-axis
+wall-concentration difference on the common radial grid decreased
+from 10.4522% to 0.06007%. Both radial-grid choices meet the selected 1%
+allowance for the three compared observables with the corrected stencil.
+
+At 5 kPa the 25 × 120 pressure-inlet input exhausts 2,400 iterations.
+The included [[file:../examples/pressure-inlet.inp][49 × 240 input]] meets the
+same stopping tolerances, with zero particle-flux drift at printed precision.
+The 20 kPa coarse diagnostic stops with 31.34% peak drift and first positive
+cake resistance at z/L = 0.125. The revised inlet axial velocity
+reconstruction is verified for the stated tests and conditions.
+
+[[file:INLET_VELOCITY.org][Current inlet report, figure, numerical data and scope of the JCP comparisons]]
 
 * Reproduce the standard checks
-Run the README CMake/CTest commands. tests/regression.py uses only Python's standard library and bounded subprocesses, with all files under its --work directory. Fixtures in tests/fixtures are immutable: the runner never regenerates them. SOURCE_MANIFEST.json identifies copied inputs; FIXTURES.json identifies current fixture inputs, original-source generator and FP policy.
+Use the CMake/CTest commands in [[file:../README.md][the package README]].
+The suite covers independent component checks and CLI behavior. It uses
+separate run directories and leaves the frozen fixtures untouched.
 
-The standard suite checks:
-- MATRIX deep/self assignment and bounds; a separately specified 2x2 LU solve.
-- Exact Carnahan–Starling Z(0.2)=2.40625 and dimensional Pi=0.240625 for kT/Va=1/2.
-- Dilute transport limits and hydraulic series resistance at Rcake/Rmem=0 and 3.
-- Closed-form zero-osmotic axial pressure, both Dirichlet boundaries and
-  second-order 25→49-node errors: 0.00223494→0.000558750 Pa.
-- Frozen original-source non-cake, mild-cake and active demanding-cake outputs.
-- Missing, duplicate, mistyped, nonfinite, invalid-domain and undersized inputs;
-  missing table/output parent, malformed continuation and unsorted property table.
-- Exit 3 on iteration exhaustion; accepted whitespace/comments; exact CT unity
-  table/analytic equivalence; six/four-column detailed-output schema.
-- Independent reconstruction of printed Darcy–Starling velocity and CSV export.
+| CTest entry | Tested behavior |
+|-------------+-----------------|
+| =mbla_units= | Matrix ownership and bounds, independent LU solve, Carnahan–Starling pressure, dilute transport and hydraulic series resistance. Closed-form axial pressure with pressure/pressure and velocity/pressure boundaries, including prescribed uniform permeability. A manufactured cubic checks the current and legacy velocity stencils, and the velocity inlet uses its imposed value exactly. |
+| =mbla_regression= | Compares all ten printed columns of three 25 × 120 pressure-inlet fixtures with =inlet_velocity_order=1=. Also checks CT table/analytic equivalence, detailed output and whitespace on the current default, plus invalid input and iteration-limit status. Reconstructs the mild-cake Darcy–Starling velocity and exports CSV. |
+| =mbla_input_contract= and =mbla_output_contract= | Exercise input/continuation and batch output contracts. Late write failures are exercised where POSIX supports the required resource limit. |
 
-Regression allowance is abs(error)<=1e-12+2e-6*abs(reference), based on the inherited six-decimal scientific printer and two last-digit rounding units. All three executed GCC release cases were exactly equal as printed. This is a new regression allowance, not the unrecovered historical Python/C++ tolerance. A denominator-sign mutation 1/(1+Rcake/Rmem)→1/(1-Rcake/Rmem) was compiled in an isolated copy; the unit test failed at the independent series-resistance expectation. Frozen data were not changed to make a test pass.
+The printed-table allowance is =1e-12 + 2e-6 * abs(reference)=
+for the absolute error in each stored value. It reflects the six places
+after the decimal point in the inherited scientific printer. All three
+legacy replays were equal at stored precision on the checked strict-FP GCC
+build. The allowance belongs to these fixtures. The historical
+researcher-reported Python/C++ agreement used an unrecovered comparison
+setup. The retained [[file:../provenance/FIXTURES.json][fixture manifest]]
+identifies inputs, source and generator settings.
+
+An isolated denominator-sign mutation in the hydraulic series law failed
+the independent resistance test. These checks support selected component,
+interface and regression claims. The closed-form pressure check uses
+zero osmotic forcing and prescribed permeability and measures the axial
+discretization in that controlled problem.
 
 * FP policy is part of source/environment identity
 The original Makefile used machine-specific Homebrew paths and did not declare floating-point contraction policy. On the checked Linux AArch64 GCC 14.2.0 / GSL 2.8 environment, adding only matrix bounds checks changed a demanding-cake run's branch/stop history: reported zero-based index 93→36, with max absolute differences 0.035163203 in wall concentration, 5.59734e-7 m/s in permeate velocity, 1.3455e-4 m/s in axial factor, and 1.39785 in Rcake/Rmem. The original default output is retained separately as cake.dat. Neither -O2 nor -O3 alone resolved it.
 
-With -ffp-contract=off applied to both original and modern source, their printed results match exactly, including inherited stopping index 92. Standard GCC/Clang CMake builds now declare that policy. This is a new common numerical policy; it does NOT reproduce the original default-FMA output. The controlled result supports contraction/inlining sensitivity; the exact changed machine instruction was not audited. A target compiler/library needs its own active-cake reference comparison. Do not weaken a regression tolerance after such a mismatch.
+In the historical comparison, applying =-ffp-contract=off= to both
+builds gave identical printed results with first-order inlet axial velocity
+reconstruction, including stopping index 92 for the demanding case. The maintained GCC/Clang
+builds use this strict-FP policy and reproduce those selected outputs
+when =inlet_velocity_order=1= selects that reconstruction. The original
+default-FMA output has a different branch history. The experiments did not trace the first
+changed machine instruction.
 
-* Separate stopping from numerical acceptance
-All values below are current verification runs, not published-figure replicas. The recorded particle-flux diagnostic is max(abs(Phi(z)/Phi(0)-1)) from column 7; it is a printed functional diagnostic, not independent field reconstruction. A 1% bound is a new pragmatic diagnostic, with failures retained.
+* Historical diagnostics with first-order inlet axial velocity reconstruction
+The table records prescribed-pressure runs with second-order pressure FDM
+and historical first-order inlet axial velocity reconstruction under the
+common strict-FP policy. The compact runs are solver regression cases.
+The JCP 2026 published-case replays have separate input and grid identities. The
+particle-flux diagnostic is =max(abs(Phi(z)/Phi(0)-1))= from printed
+column 7. The ratios in the table are fractions and the diagnostic
+threshold is 0.01. An independent field reconstruction would require
+the transverse states.
 
 | Case / common strict FP | Nz x Nr | Outlet phi | Outlet Rcake/Rmem | Maximum flux drift | Interpretation |
 |-------------------------+---------+------------+------------------+--------------------+----------------|
 | Non-cake, 5 kPa parameter | 25 x 120 | 0.3673897 | 0 | 0 at printed precision | Source-preserving regression; no cake |
 | Mild cake, 10 kPa parameter | 25 x 120 | 0.494 | 0.7613366 | 0.000789460 | Passes this small flux diagnostic |
-| Demanding cake, 20 kPa parameter | 25 x 120 | 0.494 | 6.137766 | 0.235180 | Fails 1%; useful active-branch regression only |
-| Demanding cake, refined | 49 x 240 | 0.494 | 4.961410 | 0.101347 | Improves but fails 1%; not mesh accepted |
+| Demanding cake, 20 kPa parameter | 25 x 120 | 0.494 | 6.137766 | 0.235180 | Exceeds the 1% diagnostic threshold |
+| Demanding cake, refined | 49 x 240 | 0.494 | 4.961410 | 0.101347 | Exceeds the 1% diagnostic threshold |
 | Mild cake, refined | 49 x 240 | — | — | — | Exhausted 2400 iterations in about 20 s |
 
-The mild case's independently reconstructed printed Darcy residual is 4.2624e-7 normalized by the maximum wall velocity. Its accepted coarse-grid flux diagnostic does not establish mesh convergence: the refined run failed the inherited stopping criterion. The default-FMA demanding original has ~0.148956 drift; stricter FP is a preservation policy, not an accuracy repair.
+For the historical mild-cake case, the maximum absolute difference
+between printed and reconstructed Darcy–Starling wall velocity is
+4.2624e-7 after division by the maximum absolute printed wall permeate
+velocity. The reconstruction uses column 8 divided by the radius for
+cake resistance and columns 9 and 6 for TMP and osmotic pressure. The
+coarse mild case passes the flux diagnostic at its own grid. Its refined
+run exhausts the iteration allowance. The historical default-FMA demanding
+case has approximately 0.148956 drift.
 
-Known inherited numerical/semantic limits remain explicit:
+* Inherited numerical and I/O limits
 - The pressure outlet row retains an osmotic forcing contribution, causing
   a small endpoint mismatch (about +0.1 Pa after printing in the non-cake case).
-- Inlet axial velocity uses a first-order forward pressure difference; the
-  outlet uses a second-order backward stencil. Concentration can amplify a
-  small inlet-factor error.
 - Cake search thresholds, safety substitutions and stopping flags can give a
   stopping message despite large flux drift; default-FMA sensitivity is material.
 - phi_cake input is ignored in favor of 0.64; cake thickness accounting is a
   separate optional source rule. No constitutive coefficient was silently fixed.
 - The main cake column and outlet sidecar have inherited mixed normalization.
 
-* Fresh optional Python comparison: failed at its new allowance
+* Reproduce the controlled C++–Python comparison
 The optional tool tools/compare_python.py takes an explicitly supplied reviewed public mBLA scripts directory. It records seven module hashes, imports only named numerical modules with bytecode writes disabled, and needs NumPy/SciPy. Do not import an unreviewed checkout. It is not part of standard CTest.
 
-A fresh v3.1 comparison used pressure inlet, R=0.5 mm, L=0.5 m, Lp=6.7e-10 m/(Pa s), eta0=1e-3 Pa s, T=293.15 K, a=a_H=10 nm, phi_feed=0.001, DLP=130 Pa, Pout=101325 Pa, linear HP TMP parameter 1 kPa, SPHS diffusion/viscosity, CS osmotic pressure and 25x120 nodes. kT used the same GSL constant; Python uses integral axial pressure, C++ finite differences. Python relaxed increments converged below 1e-6 with no cap in 128 iterations. The new allowance was <1% maximum relative difference in wall concentration, permeate velocity and axial factor. It was not met:
+Use =--radial-grid cpp-log --inlet-velocity-order 2= with the
+maintained executable for the matched-grid result. Repeat in a separate
+run directory with =--inlet-velocity-order 1= for the historical inlet
+axial velocity reconstruction. The
+common-grid legacy run exits 1 because its wall-concentration error
+exceeds the allowance. The native-grid option is =--radial-grid native=.
+
+The pre-correction v3.1 comparison used pressure inlet, R=0.5 mm, L=0.5 m, Lp=6.7e-10 m/(Pa s), eta0=1e-3 Pa s, T=293.15 K, a=a_H=10 nm, phi_feed=0.001, DLP=130 Pa, Pout=101325 Pa, linear HP TMP parameter 1 kPa, SPHS diffusion/viscosity, CS osmotic pressure and 25x120 nodes. kT used the same GSL constant; Python uses integral axial pressure, C++ finite differences. Python relaxed increments converged below 1e-6 with no cap in 128 iterations. The selected allowance was <1% maximum relative difference in wall concentration, permeate velocity and axial factor. The old wall-concentration comparison exceeded it.
 
 | Comparison | Max relative phi_wall | Max relative v_wall | Max relative axial factor | Max absolute pressure |
 |------------+-----------------------+---------------------+---------------------------+-----------------------|
 | Native Python radial grid | 0.105270 | 0.000158514 | 0.00335887 | 0.0495038 Pa |
 | Explicit C++ logarithmic grid in Python | 0.104522 | 0.000134041 | 0.00335948 | 0.0494790 Pa |
 
-Common radial sampling did not remove the discrepancy. The inlet factor is 0.01755337 m/s in C++ versus 0.0176125283 m/s in Python; interior factors agree closely, while concentration carries an approximately 1.4e-4 offset. The forward inlet stencil is a plausible source, not a proven complete explanation. No physical model or boundary stencil was changed to force agreement. These coarse current cases and the selected public Python edition are distinct from the historical researcher-established agreement.
+Changing radial sampling alone left a wall-concentration discrepancy.
+The old inlet factor was 0.01755337 m/s in C++ and 0.0176125283 m/s
+in Python. The subsequent controlled comparison changed the C++ inlet
+gradient while holding the Python implementation, cases and other
+settings fixed. The current results appear above. The standalone
+semi-analytic Python solver used here covers non-cake runs. The optional
+Python/Numba inner cake search has its own verification scope at Level 2.
 
 * Feedback corrections and fast boundary/grid checks
 Two demonstrated engineering defects were corrected separately from the scientific method. A successfully opened main or sidecar stream can fail during writing, flushing or closing; each output now reports that error before successful execution is announced. The POSIX boundary test induces EFBIG after successful open using a 1024-byte RLIMIT_FSIZE and a deliberately preserved ignored SIGXFSZ disposition. It covers result.dat, .Rout and .Fval independently, first checking each corresponding unrestricted baseline. Platforms without that POSIX facility report NOT_RUN for this boundary; they do not acquire a passed late-write claim.
 
 The same boundary oracle rejects the pre-fix implementation, whose truncated primary and both sidecars returned success. A second contract checks N_iter decimal 2400, scientific 2.4e3 and hexadecimal 0x960: all accepted spellings now consume 2400 and produce the same printed table. Before the correction, the latter spellings passed validation and consumed 2/0 through atoi. No fixture, numeric tolerance, physical law or ordinary-input behavior was changed.
 
-The unit pressure oracle now also checks a prescribed uniform cake coefficient Ln=1/4 under pressure/pressure boundaries and a clean velocity/pressure boundary. Each uses an independently specified zero-osmotic exact solution at 25/49 uniformly spaced axial nodes with identical endpoints; the observed error must fall by approximately four when h halves. These are quick pressure-grid sensitivity checks. They are not nonlinear cake or transverse-grid validation. The [[file:FIXED_POINT_METHOD.org][method owner]] explains the researcher's non-monotonic applicability limit and distinguishes observed safeguard activity from a hypothesized cause of floating-point sensitivity.
+The unit pressure oracle also checks a prescribed uniform cake coefficient Ln=1/4 under pressure/pressure boundaries and a clean velocity/pressure boundary. Each uses an independently specified zero-osmotic exact solution at 25/49 uniformly spaced axial nodes with identical endpoints; the observed error must fall by approximately four when h halves. These are quick pressure-grid sensitivity checks. They are not nonlinear cake or transverse-grid validation. The [[file:FIXED_POINT_METHOD.org][method owner]] explains the researcher's non-monotonic applicability limit and distinguishes observed safeguard activity from a hypothesized cause of floating-point sensitivity.
 
 * Actual check receipts and boundaries
-The portable provenance/CHECKS.json summarizes the actual environment/results. Private source-pinned commands/logs, first failures, the FP isolation variants, refined-case outputs and original-source integrity checks remain in the originating workbench record. No original research data are distributed here. No network, continuous monitoring, original-source execution in place, commit/push, publication or automatic plugin installation is part of this work.
+The preserved provenance/CHECKS.json summarizes the pre-correction checking edition. Private source-pinned commands/logs, first failures, the FP isolation variants, refined-case outputs and original-source integrity checks remain in the originating workbench record. No original research data are distributed here. No network, continuous monitoring, original-source execution in place, commit/push, publication or automatic plugin installation is part of this work.

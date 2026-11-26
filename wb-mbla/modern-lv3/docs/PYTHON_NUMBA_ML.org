@@ -10,7 +10,10 @@ Its [[file:../examples/unity_provider.cpp][unity-provider example]] exercises th
 The existing Python/Numba implementation covers the inner cake-resistance
 search. A full Python outer solver remains a planned Level 3 development.
 Keep the strict-FP Level 2 executable as the regression reference while porting
-the solver in Python. Compile measured bottlenecks with Numba.
+the solver in Python. For cases with prescribed inlet pressure, pin the inlet axial
+velocity reconstruction order. The synthetic unity example uses
+second-order pressure FDM and second-order inlet axial velocity
+reconstruction. Compile measured bottlenecks with Numba.
 
 * Worked example: PyTorch inference to a property table
 [[file:../examples/transport_table.py][transport_table.py]] defines a synthetic torch.nn.Module

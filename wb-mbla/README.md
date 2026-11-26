@@ -22,11 +22,11 @@ scientific-composability workflow.
 
 | Level | Implemented and checked scope |
 |---|---|
-| Level 1 — portable baseline | Build and interface modernization keeps the reference C++ calculation. See the [Level 1 validation guide](modern-lv1/docs/VALIDATION.org). |
+| Level 1 — portable baseline | Build and interface modernization supports replay with the historical first-order inlet axial velocity reconstruction and second-order pressure FDM. See the [Level 1 validation guide](modern-lv1/docs/VALIDATION.org). |
 | Level 2 — numerical organization | The fixed-point architecture and output contract are retained. The current C++ solver and the Python/Numba inner cake-resistance kernel have separate replay evidence below. |
 | Level 3 — scientific composition | `EquilibriumTransport` supplies scalar `D_c/D_0` and `eta/eta_s` to paired `LIVE` closures. The recorded native BD–MC/mBLA benchmark ran a 5 kPa, 10 nm non-cake case with on-demand and pretabulated providers. The live and cached linear paths matched all 250 axial and 1,440 radial printed values in that case. |
 
-`modern-lv3` uses the transport interface in the Level 2 source tree. The composition
+`modern-lv3` uses the transport interface in the Level 2 source tree. The pre-correction composition
 benchmark applies to a local-equilibrium, low particle Péclet number case
 with free-draining particle dynamics and the built-in osmotic-pressure law.
 Full suspension viscosity and cake-regime applicability require their own
@@ -45,13 +45,23 @@ The reference is the C++ solver used in Park, Dhont and Nägele,
 Level 1 modernizes the build and interfaces. Level 2 preserves the numerical
 architecture and ports the **inner cake-resistance search** from C++ to
 Python, with optional Numba acceleration. The outer solver and CLI are C++.
-Eight selected CASE1/CASE2 TMP runs at 200 × 400 reproduce Level 1 output
+Eight selected CASE1/CASE2 TMP runs with prescribed inlet velocity at 200 × 400 reproduce Level 1 output
 byte-for-byte and match archived mean TMP and permeate velocity at stored
 precision. The accepted profiles span the full axial domain, with CASE2 run at
 the reference setting b = 1. Mesh convergence and the high-TMP inlet regime
 have their own applicability limits. The [Python/Numba replay](modern-lv2/docs/PYTHON_CAKE.org)
 agrees with C++ on 42 saved searches and 9,712 trials. These are bounded
 modernization checks for the recorded conditions and routines.
+
+## Pressure-inlet velocity reconstruction
+
+The pressure equation uses a second-order FDM. With prescribed inlet
+pressure, the solver reconstructs inlet axial velocity from the solved
+pressure with a three-point second-order forward difference. Set
+`inlet_velocity_order=1` to replay the historical first-order inlet axial
+velocity reconstruction. See the measured refinement,
+C++–Python comparison and publication scope.
+[Inlet velocity validation](docs/INLET_VELOCITY.org)
 
 ## Build the root C++ baseline
 
@@ -63,8 +73,7 @@ The Level 3 provider example builds against the sibling Level 2 source.
 A C++17 template for Gunwoo Park's cross-flow ultrafiltration solver, preserving
 its hollow-fibre concentration-polarization and cake-resistance calculations.
 It provides a CMake library/CLI, owned matrix storage, validated configuration
-and tables, and small immutable reference cases. This is internal research
-preparation; **redistribution of the inherited unpublished source needs review**.
+and tables, and small immutable reference cases.
 See [license scope](LICENSE), [notices](NOTICE) and
 [third-party evidence](THIRD_PARTY_NOTICES.org).
 
@@ -77,7 +86,7 @@ cmake -S . -B /tmp/mbla-build -DCMAKE_BUILD_TYPE=Release
 cmake --build /tmp/mbla-build -j2
 ctest --test-dir /tmp/mbla-build --output-on-failure
 mkdir /tmp/mbla-run
-cp examples/cake-mild.inp /tmp/mbla-run/case.inp
+cp examples/pressure-inlet.inp /tmp/mbla-run/case.inp
 cd /tmp/mbla-run
 /tmp/mbla-build/mbla case.inp
 ```
@@ -101,8 +110,8 @@ The inherited output has mixed normalization in its cake column; read the
 
 [Fixed-point method](docs/FIXED_POINT_METHOD.org) explains the history-dependent
 cake safety rule and the researcher-stated limit for non-monotonic wall profiles.
-[Validation](docs/VALIDATION.org) records current-source equivalence under an
-explicit common floating-point policy, independent checks, observed failures
-and limits.
-Historical Python/C++ non-cake agreement remains established researcher-reported
-evidence. Fresh Python comparisons are separate; Python has no cake extension.
+[Validation](docs/VALIDATION.org) describes the inlet axial velocity checks
+and the historical first-order velocity reconstruction used by the frozen fixtures. The 1 kPa
+comparison uses a separate semi-analytic Python solver for non-cake
+conditions. The Level 2 Python/Numba implementation covers the inner
+cake search.

@@ -27,6 +27,7 @@ COND::COND(const char* filename) {
   // These controls were effectively optional in old input files. Defaults are
   // explicit here; numerical and physical inputs still have to be supplied.
   values_.emplace("inlet_BC", "pressure");
+  values_.emplace("inlet_velocity_order", "2");
   values_.emplace("CONT", "FALSE");
   values_.emplace("DETAILED_REPORT", "FALSE");
   values_.emplace("ACCOUNT_CAKE_THICKNESS", "FALSE");
@@ -62,6 +63,9 @@ void COND::validate() const {
     throw std::runtime_error("invalid relaxation, hydrodynamic radius ratio or concentration domain");
   const auto& bc = (*this)("inlet_BC");
   if (bc != "pressure" && bc != "velocity") throw std::runtime_error("inlet_BC must be pressure or velocity");
+  const auto& velocity_order = (*this)("inlet_velocity_order");
+  if (velocity_order != "1" && velocity_order != "2")
+    throw std::runtime_error("inlet_velocity_order must be 1 or 2");
   if (value(bc == "pressure" ? "DLP" : "u_inlet") <= 0) throw std::runtime_error("inlet scale must be positive");
   for (const auto& flag : {"CONT", "DETAILED_REPORT", "ACCOUNT_CAKE_THICKNESS"}) {
     if ((*this)(flag) != "TRUE" && (*this)(flag) != "FALSE") throw std::runtime_error("expected TRUE/FALSE: " + std::string(flag));
@@ -81,7 +85,7 @@ void COND::validate() const {
       throw std::runtime_error("unknown law or unavailable table: " + selected);
   }
   (*this)("fout");
-  const std::set<std::string> controls = {"inlet_BC","DLP","u_inlet","CONT","FN_CONT","DETAILED_REPORT","ACCOUNT_CAKE_THICKNESS","membrane_thickness","fcn_Dc_div_D0","fcn_eta_div_eta0","fcn_Pi","fout","phi_cake","porosity"};
+  const std::set<std::string> controls = {"inlet_BC","inlet_velocity_order","DLP","u_inlet","CONT","FN_CONT","DETAILED_REPORT","ACCOUNT_CAKE_THICKNESS","membrane_thickness","fcn_Dc_div_D0","fcn_eta_div_eta0","fcn_Pi","fout","phi_cake","porosity"};
   for (const auto& kv : values_) {
     if (!numeric.count(kv.first) && !controls.count(kv.first)) throw std::runtime_error("unknown configuration field: " + kv.first);
   }

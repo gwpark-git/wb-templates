@@ -28,9 +28,13 @@ path from the working directory. The example writes `result.dat`, `result.dat.Fv
 and `result.dat.Rout` there.
 
 The [compatibility test](tests/compare_unity.py) compares all three tables
-byte-for-byte with the Level 2 `CT` closures. The CMake project also runs the
-Level 2 regression and compatibility tests. The solver, numerical settings and
-fixture inputs are shared between the two provider paths.
+byte-for-byte with the Level 2 `CT` closures. The CMake project also runs
+the four Level 2 CTest entries, including fixture replay with historical
+first-order inlet axial velocity reconstruction. The solver, numerical settings and
+fixture inputs are shared between the two provider paths. The compatibility
+run uses second-order pressure FDM and the current second-order inlet
+axial velocity reconstruction under prescribed inlet pressure.
+[Inlet reconstruction and validation](../docs/INLET_VELOCITY.org)
 
 ## Scientific scope
 

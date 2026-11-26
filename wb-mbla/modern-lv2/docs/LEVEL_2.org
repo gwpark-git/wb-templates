@@ -7,10 +7,13 @@ Level 2 refactors the case driver and the fixed-point wall/cake update
 inside the existing architecture. A case still proceeds through input
 validation, parameter and workspace initialization, the axial hydraulic
 solve, transverse computations and the iteration/analysis outputs.
-Only the driver and the two operations below change inside the
+The archived Level 2 refactor changes the driver and the two operations below inside the
 production computation. The pressure stencil, LU interface, transverse
 marching and quadratures, transport closure equations, owned storage,
 and final analysis remain in their inherited modules.
+The subsequent numerical correction changes the pressure-driven inlet velocity
+reconstruction. The operation and regression scope are in
+[[file:VALIDATION.org][the current validation guide]].
 
 * Operation correspondence
 Level 1 source ranges refer to the pre-refactor files named in
@@ -24,7 +27,7 @@ identify the corresponding Level 2 entry points.
 | calculation_CP_profile.cpp 157–176 | [[file:../src/calculation_CP_profile.cpp::140][iteration driver]] | Save previous wall, resistance, shear rate and stress, update osmotic pressure, advance a fixed-point step and reject nonfinite wall/resistance. Wall RMS uses the original ABS_ERR_data. Trace and frozen table checks. |
 | calculation_CP_profile.cpp 178–210 | [[file:../src/fixed_point_controls.h::26][IterationStop]] | Strict wall/cake thresholds, positive outlet test, retained resistance diagnostic, sticky criterion, break index >30. Unit truth cases and exact stop trace. |
 | calculation_CP_profile.cpp 212–248 | [[file:../src/calculation_CP_profile.cpp::59][report_progress]], [[file:../src/calculation_CP_profile.cpp::183][final analysis and status]] | Keep SID/TEST diagnostic timing and the last non-break iteration index. Recompute the ten-column output with the same final state. Exact stdout and printed tables. |
-| calculation_CP_profile.cpp 51–86 | [[file:../src/calculation_CP_profile.cpp::21][report_details]] | On break, write .Rout before .Fval from the iteration state. Keep the y/R² coordinate, selected wall closure inputs, and write/flush/close checks. Sidecar hashes and late-write boundaries. |
+| calculation_CP_profile.cpp 51–86 | [[file:../src/calculation_CP_profile.cpp::21][report_details]] | On break, write .Rout before .Fval from the iteration state. Keep the y/R² coordinate, local radial closure inputs, and write/flush/close checks. Sidecar hashes and late-write boundaries. |
 | ported_lib.cpp 637–681 | [[file:../src/ported_lib.cpp::620][phiw_update]] | Regenerate the same cumulative z/L grid, derive hydraulic fields from previous resistance, then evaluate inlet F1/F2/modified F2 using previous shear and wall. Hydraulic state and integral digests. |
 | ported_lib.cpp 683–755 | [[file:../src/ported_lib.cpp::657][axial update]], [[file:../src/fixed_point_controls.h::14][relax_wall]] | For each axial node, compute a raw candidate, snapshot its integral row, apply local history with the updated upstream wall, relax and apply the negative fallback. Record first strict >freeze onset. Search at ≥freeze and under-relax resistance. Below freeze, leave the existing resistance buffer entry alone. Unit cases, station trace and active-cake regressions. |
 | ported_lib.cpp 756–765 | [[file:../src/ported_lib.cpp::691][shear updates and return]] | Remove the unused minimum-onset expression, update shear rate before stress, return the current onset index. Shear and stop trace. |
@@ -36,7 +39,7 @@ reached the return expression. The removed search counters and previous
 onset minimum likewise did not feed the calculation. No threshold was tuned
 to obtain agreement.
 
-* Unchanged operations used by the active path
+* Operations retained by the November 25 refactor
 - =file_IO= parses and validates scalar and literal path settings.
   =parameters= defines the inlet pressure convention and dimensional scales.
 - =dispersion_properties= dispatches transport and osmotic laws and owns the
@@ -44,6 +47,8 @@ to obtain agreement.
   interface. =AUX_MATRIX= owns work arrays for the outer step and local profiles.
 - =gen_yt_arr= makes the dimensionless transverse grid. The hydraulic functions
   build permeability, solve axial pressure, and derive axial and wall velocity.
+The subsequent inlet revision affects the velocity reconstruction for
+prescribed pressure.
 - =get_phi_yt_div_phib_with_given_phiw= performs the transverse march.
   =get_Ieta_yt= and =get_ID_yt= integrate viscosity and inverse diffusion.
   =get_F1=, =get_F2= and =get_F_modi= evaluate the existing flux functional.
@@ -54,7 +59,7 @@ to obtain agreement.
 * Source comments and optional Python search
 Local comments identify units, state, update ordering and branch purpose
 where those facts affect interpretation. The commented C++ release build
-matched the replayed executable bytes before CTest was run again.
+matched the replayed executable bytes in the pre-correction edition.
 The [[file:PYTHON_CAKE.org][optional Python cake kernel]] reproduces the inner search on captured
 C++ inputs through the standard library or a compiled backend.
 
@@ -71,7 +76,9 @@ python3 tests/compare_paths.py \
   --work /new/path/to/mbla-paired-trace
 #+end_src
 
-The harness instruments disposable source copies. It compares ordinary and
+The harness instruments disposable source copies. It selects
+=inlet_velocity_order=1= to replay the historical inlet axial velocity
+reconstruction with contraction disabled. It compares ordinary and
 traced outputs and diagnostics before comparing the original and refactored
 traces. It compares each saved state and hydraulic array by a digest over the
 stored double values. Per-station lines carry raw and relaxed wall values and
@@ -82,8 +89,10 @@ shear fields and stopping state. The compact fixtures cover no cake, mild
 cake and demanding cake. The demanding case is a numerical regression fixture.
 
 * Publication-derived benchmark
-The separate matched TMP benchmark uses eight archive/replay cases on 200 × 400
-grids, including CASE2 b = 1. The local package needs only its included small
+The archived TMP benchmark uses eight prescribed-velocity inlet replays on
+200 × 400 grids, including CASE2 b = 1. Two representative cases were
+replayed again after the inlet axial velocity revision.
+[[file:../../docs/INLET_VELOCITY.org][Current inlet verification]] The local package needs only its included small
 fixtures. Actual private archive inputs, outputs and execution receipts remain
 with the originating study. See [[file:VALIDATION.org][the validation rules]]
 and [[file:../provenance/PACKAGE_CHECKS.json][the edition receipt]] for the

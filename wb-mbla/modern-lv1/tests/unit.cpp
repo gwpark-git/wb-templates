@@ -41,6 +41,30 @@ double pressure_error(long nz, bool velocity=false, double cake_ratio=0.) {
   near(pressure(nz-1)*p.DLP,p.Pout,2e-8,"outlet pressure, zero osmotic source");
   return error;
 }
+
+// The exact gradients of a cubic test the production one-sided stencil
+// without depending on pressure assembly or any frozen simulation output.
+double inlet_velocity_error(long nz, bool legacy) {
+  PARAMETER_SET p{};
+  p.Nz = nz;
+  p.L_channel = 0.5;
+  p.dz = p.L_channel/(nz-1);
+  p.inlet_BC = "pressure";
+  p.legacy_inlet_velocity = legacy;
+  p.CAKE_convert_unit = 0.;
+  MATRIX pressure(nz,1), z(nz,1), uz(nz,1), cake(nz,1,0.);
+  for (long i=0; i<nz; ++i) {
+    const double x = double(i)/(nz-1);
+    z(i) = x;
+    pressure(i) = 2. - 3.*x + 4.*x*x + 5.*x*x*x;
+  }
+  get_uz_div_u0_arr_with_fouling(uz,z,pressure,cake,p);
+  const double error = uz(0) - 3.;
+  p.inlet_BC = "velocity";
+  get_uz_div_u0_arr_with_fouling(uz,z,pressure,cake,p);
+  near(uz(0),1.,0.,"prescribed inlet velocity must be used exactly");
+  return error;
+}
 }
 int main() {
   gsl_set_error_handler_off();
@@ -73,6 +97,12 @@ int main() {
             "second order pressure convergence with prescribed uniform cake permeability");
     require(velocity_fine<0.01 && velocity_coarse/velocity_fine>3.8 && velocity_coarse/velocity_fine<4.2,
             "second order velocity-inlet pressure convergence");
+    const double inlet_coarse = inlet_velocity_error(25,false);
+    const double inlet_fine = inlet_velocity_error(49,false);
+    near(inlet_coarse,10./(24.*24.),1e-12,"positive cubic truncation error for revised pressure inlet");
+    near(inlet_fine,10./(48.*48.),1e-12,"halving axial spacing must quarter the inlet error");
+    near(inlet_velocity_error(25,true),-4./24. - 5./(24.*24.),1e-12,
+         "historical first-order inlet replay");
     std::cout << "PASS matrix ownership/bounds, LU, CS, dilute closures, cake series law; pressure_errors_Pa="
               << coarse << ',' << fine << "; uniform_cake_errors_Pa=" << cake_coarse << ',' << cake_fine
               << "; velocity_inlet_errors_Pa=" << velocity_coarse << ',' << velocity_fine << '\n';

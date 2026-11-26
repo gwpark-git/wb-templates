@@ -92,6 +92,7 @@ init(COND& given_cond)
     Pout = atof(given_cond("ref_Pout").c_str());
     // inlet_BC = given_cond("inlet_BC").c_str();
     inlet_BC = given_cond("inlet_BC");
+    legacy_inlet_velocity = given_cond("inlet_velocity_order") == "1";
     
     // cout << "INLET BC = " << inlet_BC << endl;
     if (inlet_BC == "velocity")

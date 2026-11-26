@@ -86,7 +86,7 @@ Host-side client.
 ### Inspect the embedded cylinder regression
 
 Open the [mBLA profile explorer](../../wb-mbla/modern-lv2/tools/profile-explorer.html) in a browser.
-It starts offline with the embedded cylinder regression at CASE2 (`b = 1`,
+It starts offline with the embedded prescribed-velocity inlet regression at CASE2 (`b = 1`,
 nominal transmembrane pressure (TMP) 1.15 kPa). In **Axial profile**, choose
 a quantity such as wall concentration and move the **Stored axial station**
 slider through the 200 stored stations. Beside it, **Outlet radial profile**
@@ -100,6 +100,9 @@ suspension at nominal TMP 5 kPa. Choose a point on the shaded cutaway to
 see concentration and the selected velocity component along both directions.
 This site preview uses its own fixed CP length and a separate dataset from
 the JCP archive comparison and the internal coupling benchmark.
+The inlet axial velocity validation describes the reconstruction from
+the second-order pressure FDM under prescribed inlet pressure.
+[Inlet axial velocity report](../../wb-mbla/docs/INLET_VELOCITY.org)
 
 To inspect a compatible file, select **Open profile data**. The
 [data guide](../../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md) explains the
@@ -167,10 +170,12 @@ synthetic data and source comparison with the inputs from your own study.
   scientific validation of RPY and Stokesian dynamics, and broader post-processing
   validation remain open. The equilibrium MC sweep counts attempted moves.
 - **mBLA.** The [modernization overview](../../wb-mbla/docs/MODERNIZATION.md) records
-  eight selected cases on the 200 × 400 grid. Level 2 matched Level 1 files
+  eight archived prescribed-velocity cases on the 200 × 400 grid. Level 2 matched Level 1 files
   byte-for-byte and the archived mean pressures and permeate velocities at stored
-  precision. A separate non-cake 5 kPa, 10 nm case checked live and pretabulated
-  transport providers. The evidence applies to the specified cases, quantities
+  precision. Two of the archived cases were replayed again after the inlet
+  revision. The [inlet axial velocity report](../../wb-mbla/docs/INLET_VELOCITY.org)
+  gives the current numerical results. An earlier non-cake 5 kPa, 10 nm
+  case checked live and pretabulated transport providers. The evidence applies to the specified cases, quantities
   and models. Broader operating conditions and mesh convergence need their own
   checks.
 - **wb-python.** The [validation reference](../../wb-python/docs/VALIDATION.org)

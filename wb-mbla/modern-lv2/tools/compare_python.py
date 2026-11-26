@@ -26,6 +26,8 @@ def main():
     p.add_argument('--python-source', required=True, type=Path, help='reviewed checkout scripts directory')
     p.add_argument('--exe', required=True, type=Path)
     p.add_argument('--radial-grid', choices=['native','cpp-log'], default='native')
+    p.add_argument('--inlet-velocity-order', type=int, choices=(1, 2), default=2,
+                   help='C++ inlet axial velocity reconstruction order with prescribed inlet pressure (default: 2)')
     p.add_argument('--nr', type=int, default=120)
     p.add_argument('--work', required=True, type=Path)
     a = p.parse_args()
@@ -45,6 +47,7 @@ def main():
     config = (Path(__file__).resolve().parents[1]/'examples/noncake.inp').read_text()
     if not 3 <= a.nr <= 1000: raise ValueError('comparison Nr must lie in [3,1000]')
     config = config.replace('ref_DTP=5000', 'ref_DTP=1000').replace('Nr=120', 'Nr='+str(a.nr))
+    config += f'inlet_velocity_order={a.inlet_velocity_order}\n'
     (a.work/'case.inp').write_text(config)
     with (a.work/'cpp.log').open('w') as log:
         subprocess.run([str(a.exe.resolve()), 'case.inp'], cwd=a.work,
@@ -111,6 +114,7 @@ def main():
     accepted=all(observed[name] < 0.01 for name in observed if 'relative_difference' in name)
     result={'status':'passed' if accepted else 'not_accepted','scope':'new non-cake comparison only',
         'python_module_sha256':identity,'numpy':np.__version__,'scipy':scipy.__version__,
+        'cpp_inlet_velocity_order':a.inlet_velocity_order,
         'radial_grid':a.radial_grid,'Nr':nr,'python_iterations':iteration+1,'python_seconds':time.monotonic()-start,
         'python_final_max_relaxed_increment':residual,'observed':observed,
         'new_acceptance':'<1% maximum relative difference in wall concentration, permeate and axial center factor',

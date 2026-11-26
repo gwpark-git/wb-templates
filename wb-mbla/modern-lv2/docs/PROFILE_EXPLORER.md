@@ -11,7 +11,13 @@ regression or a v1 profile file and reads the selected file in memory.
 The offline HTML embeds the original `CUSTOM_DATA.json`
 (`wb.mbla.cylinder-comparison.v3`) from *mBLA physical observable recheck
 under limited cake coverage*. It contains eight full comparisons and
-three coverage summaries. Open the HTML to start the comparison. The
+three coverage summaries. All eight full CASE1/CASE2 comparisons
+prescribe inlet velocity. The separate SPHS 20 kPa coverage summary
+prescribes inlet pressure and uses second-order pressure FDM with the
+historical first-order inlet axial velocity reconstruction. The saved data also retain
+the original Level 1/2 and inner-kernel evidence editions. The
+[current inlet report](../../docs/INLET_VELOCITY.org) records new
+pressure-inlet checks and the two prescribed-velocity spot replays. The
 reference study gives the scientific context. [JCP 2026 article](https://doi.org/10.1063/5.0336005)
 
 1. Select a case from the measured summary or the **Case** list. The paired

@@ -11,7 +11,8 @@
 
 ## Scientific templates
 
-- [mBLA modernization](../wb-mbla/README.md), [profile guide](../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md),
+- [mBLA modernization](../wb-mbla/README.md), [inlet velocity validation](../wb-mbla/docs/INLET_VELOCITY.org),
+  [profile guide](../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md),
   and the [interactive regression and site examples](../wb-mbla/modern-lv2/tools/profile-explorer.html)
 - [BD–MC modernization](../wb-bd-mc/docs/MODERNIZATION_LEVELS.org), [build and use](../wb-bd-mc/docs/BUILD_AND_USAGE.md),
   and the [Carnahan–Starling pressure comparison](../examples/bdmc-eos/README.md)

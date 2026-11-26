@@ -56,11 +56,15 @@ previous trial with a =warning= status. Invalid caller-supplied state and
 nonfinite or exhausted searches raise errors.
 
 * Verification and timing
-The benchmark takes identical saved states from ordinary C++ cases and
+The November 25 timings use C++ states from cases with prescribed inlet
+pressure, second-order pressure FDM and first-order inlet axial velocity
+reconstruction. The benchmark compares identical captured states and
 compares both Python paths with the C++ trial resistance, step, residual and
 termination. The small fixtures supply 42 searches and 9,712 trials. Each
 chosen search produced the same trial values and result, with zero observed
-residual difference. A constructed case exercises the warning path in
+residual difference. Replaying the same first-order inlet axial velocity
+reconstruction with the revised C++ edition reproduced all 42 searches and 9,712 trials. A constructed
+case exercises the warning path in
 Python. An invalid radial grid is refused. A 400-node slice comes from a
 short diagnostic run and does not imply fixed-point convergence.
 
@@ -101,7 +105,8 @@ ranges. =_compiled_backend= lazily prepares Numba without fast-math.
 =CakeSearchResult= records the resistance before under-relaxation,
 the termination condition and an ordered trial/residual trace on request.
 
-The latest C++ verification inputs in =examples/= retain their frozen bytes.
+The tool selects =inlet_velocity_order=1= when capturing new states for
+these workloads.
 [[file:SCIENTIFIC_GUIDE.org][Input/output definitions]] explains .inp
 configuration, units, domains and sidecars. The Makefile selects distinct
 build and install directories. The Python inner routine receives its state

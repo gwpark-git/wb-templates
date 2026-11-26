@@ -36,9 +36,6 @@ In addition, I include a Python interface and other functionalities (e.g., Quart
 Gunwoo Park, 26 Nov. 2026
 
 
-
-
-
 ## Scientific Composability for Multiscale Simulation
 
 These independent presets help prepare computations, read outputs and present

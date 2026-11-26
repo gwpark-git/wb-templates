@@ -66,6 +66,7 @@ struct PARAMETER_SET
   string str_Pi;
 
   string inlet_BC; // this will record either the velocity or pressure boundary conditions
+  bool legacy_inlet_velocity = false; // First-order pressure-gradient replay for frozen outputs.
 
   double shear_rate_ast = 0.;
   double Pe_a; // single-particle shear Peclet number of inlet-center

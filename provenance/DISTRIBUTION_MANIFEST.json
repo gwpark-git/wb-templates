@@ -2,6 +2,11 @@
   "schema": "wb.templates.public-distribution.v2",
   "entries": [
     {
+      "path": ".gitattributes",
+      "bytes": 32,
+      "sha256": "8c7d1bd31e3b1d03dd5084de569107fbe678d43efb1bfa05e2d58a913211b0b5"
+    },
+    {
       "path": ".gitignore",
       "bytes": 97,
       "sha256": "cf549329df257660f94e3efa57e00d71e8881842225ed0c584ac97e96c808bea"
@@ -53,18 +58,18 @@
     },
     {
       "path": "README.md",
-      "bytes": 15551,
-      "sha256": "784f302322b2b65af6b07edac62bb42a61195f087b7793782f241a1b5b16bb9c"
+      "bytes": 14096,
+      "sha256": "c0abc4306cf867480512901d973ed2ae4e8110044300f27eca3922953f4c35fb"
     },
     {
       "path": "documentation/README.md",
-      "bytes": 2652,
-      "sha256": "05820bffa2b59b3e52ffc7b7db6b49e3d99debf799066ce7481887863a05114c"
+      "bytes": 2719,
+      "sha256": "ffc5020093ba5af1c0813087cbaf77072585b68d8e54ac20542c901f06add7cb"
     },
     {
       "path": "documentation/collection-guide/_guide.md",
-      "bytes": 12203,
-      "sha256": "afd736ee0b37d45664d1e7d4ee9fc310b505e52a86862578b9b1e29d80f7b4f6"
+      "bytes": 12628,
+      "sha256": "35ca643f980ef396926f8036ff25054611e85ca1a4741ab621cba1cb63038f88"
     },
     {
       "path": "documentation/collection-guide/_quarto.yml",
@@ -73,13 +78,13 @@
     },
     {
       "path": "documentation/collection-guide/_reference.md",
-      "bytes": 4550,
-      "sha256": "d0637222f6bbc3d69c876642fae385ab662f2a0a6f6c133a9fcd30f9c7bf66b3"
+      "bytes": 4618,
+      "sha256": "fd74c8900aecbf3ac479b22b7fd26945c7314332a0ef615f0587537f8df0d3a4"
     },
     {
       "path": "documentation/collection-guide/report.html",
-      "bytes": 1225065,
-      "sha256": "4016b1e3392e3ad5305722bebb38a4152e0111be19b0ac844767f60b88748f3f"
+      "bytes": 1225587,
+      "sha256": "f5137dc8191cc07b709d6c332a990a4c50e351120de8ad8eb2f01588a8b1ce25"
     },
     {
       "path": "documentation/collection-guide/report.qmd",
@@ -358,8 +363,8 @@
     },
     {
       "path": "provenance/DOCUMENTATION_PROVENANCE.json",
-      "bytes": 20623,
-      "sha256": "0f88b029b61b1b380a8a8225cbe4d28fd5dead8f729177b838e5dbbf56bdf29d"
+      "bytes": 20913,
+      "sha256": "1a07b30c8b64e810fa655c4da6bb262f47cb0034a2927f50f1744c4a33679c07"
     },
     {
       "path": "provenance/VALIDATION.org",
@@ -2073,8 +2078,8 @@
     },
     {
       "path": "wb-mbla/README.md",
-      "bytes": 6302,
-      "sha256": "13927d2aa0a671492ec37cd9561a3cc0ea1fdc196f6452de24ff9838fcd1334c"
+      "bytes": 6793,
+      "sha256": "18b48f7efc57bcd59c23666f03eacd51c7dea920a0a8bcf5041fc039d1f2602c"
     },
     {
       "path": "wb-mbla/THIRD_PARTY_NOTICES.org",
@@ -2083,28 +2088,53 @@
     },
     {
       "path": "wb-mbla/docs/FIXED_POINT_METHOD.org",
-      "bytes": 9609,
-      "sha256": "bbd8d3d0acc0fc56833d1c97b2e4b2d54b68119d9d2cd843981ce0fcbbd2b545"
+      "bytes": 9830,
+      "sha256": "da934dafb3d07e8ef44b8d14e2c959a54102fe73e2548cbf4e77eaf70e1191fb"
+    },
+    {
+      "path": "wb-mbla/docs/INLET_VELOCITY.org",
+      "bytes": 7287,
+      "sha256": "a192c9cb9abbe1abfd662fe8db83698127ce1d334537900676a31429b739b826"
     },
     {
       "path": "wb-mbla/docs/LEVEL_3_DESIGN.org",
-      "bytes": 22023,
-      "sha256": "9609ebaa63af3a3b301cffbc21ffaea2da2f977029de7f6b62612e0a6d593300"
+      "bytes": 22064,
+      "sha256": "c399480f39d03609b7ab3535c655058529fc58663b0bdd8a11dbaba7907fd0d3"
     },
     {
       "path": "wb-mbla/docs/MODERNIZATION.md",
-      "bytes": 3625,
-      "sha256": "7a8c85ff3ebd59c4dc67ae311b33f45a3c946b9630883011277cebc9f1c4f7cb"
+      "bytes": 4075,
+      "sha256": "a7006f8e88290bec2a833ef98898b0b0af4192aa23fbfba22a61a9fc3d9baaca"
     },
     {
       "path": "wb-mbla/docs/SCIENTIFIC_GUIDE.org",
-      "bytes": 9796,
-      "sha256": "45debf9bda19310adda374fbf6af7d30927ac0bd7dee481f6824d41f192b4965"
+      "bytes": 10300,
+      "sha256": "c50f17916dd0357a746a2c335dd7a06d14e3301aeafdd46def1f3513935da687"
     },
     {
       "path": "wb-mbla/docs/VALIDATION.org",
-      "bytes": 10428,
-      "sha256": "afbbed2336c93182210a3a8fc4cd05e742d36addeaee0be1359bab13c2e5fe3e"
+      "bytes": 11951,
+      "sha256": "791c7d435ff4c863adc3a36dd1587f3e756787795b5ce53ca47759ba1afa317b"
+    },
+    {
+      "path": "wb-mbla/docs/inlet-velocity-refinement.csv",
+      "bytes": 535,
+      "sha256": "1157f4fb97c20313576c04af698b368e13d8332616af182809d391ad46d33224"
+    },
+    {
+      "path": "wb-mbla/docs/inlet-velocity-wall.csv",
+      "bytes": 2366,
+      "sha256": "1014dc301f5b7fb09f1b9c7896c33a3e940c8a00b7239582d3d84da8e145a7a8"
+    },
+    {
+      "path": "wb-mbla/docs/inlet-velocity.pdf",
+      "bytes": 25596,
+      "sha256": "f4521d097e7d096970f0de530d091768d73b4fbe2c6ee0f9f32269f0a0cf15d6"
+    },
+    {
+      "path": "wb-mbla/docs/inlet-velocity.png",
+      "bytes": 359237,
+      "sha256": "56c5d9f4722f0060d5fc3ba4d25d7000a922694ca49c724e549d35547141456e"
     },
     {
       "path": "wb-mbla/examples/cake-mild.inp",
@@ -2120,6 +2150,11 @@
       "path": "wb-mbla/examples/noncake.inp",
       "bytes": 455,
       "sha256": "e0b14ac57d8de8aa6dc567d0b49dbad1239510262bbad78cb1f2e1e438e82706"
+    },
+    {
+      "path": "wb-mbla/examples/pressure-inlet.inp",
+      "bytes": 464,
+      "sha256": "24d8dc32d11bc1e9d78eb834d53da88957c925ef05cd1a76a149bdfd7e479286"
     },
     {
       "path": "wb-mbla/modern-lv1/AGENTS.md",
@@ -2148,8 +2183,8 @@
     },
     {
       "path": "wb-mbla/modern-lv1/README.md",
-      "bytes": 4112,
-      "sha256": "982ba65df4fa4ea979bb811f6f0d373a0f2ba7f4f971c0f5f7cf5c159260621e"
+      "bytes": 4500,
+      "sha256": "5cbb931782107d1026bc596a38568a002b8670bffc14eccf2bb250f2b259b8ea"
     },
     {
       "path": "wb-mbla/modern-lv1/THIRD_PARTY_NOTICES.org",
@@ -2158,8 +2193,8 @@
     },
     {
       "path": "wb-mbla/modern-lv1/docs/FIXED_POINT_METHOD.org",
-      "bytes": 11159,
-      "sha256": "e5ed425c1cf1a723efdcdee6c8d639d0e63be0124acf05ce0abd9ab70ecacf8e"
+      "bytes": 11380,
+      "sha256": "c71f01ddbed40d526e37ff11199e4f3a5144464984f8ba0350fe7b067eda8b4d"
     },
     {
       "path": "wb-mbla/modern-lv1/docs/PROFILE_EXPLORER.md",
@@ -2168,13 +2203,13 @@
     },
     {
       "path": "wb-mbla/modern-lv1/docs/SCIENTIFIC_GUIDE.org",
-      "bytes": 9796,
-      "sha256": "45debf9bda19310adda374fbf6af7d30927ac0bd7dee481f6824d41f192b4965"
+      "bytes": 10300,
+      "sha256": "c50f17916dd0357a746a2c335dd7a06d14e3301aeafdd46def1f3513935da687"
     },
     {
       "path": "wb-mbla/modern-lv1/docs/VALIDATION.org",
-      "bytes": 14194,
-      "sha256": "7ecb4edefa25e442cf9c2a32c22d3eaf75a07a514475fb207845b6aa7dce4be6"
+      "bytes": 15851,
+      "sha256": "89dae9a3ebcc9835ec0dadbfda404b70523314903ae6f289d52fe7809d26eb93"
     },
     {
       "path": "wb-mbla/modern-lv1/examples/cake-mild.inp",
@@ -2190,6 +2225,11 @@
       "path": "wb-mbla/modern-lv1/examples/noncake.inp",
       "bytes": 455,
       "sha256": "e0b14ac57d8de8aa6dc567d0b49dbad1239510262bbad78cb1f2e1e438e82706"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/examples/pressure-inlet.inp",
+      "bytes": 464,
+      "sha256": "24d8dc32d11bc1e9d78eb834d53da88957c925ef05cd1a76a149bdfd7e479286"
     },
     {
       "path": "wb-mbla/modern-lv1/provenance/CHECKS.json",
@@ -2238,8 +2278,8 @@
     },
     {
       "path": "wb-mbla/modern-lv1/src/file_IO.cpp",
-      "bytes": 5464,
-      "sha256": "e54289a3725dfd74c6e179353469c757701cf69a74109475f13226216888a7c0"
+      "bytes": 5722,
+      "sha256": "eed434086b7aeb33faf987cd8b3ea1454d050c7e127324289169249f85f3f17f"
     },
     {
       "path": "wb-mbla/modern-lv1/src/file_IO.h",
@@ -2268,18 +2308,18 @@
     },
     {
       "path": "wb-mbla/modern-lv1/src/parameters.cpp",
-      "bytes": 7029,
-      "sha256": "ae08cd12b0717c2e8d69c9409d1cd262134ca23f49ddcaf817785aaa8c3d8959"
+      "bytes": 7100,
+      "sha256": "3563836558d5a417da33bb995fe082846dfe17bb46d4c0b2c5bdb9390d964b41"
     },
     {
       "path": "wb-mbla/modern-lv1/src/parameters.h",
-      "bytes": 1671,
-      "sha256": "4174b1d10098cef63ee7ebdcfc849ec3aecafcca084350b1de39756acfcf0a78"
+      "bytes": 1769,
+      "sha256": "e75059c720bc2d5a497ac8d07408128e8b8d69ee124f54b20ac9b1908b34498f"
     },
     {
       "path": "wb-mbla/modern-lv1/src/ported_lib.cpp",
-      "bytes": 37455,
-      "sha256": "ee732e815194b1d790b273cc9fbe1cb9583cd7aabdb2f18503d06fdbfe9b32bd"
+      "bytes": 37684,
+      "sha256": "5fc28e8b94497aa140f4cec36cd218615d0e8cf42b36d4e14b6f5875627c6ac7"
     },
     {
       "path": "wb-mbla/modern-lv1/src/ported_lib.h",
@@ -2348,18 +2388,18 @@
     },
     {
       "path": "wb-mbla/modern-lv1/tests/regression.py",
-      "bytes": 7683,
-      "sha256": "5b28df9f5d78398dfe61b5e73da80d29b65f1e41800934e77d81dab963bb4857"
+      "bytes": 7974,
+      "sha256": "837ab0b4a598547cc70b5858a3c351b8221807129aaac100d1d293d1bddcd040"
     },
     {
       "path": "wb-mbla/modern-lv1/tests/unit.cpp",
-      "bytes": 4272,
-      "sha256": "588244043297bda8a8e629242b022fee015b2e517cc707afd61af957c9f3149f"
+      "bytes": 5548,
+      "sha256": "0ecee50fa34798424cfe16301e430cbe9aa04c81988aa7328a186f08e046f500"
     },
     {
       "path": "wb-mbla/modern-lv1/tools/compare_python.py",
-      "bytes": 6846,
-      "sha256": "c5aca3e55db35c3a0bd49616d01bf8fc3193573681b0a7781260caa5037cd60e"
+      "bytes": 7169,
+      "sha256": "61756348e47bbdd4073fe382f1919e87a254772b71b4217a709526b9c6d59b20"
     },
     {
       "path": "wb-mbla/modern-lv1/tools/inspect_output.py",
@@ -2398,8 +2438,8 @@
     },
     {
       "path": "wb-mbla/modern-lv2/README.md",
-      "bytes": 6040,
-      "sha256": "01a4b391d89721265132dd954235f1e8b6af5365a3effb24030425bc3506c28a"
+      "bytes": 6428,
+      "sha256": "7f063a75e7653dc9083390a67d81266e5f71b83a48b4ef061d6b7db40b9a4fe1"
     },
     {
       "path": "wb-mbla/modern-lv2/THIRD_PARTY_NOTICES.org",
@@ -2408,33 +2448,33 @@
     },
     {
       "path": "wb-mbla/modern-lv2/docs/FIXED_POINT_METHOD.org",
-      "bytes": 11096,
-      "sha256": "5031b380142016d5231d5a3484e5e7e0fdff6859f95689117cdce9f0ec861639"
+      "bytes": 11317,
+      "sha256": "0ae999813d5bbe8c2967c45ca34438f49536a740ec63a1559b1c69b78245b7eb"
     },
     {
       "path": "wb-mbla/modern-lv2/docs/LEVEL_2.org",
-      "bytes": 8034,
-      "sha256": "ea83b9a072969b6de74d406788e83206c200ca1679a306e7f2e7f4eb8688c0ce"
+      "bytes": 8630,
+      "sha256": "18d104cf53c9bf1bb30d6192eee78a6049767bc69f47db3185981cfd5d89dfa1"
     },
     {
       "path": "wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md",
-      "bytes": 7780,
-      "sha256": "c313af1f0f9fa93795707a5fe49455a419533689cf850e0cd4f89482ac53a1f5"
+      "bytes": 8202,
+      "sha256": "b21b5919a200322a10f31c20af347c89b0bae301c25d459b8e79627b16c38b4b"
     },
     {
       "path": "wb-mbla/modern-lv2/docs/PYTHON_CAKE.org",
-      "bytes": 5363,
-      "sha256": "6bfb3fb532aae552e740b4837459025fa4a3ed2258544e3e80b018ecec4d30f2"
+      "bytes": 5659,
+      "sha256": "897c97471f3f87944f34791a57bb925c2458bddd0f54067af75042194680de65"
     },
     {
       "path": "wb-mbla/modern-lv2/docs/SCIENTIFIC_GUIDE.org",
-      "bytes": 10766,
-      "sha256": "10e0db51601a53e543d1bbb0c98742affe0e6fb22177b953733108f842395fd5"
+      "bytes": 11270,
+      "sha256": "92d06eda9ed3670dcbada7f8f0ae48f3b5640c1c46f27fabe3c756917bff836e"
     },
     {
       "path": "wb-mbla/modern-lv2/docs/VALIDATION.org",
-      "bytes": 14763,
-      "sha256": "c47ad2ec93aee333b2c9e053ceb9d3f29b86009d4200106e8270d792ed9694c5"
+      "bytes": 16420,
+      "sha256": "f610942092235a889b064a478a059b030af501942a77e24568164f5c764638e7"
     },
     {
       "path": "wb-mbla/modern-lv2/docs/validation-screenshot.png",
@@ -2455,6 +2495,11 @@
       "path": "wb-mbla/modern-lv2/examples/noncake.inp",
       "bytes": 455,
       "sha256": "e0b14ac57d8de8aa6dc567d0b49dbad1239510262bbad78cb1f2e1e438e82706"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/examples/pressure-inlet.inp",
+      "bytes": 464,
+      "sha256": "24d8dc32d11bc1e9d78eb834d53da88957c925ef05cd1a76a149bdfd7e479286"
     },
     {
       "path": "wb-mbla/modern-lv2/provenance/CHECKS.json",
@@ -2518,8 +2563,8 @@
     },
     {
       "path": "wb-mbla/modern-lv2/src/file_IO.cpp",
-      "bytes": 5816,
-      "sha256": "318d245dd0da5a451329f3114229abba4a75736f47398258aac3dc5bb0f903c0"
+      "bytes": 6074,
+      "sha256": "2ef4db125c736e693836fe64b36aaabf9e01a8abe68e3434c2f6c03396bea8e2"
     },
     {
       "path": "wb-mbla/modern-lv2/src/file_IO.h",
@@ -2558,18 +2603,18 @@
     },
     {
       "path": "wb-mbla/modern-lv2/src/parameters.cpp",
-      "bytes": 7124,
-      "sha256": "dbd3aec1fafcb6571564d702f2ccd2e4f6b6317d9a849fe03a5cdb8724d813e2"
+      "bytes": 7195,
+      "sha256": "26e04b1376162d2b2f4f98313a8e9625b708dc92899bfa1b6dc1dd5deb06a809"
     },
     {
       "path": "wb-mbla/modern-lv2/src/parameters.h",
-      "bytes": 1671,
-      "sha256": "4174b1d10098cef63ee7ebdcfc849ec3aecafcca084350b1de39756acfcf0a78"
+      "bytes": 1769,
+      "sha256": "e75059c720bc2d5a497ac8d07408128e8b8d69ee124f54b20ac9b1908b34498f"
     },
     {
       "path": "wb-mbla/modern-lv2/src/ported_lib.cpp",
-      "bytes": 37137,
-      "sha256": "077632926d8141b34a3a1f946a12eb716cac2599a6e341f12ade5c7a9789c315"
+      "bytes": 37366,
+      "sha256": "3c53447b4edf79266291a8e0142d5dfe75e29cc6ef3a4949dbadfa92f8c1e0b9"
     },
     {
       "path": "wb-mbla/modern-lv2/src/ported_lib.h",
@@ -2613,13 +2658,13 @@
     },
     {
       "path": "wb-mbla/modern-lv2/tests/compare_paths.py",
-      "bytes": 11665,
-      "sha256": "4e3eafbf8e7ffac8e420a9520f4f781cfc31a5d790455d5ffd9e4eed64243578"
+      "bytes": 11783,
+      "sha256": "2ca66112dec79f2ad1d9fd609884176694217b9f1a9de1efbacc7bc3d5b9081a"
     },
     {
       "path": "wb-mbla/modern-lv2/tests/compare_python_cake.py",
-      "bytes": 10839,
-      "sha256": "40182c38947ccfef3c51414a4679d1df65c10d840b7a19df8af5453db26943a9"
+      "bytes": 10965,
+      "sha256": "f62716d3ec34b11f7768ab7d59007c8790a3cb1e222c66eea3ae957901a4493c"
     },
     {
       "path": "wb-mbla/modern-lv2/tests/fixtures/cake-mild-strict.dat",
@@ -2648,13 +2693,13 @@
     },
     {
       "path": "wb-mbla/modern-lv2/tests/regression.py",
-      "bytes": 7683,
-      "sha256": "5b28df9f5d78398dfe61b5e73da80d29b65f1e41800934e77d81dab963bb4857"
+      "bytes": 7974,
+      "sha256": "837ab0b4a598547cc70b5858a3c351b8221807129aaac100d1d293d1bddcd040"
     },
     {
       "path": "wb-mbla/modern-lv2/tests/unit.cpp",
-      "bytes": 6172,
-      "sha256": "35007b893d55e2c38f6f2251cce27442ca58ce45a4d57d7c1a89fdc562d82797"
+      "bytes": 7448,
+      "sha256": "76916d7bbd06beb966cc52aa4d91581a6eb1af1b366348b165275a571aca8e94"
     },
     {
       "path": "wb-mbla/modern-lv2/tools/boundary-shading.tsx",
@@ -2668,8 +2713,8 @@
     },
     {
       "path": "wb-mbla/modern-lv2/tools/compare_python.py",
-      "bytes": 6846,
-      "sha256": "c5aca3e55db35c3a0bd49616d01bf8fc3193573681b0a7781260caa5037cd60e"
+      "bytes": 7169,
+      "sha256": "61756348e47bbdd4073fe382f1919e87a254772b71b4217a709526b9c6d59b20"
     },
     {
       "path": "wb-mbla/modern-lv2/tools/cylinder-comparison.css",
@@ -2723,13 +2768,13 @@
     },
     {
       "path": "wb-mbla/modern-lv3/README.md",
-      "bytes": 2640,
-      "sha256": "d8734791724cae119c6d052798b14a1285ead96b2346a305c0714eaea6f0dcc6"
+      "bytes": 2931,
+      "sha256": "a51526489a573091996ad02660c8556fe91616ec5560d6efcaae232f659df874"
     },
     {
       "path": "wb-mbla/modern-lv3/docs/PYTHON_NUMBA_ML.org",
-      "bytes": 5947,
-      "sha256": "e5a813e5a7de393aab467d8a082850c2a6740e19f4576e52871503d46b6e3ed9"
+      "bytes": 6153,
+      "sha256": "799524b8b0f97ce98a2d574363538db4f59da25af2974c71691d3924ba7d73e0"
     },
     {
       "path": "wb-mbla/modern-lv3/examples/transport-unity.inp",
@@ -2793,8 +2838,8 @@
     },
     {
       "path": "wb-mbla/src/file_IO.cpp",
-      "bytes": 5464,
-      "sha256": "e54289a3725dfd74c6e179353469c757701cf69a74109475f13226216888a7c0"
+      "bytes": 5722,
+      "sha256": "eed434086b7aeb33faf987cd8b3ea1454d050c7e127324289169249f85f3f17f"
     },
     {
       "path": "wb-mbla/src/file_IO.h",
@@ -2823,18 +2868,18 @@
     },
     {
       "path": "wb-mbla/src/parameters.cpp",
-      "bytes": 7029,
-      "sha256": "ae08cd12b0717c2e8d69c9409d1cd262134ca23f49ddcaf817785aaa8c3d8959"
+      "bytes": 7100,
+      "sha256": "3563836558d5a417da33bb995fe082846dfe17bb46d4c0b2c5bdb9390d964b41"
     },
     {
       "path": "wb-mbla/src/parameters.h",
-      "bytes": 1671,
-      "sha256": "4174b1d10098cef63ee7ebdcfc849ec3aecafcca084350b1de39756acfcf0a78"
+      "bytes": 1769,
+      "sha256": "e75059c720bc2d5a497ac8d07408128e8b8d69ee124f54b20ac9b1908b34498f"
     },
     {
       "path": "wb-mbla/src/ported_lib.cpp",
-      "bytes": 37455,
-      "sha256": "ee732e815194b1d790b273cc9fbe1cb9583cd7aabdb2f18503d06fdbfe9b32bd"
+      "bytes": 37684,
+      "sha256": "5fc28e8b94497aa140f4cec36cd218615d0e8cf42b36d4e14b6f5875627c6ac7"
     },
     {
       "path": "wb-mbla/src/ported_lib.h",
@@ -2903,18 +2948,18 @@
     },
     {
       "path": "wb-mbla/tests/regression.py",
-      "bytes": 7683,
-      "sha256": "5b28df9f5d78398dfe61b5e73da80d29b65f1e41800934e77d81dab963bb4857"
+      "bytes": 7974,
+      "sha256": "837ab0b4a598547cc70b5858a3c351b8221807129aaac100d1d293d1bddcd040"
     },
     {
       "path": "wb-mbla/tests/unit.cpp",
-      "bytes": 4272,
-      "sha256": "588244043297bda8a8e629242b022fee015b2e517cc707afd61af957c9f3149f"
+      "bytes": 5548,
+      "sha256": "0ecee50fa34798424cfe16301e430cbe9aa04c81988aa7328a186f08e046f500"
     },
     {
       "path": "wb-mbla/tools/compare_python.py",
-      "bytes": 6846,
-      "sha256": "c5aca3e55db35c3a0bd49616d01bf8fc3193573681b0a7781260caa5037cd60e"
+      "bytes": 7169,
+      "sha256": "61756348e47bbdd4073fe382f1919e87a254772b71b4217a709526b9c6d59b20"
     },
     {
       "path": "wb-mbla/tools/inspect_output.py",
@@ -3022,6 +3067,6 @@
       "sha256": "7267dc39ea43194a4209bcd9f36456a8f352b6b7d5446c41fee014852e260e5b"
     }
   ],
-  "file_count": 604,
-  "payload_bytes": 16028334
+  "file_count": 613,
+  "payload_bytes": 16443159
 }
