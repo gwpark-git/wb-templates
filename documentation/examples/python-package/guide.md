@@ -119,6 +119,6 @@ Gunwoo Park directs Agentic Workbench and its `wb-templates` collection.
 Project overview: <https://github.com/gwpark-git/agentic-workbench-knowledge>  
 wb-templates repository (planned): <https://github.com/gwpark-git/wb-templates>
 
-### AI assistance {#ai-assistance}
+### AI assistance
 
 OpenAI Codex assisted with drafting this example under Gunwoo Park's direction.

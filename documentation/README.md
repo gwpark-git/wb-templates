@@ -1,51 +1,42 @@
 # wb-templates documentation
 
-[AI-generated text](collection-guide/report.html#ai-assistance)
+[AI-generated text](../README.md#ai-assistance)
 
-[mBLA validation and site profiles](../wb-mbla/modern-lv2/tools/profile-explorer.html) /
-[BD–MC pressure comparison](../examples/bdmc-eos/README.md)
+## Collection guide
 
-## Read on GitHub or in a browser
+- [Purpose, setup and worked scientific examples](collection-guide/_guide.md)
+- [Functional reference for code, configuration, data and checks](collection-guide/_reference.md)
+- [Template catalog](../README.md#templates) and [copying contract](../PACKAGING.org)
+- [Validation and reproduction notes](../provenance/VALIDATION.org)
 
-On GitHub, use this Markdown index and the Markdown and Org source pages
-linked from the [collection README](../README.md). For the rendered version,
-open the distribution's [HTML home page](../index.html) through a static web
-server. Document links in the HTML reading view open the corresponding HTML
-page. **Source** opens the maintained Markdown or Org file. **Edit** in
-the formatted report, Python guide and slides opens the editing instructions
-within that document.
+## Scientific templates
 
-Start with the [collection guide](collection-guide/report.html) for the
-project's purpose, practical workflows and the current template catalog.
-Its [functional reference](collection-guide/report.html#functional-reference)
-links the code, configuration, data contracts and checks for each area.
+- [mBLA modernization](../wb-mbla/README.md), [profile guide](../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md),
+  and the [interactive regression and site examples](../wb-mbla/modern-lv2/tools/profile-explorer.html)
+- [BD–MC modernization](../wb-bd-mc/docs/MODERNIZATION_LEVELS.org), [build and use](../wb-bd-mc/docs/BUILD_AND_USAGE.md),
+  and the [Carnahan–Starling pressure comparison](../examples/bdmc-eos/README.md)
+- [Plot styles](../plot-styles/README.md), [wb-style](../wb-style/README.md),
+  and [scientific CSV I/O](../scientific-io/README.md)
+- [wb-python reader guide and API reference](../wb-python/README.md)
 
 ## Documentation families
 
-| Family | Use it for | Preview | Editable preset |
-| --- | --- | --- | --- |
-| Basic documentation | Project reports, research workflows and presentations | [HTML report](examples/quarto-comparison/report.html), [Reveal.js slides](examples/quarto-comparison/slides.html), [PDF slides](examples/quarto-comparison/slides.pdf) | [Quarto comparison](examples/quarto-comparison/README.md) |
-| Python package guide | Installation, first successful run, API and troubleshooting | [Read a retained Workbench request with wb-python](examples/python-package/preview.html) | [wb-python worked example](examples/python-package/README.md) |
+| Family | Read or copy | Bundled browser example |
+| --- | --- | --- |
+| Basic documentation | [Quarto report and slide project](examples/quarto-comparison/README.md), [guide chapter](examples/quarto-comparison/_guide.md), [methods](examples/quarto-comparison/_methods.md), [results](examples/quarto-comparison/_results.md), [source comparison](examples/quarto-comparison/_code.md) | [HTML report](examples/quarto-comparison/report.html), [Reveal.js slides](examples/quarto-comparison/slides.html), [PDF slides](examples/quarto-comparison/slides.pdf) |
+| Python package guide | [Worked request-readback guide](examples/python-package/guide.md), [render instructions](examples/python-package/README.md) | [Formatted Python guide](examples/python-package/preview.html) |
 
 The public previews open without a Workbench runtime. To execute the Python
-request-readback example, use a separately supplied runtime and existing
+request-readback example, use a separately supplied runtime and an existing
 request receipt. The [wb-python manual](../wb-python/README.md) explains setup.
 
-- [mBLA explorer guide](../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md) for the saved cases, coordinate definitions and file formats
-- [BD–MC equilibrium EOS example](../examples/bdmc-eos/README.md) for retained Carnahan–Starling comparison data
-- [Collection catalog and entry points](../README.md#templates)
+## Build and read the HTML edition
 
-## Open a local copy in a browser
+Follow the [README build command](../README.md#build-the-html-site). The
+[formatted collection handbook](collection-guide/report.html) is also bundled.
+Open the generated site from its output directory so relative links to PDF, CSV and
+source files resolve. **Source** opens the maintained Markdown or Org file.
+**Edit** in a formatted report, Python guide or slide deck opens the
+editing instructions within that document.
 
-Keep the full distribution tree together. It contains the PDF, CSV and source
-files linked from the previews. If a local file preview restricts navigation,
-serve the copied distribution from the machine running the browser. From its root:
-
-```sh
-python3 -m http.server --bind 127.0.0.1 8765
-```
-
-Then open <http://127.0.0.1:8765/>. The home page, previews and related assets
-also work under a site prefix.
-
-[Author and project information](collection-guide/report.html#author-and-project-information)
+[Author and project information](../README.md#author-and-project-information)

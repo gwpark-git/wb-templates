@@ -22,7 +22,10 @@ continuous document with outline and code-copy controls. Open
 To save a presentation PDF, open `site/slides.html?print-pdf` in Chromium,
 print with background graphics, and turn off printer headers and footers.
 
-The Markdown chapter files (prefixed with `_`) are listed in [report.qmd](report.qmd).
+Read the report's Markdown chapters directly
+[guide](_guide.md), [methods](_methods.md), [results](_results.md),
+[source comparison](_code.md) and [review](_review.md).
+[report.qmd](report.qmd) assembles them.
 [slides.qmd](slides.qmd) names stable slide IDs and the shared figure.
 `_quarto.yml` selects render targets and sidecar resources. The inputs
 include both PDF and PNG figures and an explicit-license scope.

@@ -12,7 +12,7 @@
 [라이선스 범위 — 영어](LICENSE_SCOPE.md)
 
 [문서 목차 — 영어](documentation/README.md) /
-[상세 HTML 가이드 — 영어](documentation/collection-guide/report.html) /
+[상세 가이드 — 영어](documentation/collection-guide/_guide.md) /
 [보고서·Python 가이드 미리보기 — 영어](documentation/README.md#documentation-families)
 
 프로젝트가 소유한 플롯 스타일과 재사용 코드는
@@ -95,9 +95,27 @@ hard-sphere MC의 결과 CSV와 PDF, PNG 및 샘플링 범위를 확인할 수 �
 [Quarto 문서 템플릿 — 영어](documentation/examples/quarto-comparison/README.md)는
 물리량과 소스코드 비교를 예제로 제공합니다.
 [문서 목차 — 영어](documentation/README.md) /
-[상세 가이드 — 영어](documentation/collection-guide/report.html).
-[기능별 참조 — 영어](documentation/collection-guide/report.html#functional-reference)에는
+[상세 가이드 — 영어](documentation/collection-guide/_guide.md).
+[기능별 참조 — 영어](documentation/collection-guide/_reference.md)에는
 각 도구의 구현, 설정, 데이터 형식과 검증 문서가 연결되어 있습니다.
+
+## HTML 문서 빌드
+
+GitHub에서는 [문서 목차 — 영어](documentation/README.md)에서 Markdown·Org 원본을
+열 수 있습니다. 전체 HTML 사이트를 만들려면 Python 3.10 이상과
+Quarto 1.8.26을 설치하고 저장소 최상위 폴더에서 POSIX 셸로 실행합니다.
+
+```sh
+site="$(mktemp -d)/wb-templates-site"
+python3 -B tools/build_html.py --quarto "$(command -v quarto)" --output "$site"
+python3 -m http.server --bind 127.0.0.1 --directory "$site" 8765
+```
+
+서버가 실행 중일 때 <http://127.0.0.1:8765/>를 엽니다. 별도 출력 폴더에
+변환한 문서, 상세 안내서, Python 가이드 미리보기와 함께 제공되는 탐색기,
+슬라이드, 데이터가 들어갑니다. 배포 manifest에 나열된 파일의 현재 내용을
+읽으므로 문서 편집 뒤 다시 빌드할 수 있습니다.
+[Quarto 보고서와 Reveal.js 재생성 안내 — 영어](documentation/examples/quarto-comparison/README.md#render-the-example)
 
 ## 플롯 실행
 

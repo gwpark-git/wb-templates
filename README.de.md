@@ -13,7 +13,7 @@ Tests und Herkunftsnachweisen und passen Sie es an Ihre Fragestellung an.
 [Lizenzumfang](LICENSE_SCOPE.md)
 
 [Dokumentation](documentation/README.md) /
-[Ausführliches HTML-Handbuch (Englisch)](documentation/collection-guide/report.html) /
+[Handbuch (Englisch)](documentation/collection-guide/_guide.md) /
 [Vorschau: Bericht und Python-Handbuch (Englisch)](documentation/README.md#documentation-families)
 
 Das [Quarto-Vergleichsbeispiel](documentation/examples/quarto-comparison/README.md)
@@ -61,7 +61,7 @@ Ergebnis verwendbar ist, ergibt sich aus den Prüfbelegen der jeweiligen Vorlage
   Hartkugel-MC samt Abbildungen und Angaben zur Stichprobe.
 - **Einen Vergleich darstellen.** Erzeugen Sie mit dem [CSV-Grafikbeispiel](#grafikbeispiel-ausprobieren) PNG- und PDF-Dateien. Das Quarto-Beispiel zeigt, wie Sie die Methoden und Prüfbelege dokumentieren können.
 
-Die [Funktionsreferenz](documentation/collection-guide/report.html#functional-reference)
+Die [Funktionsreferenz](documentation/collection-guide/_reference.md)
 verweist für jeden Bereich auf Implementierung, Konfiguration, Eingaben und Prüfungen.
 
 Die [Vorlage für die wb-python-Schnittstelle](wb-python/README.md)
@@ -109,6 +109,25 @@ ab CASE2 (`b = 1`, nominaler TMP 1,15 kPa). Beide Profile bleiben sichtbar.
 Wählen Sie aus 200 Axialpositionen oder 400 radialen Punkten am Auslass.
 Die radiale Anzeige gibt `y/R`, `r/R` und `y/δ_CP` an. Das Level-3-Beispiel
 benötigt den Level-2-Löser aus demselben mBLA-Paket.
+
+## HTML-Dokumentation erstellen
+
+Die [Dokumentationsübersicht](documentation/README.md) verlinkt auf die
+Markdown- und Org-Quellen. Installieren Sie Python 3.10 oder neuer und
+Quarto 1.8.26. Führen Sie im Wurzelverzeichnis der Sammlung in einer
+POSIX-Shell diese Befehle aus:
+
+```sh
+site="$(mktemp -d)/wb-templates-site"
+python3 -B tools/build_html.py --quarto "$(command -v quarto)" --output "$site"
+python3 -m http.server --bind 127.0.0.1 --directory "$site" 8765
+```
+
+Öffnen Sie <http://127.0.0.1:8765/>, solange der Server läuft. Das separate
+Ausgabeverzeichnis enthält die gerenderten Seiten, das Handbuch, die
+Python-Vorschau und die mitgelieferten Werkzeuge, Folien und Daten.
+Der Build liest die aktuellen Inhalte der Dateien im Distributionsmanifest.
+[Anleitung für den Quarto-Bericht und die Reveal.js-Folien](documentation/examples/quarto-comparison/README.md#render-the-example) (Englisch).
 
 ## Grafikbeispiel ausprobieren
 

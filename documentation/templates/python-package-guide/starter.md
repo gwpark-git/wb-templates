@@ -34,6 +34,6 @@ Explain likely failures, recovery and supported environments.
 
 Give the project author and the project overview URL.
 
-### AI assistance {#ai-assistance}
+### AI assistance
 
 Describe the actual AI assistance used for the document.

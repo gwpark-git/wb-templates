@@ -16,7 +16,7 @@
   "render_command": "sh render.sh /path/to/new-build-directory",
   "source_sha256": {
     "LICENSE": "1757fa550d559f842269318f383b4e3e2d9a4d5174183087618bbdd4016d89c0",
-    "README.md": "52b0b98ccf0690f3ea4cfa4b4465422fd3fb6ad342039f804aa2966363919db9",
+    "README.md": "0c9f983b2a619c6f5c34c8161ddaf1ca530818e4efd6174ab5f71bf30e9a71b0",
     "_quarto.yml": "8ccbd5c36821835a2bae0441fa14ffccf36ec8d25860314a0328e42d62606df3",
     "report.qmd": "c0e575a96188e4c56fdc0381a18422c404f628f9039678a148552757f7b74743",
     "slides.qmd": "a13dc360f1bfb283a8506c266200cbd5b357ba6812c865fbd9064e2b96a8385c",

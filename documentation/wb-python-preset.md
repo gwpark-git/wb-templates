@@ -43,11 +43,12 @@ A standalone release of `wb-jupyter` is under consideration. For most
 Host-facing wb-applications packages, the release plan is individual
 distribution after security review.
 
-[Read a retained Workbench request from a Python script](examples/python-package/preview.html)
+[Read a retained Workbench request from a Python script](examples/python-package/guide.md) /
+[Formatted preview](examples/python-package/preview.html)
 
 [Python package guide source and other documentation formats](README.md#documentation-families)
 
-[Collection guide and functional reference](collection-guide/report.html)
+[Collection guide](collection-guide/_guide.md) / [Functional reference](collection-guide/_reference.md)
 
 ## Author and project information
 

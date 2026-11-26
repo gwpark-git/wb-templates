@@ -2209,7 +2209,7 @@ vertical-align: -.125em;
    
   <ul>
   <li><a href="#what-wb-templates-is" id="toc-what-wb-templates-is" class="nav-link active" data-scroll-target="#what-wb-templates-is">What wb-templates is</a></li>
-  <li><a href="#scientific-composability" id="toc-scientific-composability" class="nav-link" data-scroll-target="#scientific-composability">Scientific Composability for Multiscale Simulation</a>
+  <li><a href="#scientific-composability-for-multiscale-simulation" id="toc-scientific-composability-for-multiscale-simulation" class="nav-link" data-scroll-target="#scientific-composability-for-multiscale-simulation">Scientific Composability for Multiscale Simulation</a>
   <ul class="collapse">
   <li><a href="#a-current-level-3-example" id="toc-a-current-level-3-example" class="nav-link" data-scroll-target="#a-current-level-3-example">A current Level 3 example</a></li>
   </ul></li>
@@ -2267,8 +2267,8 @@ Documentation edition: 2026-11-26</p>
 <p>Park describes this problem in his <a href="https://github.com/gwpark-git/agentic-workbench-knowledge">Agentic Workbench project letter</a>. His research codes were tested for particular questions, and he reused his own Python analysis and visualization routines over many years. When a new question comes up, the useful parts can outlast the context in which they were written. The templates show how to recover that context, retain an original comparison and adapt the parts that the new project needs. The receiving researcher chooses the scientific model, applicability domain and criteria for using the result.</p>
 <p>Within wb, <strong>wb-plugins</strong> supplies reusable procedures for people and agents. <strong>wb-templates</strong> supplies examples and reusable source. <strong>wb-applications</strong> can assemble selected parts into an environment for a particular task. The templates can also be copied and used independently with their declared dependencies.</p>
 </section>
-<section id="scientific-composability" class="level2">
-<h2 class="anchored" data-anchor-id="scientific-composability">Scientific Composability for Multiscale Simulation</h2>
+<section id="scientific-composability-for-multiscale-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="scientific-composability-for-multiscale-simulation">Scientific Composability for Multiscale Simulation</h2>
 <p>A particle simulation and a continuum calculation can share a physical quantity if both sides agree on its definition, units, applicable conditions and numerical handling. For example, a continuum filtration solver can query a table of concentration-dependent transport properties derived from a particle-scale calculation. The solver needs to know what each ratio means, which concentrations have physical support and how the table handles queries between or beyond its recorded points. A composition check observes the two components exchanging and using the quantities under stated conditions.</p>
 <p>The collection documents three levels of modernization. Choose the level that matches the change you need and the evidence you can collect.</p>
 <table class="caption-top table">
@@ -2297,7 +2297,7 @@ Documentation edition: 2026-11-26</p>
 </tr>
 </tbody>
 </table>
-<p>The <a href="../../wb-bd-mc/docs/MODERNIZATION_LEVELS.html">BD–MC modernization guide</a> and <a href="../../wb-mbla/docs/MODERNIZATION.html">mBLA modernization overview</a> describe the evidence available at each level for their respective cases.</p>
+<p>The <a href="../../wb-bd-mc/docs/MODERNIZATION_LEVELS.org">BD–MC modernization guide</a> and <a href="../../wb-mbla/docs/MODERNIZATION.md">mBLA modernization overview</a> describe the evidence available at each level for their respective cases.</p>
 <section id="a-current-level-3-example" class="level3">
 <h3 class="anchored" data-anchor-id="a-current-level-3-example">A current Level 3 example</h3>
 <p>An internal wb-applications project couples the native BD–MC particle model to the mBLA continuum solver. The live path calls BD–MC to evaluate transport properties for the filtration calculation. The tested live evaluations are computationally expensive, so the practical route uses interpolation of an offline table of calculated properties over its stated range. The application is internal. Development is extending live evaluation to conditions where the solver needs a fresh property calculation. The same interface could support a future ML surrogate after its training data, validity range and predictions are independently validated.</p>
@@ -2316,38 +2316,38 @@ Documentation edition: 2026-11-26</p>
 <tbody>
 <tr class="odd">
 <td>Make related figures in color and monochrome</td>
-<td><a href="../../plot-styles/README.html">Plot styles</a></td>
+<td><a href="../../plot-styles/README.md">Plot styles</a></td>
 <td>A Matplotlib style with shared geometry, line weights and typography, plus synthetic layout and legend examples.</td>
 </tr>
 <tr class="even">
 <td>Reuse the appearance of Park’s publication plotting scripts</td>
-<td><a href="../../wb-style/README.html">wb-style</a></td>
+<td><a href="../../wb-style/README.md">wb-style</a></td>
 <td>A standalone <code>wb_style</code> preset for ticks, spines, typography, markers and dash patterns, with a neutral CSV example.</td>
 </tr>
 <tr class="odd">
 <td>Read a measurement table with explicit column choices</td>
-<td><a href="../../scientific-io/README.html">Scientific CSV I/O</a></td>
+<td><a href="../../scientific-io/README.md">Scientific CSV I/O</a></td>
 <td>Header inspection and numeric validation for selected CSV columns. The caller supplies units and physical interpretation.</td>
 </tr>
 <tr class="even">
 <td>Share a detailed worked analysis and a short presentation</td>
-<td><a href="../examples/quarto-comparison/README.html">Quarto comparison template</a></td>
+<td><a href="../examples/quarto-comparison/README.md">Quarto comparison template</a></td>
 <td>An independently copyable example with a continuous report, linked Reveal.js slides, a synthetic comparison, a source diff and local build instructions.</td>
 </tr>
 <tr class="odd">
 <td>Recover or adapt a Brownian dynamics or Monte Carlo research code</td>
-<td><a href="../../wb-bd-mc/README.html">BD–MC</a></td>
+<td><a href="../../wb-bd-mc/README.md">BD–MC</a></td>
 <td>A portable legacy baseline, C++ and Python components, and a standalone equilibrium pressure and structure example.</td>
 </tr>
 <tr class="even">
 <td>Reproduce or extend a cross-flow filtration calculation</td>
-<td><a href="../../wb-mbla/README.html">mBLA</a></td>
+<td><a href="../../wb-mbla/README.md">mBLA</a></td>
 <td>Level 1 and Level 2 solver packages, the Level 3 transport interface, a Python/Numba cake search, and an offline viewer for the original regression.</td>
 </tr>
 </tbody>
 </table>
-<p>The <a href="../../templates.json">catalog</a> lists the available entries. To copy a scientific template, follow the <a href="../../PACKAGING.html">copying contract</a>. Copy the whole mBLA package for Level 3 so its provider example can build against the Level 2 solver. The documentation index has separate editable presets for <a href="../README.html#documentation-families">a research report and slides or a Python package guide</a>.</p>
-<p>The <a href="../../wb-python/README.html">wb-python package documentation</a> covers the interface preset for future wb-applications integrations that script Session Profile and Agent Profile operations. The public catalog entry contains the manual and references. Running the worked request-readback example requires a separately supplied wb-python runtime and a configured Sandbox. The optional <code>wb-jupyter</code> application belongs to <code>wb-applications</code>; <code>wb-client</code> is the separate Host-side client.</p>
+<p>The <a href="../../templates.json">catalog</a> lists the available entries. To copy a scientific template, follow the <a href="../../PACKAGING.org">copying contract</a>. Copy the whole mBLA package for Level 3 so its provider example can build against the Level 2 solver. The documentation index has separate editable presets for <a href="../README.md#documentation-families">a research report and slides or a Python package guide</a>.</p>
+<p>The <a href="../../wb-python/README.md">wb-python package documentation</a> covers the interface preset for future wb-applications integrations that script Session Profile and Agent Profile operations. The public catalog entry contains the manual and references. Running the worked request-readback example requires a separately supplied wb-python runtime and a configured Sandbox. The optional <code>wb-jupyter</code> application belongs to <code>wb-applications</code>; <code>wb-client</code> is the separate Host-side client.</p>
 </section>
 <section id="worked-use-cases" class="level2">
 <h2 class="anchored" data-anchor-id="worked-use-cases">Worked use cases</h2>
@@ -2355,24 +2355,24 @@ Documentation edition: 2026-11-26</p>
 <h3 class="anchored" data-anchor-id="inspect-the-embedded-cylinder-regression">Inspect the embedded cylinder regression</h3>
 <p>Open the <a href="../../wb-mbla/modern-lv2/tools/profile-explorer.html">mBLA profile explorer</a> in a browser. It starts offline with the embedded cylinder regression at CASE2 (<code>b = 1</code>, nominal transmembrane pressure (TMP) 1.15 kPa). In <strong>Axial profile</strong>, choose a quantity such as wall concentration and move the <strong>Stored axial station</strong> slider through the 200 stored stations. Beside it, <strong>Outlet radial profile</strong> has its own <strong>Stored radial sample</strong> slider for the 400 samples at <code>z/L = 1</code>. The radial readout gives wall distance <code>y/R</code>, radius from the axis <code>r/R</code>, and <code>y/δ_CP</code> for the case’s fixed concentration-polarization length. The tables give the archive and replay values and signed differences.</p>
 <p>Open <strong>Site hollow-fibre reference</strong> to investigate the saved Python suspension at nominal TMP 5 kPa. Choose a point on the shaded cutaway to see concentration and the selected velocity component along both directions. This site preview uses its own fixed CP length and a separate dataset from the JCP archive comparison and the internal coupling benchmark.</p>
-<p>To inspect a compatible file, select <strong>Open profile data</strong>. The <a href="../../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.html">data guide</a> explains the formats. The explorer displays saved results locally in the browser.</p>
+<p>To inspect a compatible file, select <strong>Open profile data</strong>. The <a href="../../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md">data guide</a> explains the formats. The explorer displays saved results locally in the browser.</p>
 </section>
 <section id="update-a-solver-or-exchange-a-quantity" class="level3">
 <h3 class="anchored" data-anchor-id="update-a-solver-or-exchange-a-quantity">Update a solver or exchange a quantity</h3>
-<p>Start from one traceable calculation you trust. Save the original inputs, recorded outputs and tolerances. In <a href="../../wb-bd-mc/docs/VALIDATION.html">BD–MC</a>, the portable legacy executable is checked with frozen regressions, and the modern components have checks for selected topology, transition and clock operations. The separate <a href="../../wb-bd-mc/docs/EQUILIBRIUM_EOS.html">equilibrium EOS example</a> exports observations from a native hard-sphere sampler. A Python process reads them and estimates pressure. The run covers equilibrium pressure and near-contact structure under the stated model conditions. For your own exchange, define the physical quantity and check the supplier and receiving calculation together.</p>
-<p>For a small comparison with retained results, open the <a href="../../examples/bdmc-eos/README.html">BD–MC equilibrium EOS example</a>. It compares soft-repulsive Brownian dynamics and hard-sphere Monte Carlo with the Carnahan–Starling equation. The example includes the measured CSV, both figure formats and the scope of the finite-size checks.</p>
+<p>Start from one traceable calculation you trust. Save the original inputs, recorded outputs and tolerances. In <a href="../../wb-bd-mc/docs/VALIDATION.md">BD–MC</a>, the portable legacy executable is checked with frozen regressions, and the modern components have checks for selected topology, transition and clock operations. The separate <a href="../../wb-bd-mc/docs/EQUILIBRIUM_EOS.org">equilibrium EOS example</a> exports observations from a native hard-sphere sampler. A Python process reads them and estimates pressure. The run covers equilibrium pressure and near-contact structure under the stated model conditions. For your own exchange, define the physical quantity and check the supplier and receiving calculation together.</p>
+<p>For a small comparison with retained results, open the <a href="../../examples/bdmc-eos/README.md">BD–MC equilibrium EOS example</a>. It compares soft-repulsive Brownian dynamics and hard-sphere Monte Carlo with the Carnahan–Starling equation. The example includes the measured CSV, both figure formats and the scope of the finite-size checks.</p>
 </section>
 <section id="read-measurements-make-figures-and-share-the-comparison" class="level3">
 <h3 class="anchored" data-anchor-id="read-measurements-make-figures-and-share-the-comparison">Read measurements, make figures and share the comparison</h3>
-<p>Inspect a CSV header and select the numeric columns explicitly with <a href="../../scientific-io/README.html">Scientific CSV I/O</a>. Choose units, transformations and axis limits according to the measurements. Apply <a href="../../plot-styles/README.html">plot styles</a> to use consistent axes and switch between color and monochrome. Use <a href="../../wb-style/README.html">wb-style</a> when you want the separate preset derived from Park’s original plotting scripts. The <a href="../../README.html#try-plotting">collection plotting example</a> generates its own synthetic CSV and writes PNG, PDF and rendering metadata.</p>
-<p>To communicate the result, copy the <a href="../examples/quarto-comparison/README.html">Quarto comparison example</a>. Use its report to explain quantities, cases and acceptance criteria in full, and its slides to show the selected figure and link back to the report. Replace the synthetic data and source comparison with the inputs from your own study.</p>
+<p>Inspect a CSV header and select the numeric columns explicitly with <a href="../../scientific-io/README.md">Scientific CSV I/O</a>. Choose units, transformations and axis limits according to the measurements. Apply <a href="../../plot-styles/README.md">plot styles</a> to use consistent axes and switch between color and monochrome. Use <a href="../../wb-style/README.md">wb-style</a> when you want the separate preset derived from Park’s original plotting scripts. The <a href="../../README.md#try-plotting">collection plotting example</a> generates its own synthetic CSV and writes PNG, PDF and rendering metadata.</p>
+<p>To communicate the result, copy the <a href="../examples/quarto-comparison/README.md">Quarto comparison example</a>. Use its report to explain quantities, cases and acceptance criteria in full, and its slides to show the selected figure and link back to the report. Replace the synthetic data and source comparison with the inputs from your own study.</p>
 </section>
 </section>
 <section id="reproduce-and-adapt" class="level2">
 <h2 class="anchored" data-anchor-id="reproduce-and-adapt">Reproduce and adapt</h2>
 <ol type="1">
 <li><strong>Choose the scope.</strong> Decide what you want to reproduce or extend. Read the selected template’s requirements, test procedure and evidence limits.</li>
-<li><strong>Make an independent copy.</strong> Keep the source, small fixtures, tests, license, notices and provenance together. The <a href="../../PACKAGING.html">copying contract</a> and <a href="../../README.html#copy-verify-and-adapt">collection commands</a> describe the local exporter and manifest check.</li>
+<li><strong>Make an independent copy.</strong> Keep the source, small fixtures, tests, license, notices and provenance together. The <a href="../../PACKAGING.org">copying contract</a> and <a href="../../README.md#copy-verify-and-adapt">collection commands</a> describe the local exporter and manifest check.</li>
 <li><strong>Run the supplied example in the stated environment.</strong> Use a fresh output directory. Record the source edition, inputs, command and result so that you can rerun the same case later.</li>
 <li><strong>Change one part at a time.</strong> Keep your original comparison. For a solver, record changes to assumptions, boundary conditions, units, numerical methods or estimators. For a figure or document, keep the input data distinct from style and layout settings.</li>
 <li><strong>Check what you will rely on.</strong> Compare the adapted result with a relevant reference or invariant under your own conditions. For an exchanged quantity, check that the receiving component interprets the values and applicable range as intended.</li>
@@ -2381,12 +2381,12 @@ Documentation edition: 2026-11-26</p>
 <section id="evidence-and-limits" class="level2">
 <h2 class="anchored" data-anchor-id="evidence-and-limits">Evidence and limits</h2>
 <ul>
-<li><strong>BD–MC.</strong> The <a href="../../wb-bd-mc/docs/MODERNIZATION_LEVELS.html">modernization record</a> reports nine frozen current-port regressions, including driven shear cases with changes in network topology. The detached Level 3 check covers a native sampler and independent pressure analysis. Full modern active-shear correspondence, scientific validation of RPY and Stokesian dynamics, and broader post-processing validation remain open. The equilibrium MC sweep counts attempted moves.</li>
-<li><strong>mBLA.</strong> The <a href="../../wb-mbla/docs/MODERNIZATION.html">modernization overview</a> records eight selected cases on the 200 × 400 grid. Level 2 matched Level 1 files byte-for-byte and the archived mean pressures and permeate velocities at stored precision. A separate non-cake 5 kPa, 10 nm case checked live and pretabulated transport providers. The evidence applies to the specified cases, quantities and models. Broader operating conditions and mesh convergence need their own checks.</li>
-<li><strong>wb-python.</strong> The <a href="../../wb-python/docs/VALIDATION.html">validation reference</a> gives the tested runtime editions and the scope of the request and Profile checks.</li>
+<li><strong>BD–MC.</strong> The <a href="../../wb-bd-mc/docs/MODERNIZATION_LEVELS.org">modernization record</a> reports nine frozen current-port regressions, including driven shear cases with changes in network topology. The detached Level 3 check covers a native sampler and independent pressure analysis. Full modern active-shear correspondence, scientific validation of RPY and Stokesian dynamics, and broader post-processing validation remain open. The equilibrium MC sweep counts attempted moves.</li>
+<li><strong>mBLA.</strong> The <a href="../../wb-mbla/docs/MODERNIZATION.md">modernization overview</a> records eight selected cases on the 200 × 400 grid. Level 2 matched Level 1 files byte-for-byte and the archived mean pressures and permeate velocities at stored precision. A separate non-cake 5 kPa, 10 nm case checked live and pretabulated transport providers. The evidence applies to the specified cases, quantities and models. Broader operating conditions and mesh convergence need their own checks.</li>
+<li><strong>wb-python.</strong> The <a href="../../wb-python/docs/VALIDATION.org">validation reference</a> gives the tested runtime editions and the scope of the request and Profile checks.</li>
 <li><strong>Plotting, I/O and publishing.</strong> The supplied examples use synthetic data to exercise plotting, numeric selection and publishing. Their evidence covers those operations. Original research figures and physical results have separate sources and acceptance criteria.</li>
 </ul>
-<p>Use the <a href="../../LICENSE_SCOPE.html">collection license scope</a> and the selected template’s notices when copying code, data or rendered assets.</p>
+<p>Use the <a href="../../LICENSE_SCOPE.md">collection license scope</a> and the selected template’s notices when copying code, data or rendered assets.</p>
 </section>
 <section id="functional-reference" class="level2">
 <h2 class="anchored" data-anchor-id="functional-reference">Functional reference</h2>
@@ -2402,73 +2402,73 @@ Documentation edition: 2026-11-26</p>
 <tbody>
 <tr class="odd">
 <td>Collection inventory and copying</td>
-<td><a href="../../templates.json">Catalog</a>, <a href="../../PACKAGING.html">copying contract</a></td>
-<td><a href="../../tools/export_template.py">Exporter</a>, <a href="../../tools/verify_manifest.py">manifest verifier</a>, <a href="../../provenance/VALIDATION.html">verification and reproduction</a></td>
+<td><a href="../../templates.json">Catalog</a>, <a href="../../PACKAGING.org">copying contract</a></td>
+<td><a href="../../tools/export_template.py">Exporter</a>, <a href="../../tools/verify_manifest.py">manifest verifier</a>, <a href="../../provenance/VALIDATION.org">verification and reproduction</a></td>
 </tr>
 <tr class="even">
 <td>Plot styles</td>
-<td><a href="../../plot-styles/README.html">Installation, presets and examples</a></td>
-<td><a href="../../plot-styles/docs/DEVELOPER.html">Style operations, preset schema, dependencies and tests</a></td>
+<td><a href="../../plot-styles/README.md">Installation, presets and examples</a></td>
+<td><a href="../../plot-styles/docs/DEVELOPER.org">Style operations, preset schema, dependencies and tests</a></td>
 </tr>
 <tr class="odd">
 <td>wb-style</td>
-<td><a href="../../wb-style/README.html">Using the extracted plotting style</a></td>
-<td><a href="../../wb-style/docs/STYLE_AND_VALIDATION.html">Style keys, font settings and verification</a>, <a href="../../wb-style/REFERENCES.html">source and palette references</a></td>
+<td><a href="../../wb-style/README.md">Using the extracted plotting style</a></td>
+<td><a href="../../wb-style/docs/STYLE_AND_VALIDATION.org">Style keys, font settings and verification</a>, <a href="../../wb-style/REFERENCES.md">source and palette references</a></td>
 </tr>
 <tr class="even">
 <td>Scientific CSV I/O</td>
-<td><a href="../../scientific-io/README.html">Inspecting headers and reading selected columns</a></td>
-<td><a href="../../scientific-io/docs/CSV.html">CSV functions, errors, numeric data contract and tests</a>, <a href="../../examples/plot_csv.py">plotting integration example</a></td>
+<td><a href="../../scientific-io/README.md">Inspecting headers and reading selected columns</a></td>
+<td><a href="../../scientific-io/docs/CSV.org">CSV functions, errors, numeric data contract and tests</a>, <a href="../../examples/plot_csv.py">plotting integration example</a></td>
 </tr>
 <tr class="odd">
 <td>BD–MC build and runtime</td>
-<td><a href="../../wb-bd-mc/docs/BUILD_AND_USAGE.html">Build, inputs and CLI</a>, <a href="../../wb-bd-mc/modern/README.html">C++ and Python components</a></td>
-<td><a href="../../wb-bd-mc/docs/CODE_GUIDE.html">Code and binding guide</a>, <a href="../../wb-bd-mc/docs/MODERNIZATION_LEVELS.html">modernization levels</a>, <a href="../../wb-bd-mc/docs/VALIDATION.html">tests and recorded evidence</a></td>
+<td><a href="../../wb-bd-mc/docs/BUILD_AND_USAGE.md">Build, inputs and CLI</a>, <a href="../../wb-bd-mc/modern/README.md">C++ and Python components</a></td>
+<td><a href="../../wb-bd-mc/docs/CODE_GUIDE.org">Code and binding guide</a>, <a href="../../wb-bd-mc/docs/MODERNIZATION_LEVELS.org">modernization levels</a>, <a href="../../wb-bd-mc/docs/VALIDATION.md">tests and recorded evidence</a></td>
 </tr>
 <tr class="even">
 <td>BD–MC scientific analysis</td>
-<td><a href="../../wb-bd-mc/docs/EQUILIBRIUM_EOS.html">Equilibrium pressure and structure</a>, <a href="../../wb-bd-mc/docs/DIFFUSION.html">self and collective diffusion</a></td>
-<td><a href="../../wb-bd-mc/docs/HI_EQUILIBRIUM.html">HI equilibrium</a>, <a href="../../wb-bd-mc/docs/HI_SD.html">RPY and SD status</a>, <a href="../../wb-bd-mc/docs/POSTPROCESSING.html">post-processing</a>, <a href="../../wb-bd-mc/docs/METAL_BENCHMARK.html">Metal benchmark</a></td>
+<td><a href="../../wb-bd-mc/docs/EQUILIBRIUM_EOS.org">Equilibrium pressure and structure</a>, <a href="../../wb-bd-mc/docs/DIFFUSION.org">self and collective diffusion</a></td>
+<td><a href="../../wb-bd-mc/docs/HI_EQUILIBRIUM.org">HI equilibrium</a>, <a href="../../wb-bd-mc/docs/HI_SD.md">RPY and SD status</a>, <a href="../../wb-bd-mc/docs/POSTPROCESSING.md">post-processing</a>, <a href="../../wb-bd-mc/docs/METAL_BENCHMARK.org">Metal benchmark</a></td>
 </tr>
 <tr class="odd">
 <td>BD–MC EOS worked example</td>
-<td><a href="../../examples/bdmc-eos/README.html">Soft-repulsive BD and hard-sphere MC</a></td>
+<td><a href="../../examples/bdmc-eos/README.md">Soft-repulsive BD and hard-sphere MC</a></td>
 <td><a href="../../examples/bdmc-eos/equation_of_state.csv">Retained comparison CSV</a>, <a href="../../examples/bdmc-eos/equation_of_state.pdf">PDF</a>, <a href="../../examples/bdmc-eos/equation_of_state.png">PNG</a></td>
 </tr>
 <tr class="even">
 <td>wb-python interface preset</td>
-<td><a href="../../wb-python/docs/READER_GUIDE.html">Reader Guide</a> for setup, Session Profiles, request readback and Agent Profiles</td>
-<td><a href="../../wb-python/docs/API.html">API</a>, <a href="../../wb-python/docs/REMOTE.html">remote interface</a>, <a href="../../wb-python/docs/SECURITY.html">security</a> and <a href="../../wb-python/docs/VALIDATION.html">validation</a>. <a href="../wb-python-preset.html#jupyter-integration-in-wb-applications">Separate Jupyter integration</a></td>
+<td><a href="../../wb-python/docs/READER_GUIDE.org">Reader Guide</a> for setup, Session Profiles, request readback and Agent Profiles</td>
+<td><a href="../../wb-python/docs/API.org">API</a>, <a href="../../wb-python/docs/REMOTE.org">remote interface</a>, <a href="../../wb-python/docs/SECURITY.org">security</a> and <a href="../../wb-python/docs/VALIDATION.org">validation</a>. <a href="../wb-python-preset.md#jupyter-integration-in-wb-applications">Separate Jupyter integration</a></td>
 </tr>
 <tr class="odd">
 <td>mBLA solvers and physical models</td>
-<td><a href="../../wb-mbla/README.html">Package entry</a>, <a href="../../wb-mbla/modern-lv1/README.html">Level 1 build and CLI</a>, <a href="../../wb-mbla/modern-lv2/README.html">Level 2 build and CLI</a>, <a href="../../wb-mbla/modern-lv3/README.html">Level 3 provider and compatibility test</a></td>
-<td><a href="../../wb-mbla/modern-lv2/docs/SCIENTIFIC_GUIDE.html">Scientific model and parameters</a>, <a href="../../wb-mbla/modern-lv2/docs/FIXED_POINT_METHOD.html">fixed-point and cake method</a>, <a href="../../wb-mbla/docs/LEVEL_3_DESIGN.html">Level 3 design and interface</a></td>
+<td><a href="../../wb-mbla/README.md">Package entry</a>, <a href="../../wb-mbla/modern-lv1/README.md">Level 1 build and CLI</a>, <a href="../../wb-mbla/modern-lv2/README.md">Level 2 build and CLI</a>, <a href="../../wb-mbla/modern-lv3/README.md">Level 3 provider and compatibility test</a></td>
+<td><a href="../../wb-mbla/modern-lv2/docs/SCIENTIFIC_GUIDE.org">Scientific model and parameters</a>, <a href="../../wb-mbla/modern-lv2/docs/FIXED_POINT_METHOD.org">fixed-point and cake method</a>, <a href="../../wb-mbla/docs/LEVEL_3_DESIGN.org">Level 3 design and interface</a></td>
 </tr>
 <tr class="even">
 <td>mBLA cake search and checks</td>
-<td><a href="../../wb-mbla/modern-lv2/docs/PYTHON_CAKE.html">Python and Numba search</a></td>
-<td><a href="../../wb-mbla/modern-lv1/docs/VALIDATION.html">Level 1 verification</a>, <a href="../../wb-mbla/modern-lv2/docs/VALIDATION.html">Level 2 verification</a>, <a href="../../wb-mbla/THIRD_PARTY_NOTICES.html">package rights and dependencies</a></td>
+<td><a href="../../wb-mbla/modern-lv2/docs/PYTHON_CAKE.org">Python and Numba search</a></td>
+<td><a href="../../wb-mbla/modern-lv1/docs/VALIDATION.org">Level 1 verification</a>, <a href="../../wb-mbla/modern-lv2/docs/VALIDATION.org">Level 2 verification</a>, <a href="../../wb-mbla/THIRD_PARTY_NOTICES.org">package rights and dependencies</a></td>
 </tr>
 <tr class="odd">
 <td>mBLA regression and profile viewer</td>
-<td><a href="../../wb-mbla/modern-lv2/tools/profile-explorer.html">Open the recorded comparison</a>, <a href="../../wb-mbla/docs/MODERNIZATION.html">modernization and evidence scope</a></td>
-<td><a href="../../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.html">Coordinate selection, saved profile format, case coverage and verification</a></td>
+<td><a href="../../wb-mbla/modern-lv2/tools/profile-explorer.html">Open the recorded comparison</a>, <a href="../../wb-mbla/docs/MODERNIZATION.md">modernization and evidence scope</a></td>
+<td><a href="../../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md">Coordinate selection, saved profile format, case coverage and verification</a></td>
 </tr>
 <tr class="even">
 <td>Quarto comparison example</td>
-<td><a href="../examples/quarto-comparison/README.html">Copy and render the example</a>, <a href="../examples/quarto-comparison/_quarto.yml">project settings</a></td>
-<td><a href="../examples/quarto-comparison/_code.html">Models and source comparison</a>, <a href="../examples/quarto-comparison/tools/make_example.py">data and figure generator</a>, <a href="../examples/quarto-comparison/render.sh">render command</a>, <a href="../examples/quarto-comparison/tools/portable_pdf.py">portable PDF links</a></td>
+<td><a href="../examples/quarto-comparison/README.md">Copy and render the example</a>, <a href="../examples/quarto-comparison/_quarto.yml">project settings</a></td>
+<td><a href="../examples/quarto-comparison/_code.md">Models and source comparison</a>, <a href="../examples/quarto-comparison/tools/make_example.py">data and figure generator</a>, <a href="../examples/quarto-comparison/render.sh">render command</a>, <a href="../examples/quarto-comparison/tools/portable_pdf.py">portable PDF links</a></td>
 </tr>
 </tbody>
 </table>
-<p>See the <a href="../../LICENSE_SCOPE.html">collection license scope</a> and <a href="../../provenance/DOCUMENTATION_PROVENANCE.json">documentation provenance</a>.</p>
+<p>See the <a href="../../LICENSE_SCOPE.md">collection license scope</a> and <a href="../../provenance/DOCUMENTATION_PROVENANCE.json">documentation provenance</a>.</p>
 </section>
 <section id="edit-source" class="level2">
 <h2 class="anchored" data-anchor-id="edit-source">Edit this guide</h2>
 <p>Edit <a href="_guide.md" data-source-link="true">the main guide</a> for project and usage documentation or <a href="_reference.md" data-source-link="true">the functional reference</a> for implementation routes. Run the following from <code>documentation/collection-guide</code>.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render <span class="at">--no-execute</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The command creates <code>site/report.html</code>. In an editable collection copy, place that generated file beside <code>report.qmd</code> before opening it so its relative links resolve. The public HTML build does this automatically. The <a href="../README.html">documentation index</a> links the editable examples.</p>
+<p>The command creates <code>site/report.html</code>. In an editable collection copy, place that generated file beside <code>report.qmd</code> before opening it so its relative links resolve. The public HTML build does this automatically. The <a href="../README.md">documentation index</a> links the editable examples.</p>
 </section>
 <section id="author-and-project-information" class="level2">
 <h2 class="anchored" data-anchor-id="author-and-project-information">Author and project information</h2>

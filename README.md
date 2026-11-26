@@ -11,7 +11,7 @@ assumptions, examples, tests and provenance, then adapt it to your problem.
 [License scope](LICENSE_SCOPE.md)
 
 [Documentation](documentation/README.md) /
-[Detailed HTML guide](documentation/collection-guide/report.html) /
+[Collection guide](documentation/collection-guide/_guide.md) /
 [Report and Python guide previews](documentation/README.md#documentation-families)
 
 Use the [Quarto comparison example](documentation/examples/quarto-comparison/README.md)
@@ -86,7 +86,7 @@ template's own evidence when deciding whether a particular result is ready for u
 - **Present a comparison.** Use the [CSV plotting example](#try-plotting) to generate
   PNG and PDF outputs, then reuse the Quarto example to share methods and evidence.
 
-The [functional reference](documentation/collection-guide/report.html#functional-reference)
+The [functional reference](documentation/collection-guide/_reference.md)
 links implementation, configuration, inputs and checks for each area.
 
 The [wb-python interface preset](wb-python/README.md) supports
@@ -132,6 +132,28 @@ starting at CASE2 (`b = 1`, nominal TMP 1.15 kPa). Both profiles stay visible.
 Select from 200 axial stations or 400 samples at the outlet; the radial probe
 shows `y/R`, `r/R` and `y/δ_CP`. To build the Level 3 provider example, keep
 it with the Level 2 solver in the same mBLA package.
+
+## Build the HTML site
+
+Read the [documentation index](documentation/README.md) on GitHub for the
+Markdown and Org guides. To build the complete browser version, install
+Python 3.10 or later and Quarto 1.8.26, then run these commands from the
+repository root in a POSIX shell:
+
+```sh
+site="$(mktemp -d)/wb-templates-site"
+python3 -B tools/build_html.py --quarto "$(command -v quarto)" --output "$site"
+python3 -m http.server --bind 127.0.0.1 --directory "$site" 8765
+```
+
+Open <http://127.0.0.1:8765/> while the server is running. The builder renders
+Markdown and Org pages, the collection handbook and the Python guide preview
+into a separate directory with the bundled tools, slides and data. It
+follows the distribution manifest's file list and reads the current contents
+of those files, so you can rebuild after editing a guide. The command runs
+no scientific model or documentation code block.
+
+For the standalone Quarto report and Reveal.js deck, see their [render instructions](documentation/examples/quarto-comparison/README.md#render-the-example).
 
 ## Try plotting
 

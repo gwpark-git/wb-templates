@@ -1,4 +1,4 @@
-## Functional reference {#functional-reference}
+## Functional reference
 
 Use these links to check the implementation behind a task. For each package,
 start with its entry point, then follow its source, configuration, data and

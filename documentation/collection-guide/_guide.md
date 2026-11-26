@@ -1,4 +1,4 @@
-## What wb-templates is {#what-wb-templates-is}
+## What wb-templates is
 
 wb-templates is the reusable scientific-computing layer of Agentic Workbench
 (wb). It brings together code, data readers,
@@ -20,7 +20,7 @@ Within wb, **wb-plugins** supplies reusable procedures for people and agents.
 assemble selected parts into an environment for a particular task. The templates
 can also be copied and used independently with their declared dependencies.
 
-## Scientific Composability for Multiscale Simulation {#scientific-composability}
+## Scientific Composability for Multiscale Simulation
 
 A particle simulation and a continuum calculation can share a physical quantity
 if both sides agree on its definition, units, applicable conditions and numerical
@@ -56,7 +56,7 @@ the solver needs a fresh property calculation. The same interface could
 support a future ML surrogate after its training data, validity range and
 predictions are independently validated.
 
-## Choose a template {#choose-a-template}
+## Choose a template
 
 | If you want to… | Start here | What you can reuse |
 |-----------------|------------|--------------------|
@@ -81,7 +81,7 @@ wb-python runtime and a configured Sandbox. The optional `wb-jupyter`
 application belongs to `wb-applications`; `wb-client` is the separate
 Host-side client.
 
-## Worked use cases {#worked-use-cases}
+## Worked use cases
 
 ### Inspect the embedded cylinder regression
 
@@ -138,7 +138,7 @@ Use its report to explain quantities, cases and acceptance criteria in full, and
 its slides to show the selected figure and link back to the report. Replace the
 synthetic data and source comparison with the inputs from your own study.
 
-## Reproduce and adapt {#reproduce-and-adapt}
+## Reproduce and adapt
 
 1. **Choose the scope.** Decide what you want to reproduce or extend. Read the
    selected template's requirements, test procedure and evidence limits.
@@ -158,7 +158,7 @@ synthetic data and source comparison with the inputs from your own study.
    check that the receiving component interprets the values and applicable range
    as intended.
 
-## Evidence and limits {#evidence-and-limits}
+## Evidence and limits
 
 - **BD–MC.** The [modernization record](../../wb-bd-mc/docs/MODERNIZATION_LEVELS.org)
   reports nine frozen current-port regressions, including driven shear cases with
