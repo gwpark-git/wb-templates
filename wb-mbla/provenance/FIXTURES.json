@@ -1,0 +1,37 @@
+[
+  {
+    "fixture": "tests/fixtures/noncake.dat",
+    "sha256": "adf2a27341576b646891081456a49c0e4ea5209a5fa471cb0a8e4bc8f4da3a1a",
+    "input": "examples/noncake.inp",
+    "input_sha256": "e0b14ac57d8de8aa6dc567d0b49dbad1239510262bbad78cb1f2e1e438e82706",
+    "generator": "unmodified copied 2026 JCP C++ source; GCC 14.2.0 -std=c++17 -O2; GSL 2.8; current verification case, not authenticated historical publication output"
+  },
+  {
+    "fixture": "tests/fixtures/cake.dat",
+    "sha256": "4fb23e1395729890df2c2604371d7f22e92fa99c1b057f254613474fddfc454f",
+    "input": "examples/cake.inp",
+    "input_sha256": "3928a6983909b0ef709996c76327f95b5c8fd1cae1379511bb727726ca64e38c",
+    "generator": "unmodified copied 2026 JCP C++ source; GCC 14.2.0 -std=c++17 -O2; GSL 2.8; current verification case, not authenticated historical publication output"
+  },
+  {
+    "fixture": "tests/fixtures/noncake-strict.dat",
+    "sha256": "adf2a27341576b646891081456a49c0e4ea5209a5fa471cb0a8e4bc8f4da3a1a",
+    "input": "examples/noncake.inp",
+    "input_sha256": "e0b14ac57d8de8aa6dc567d0b49dbad1239510262bbad78cb1f2e1e438e82706",
+    "generator": "unmodified copied 2026 JCP C++ source; GCC 14.2.0 -std=c++17 -O2 -ffp-contract=off; GSL 2.8; new common FP policy, not historical/default output"
+  },
+  {
+    "fixture": "tests/fixtures/cake-strict.dat",
+    "sha256": "39d5badc708083de5b6c472ddaf2cc21c8878429ab99e360be8ab99350c8cce2",
+    "input": "examples/cake.inp",
+    "input_sha256": "3928a6983909b0ef709996c76327f95b5c8fd1cae1379511bb727726ca64e38c",
+    "generator": "unmodified copied 2026 JCP C++ source; GCC 14.2.0 -std=c++17 -O2 -ffp-contract=off; GSL 2.8; new common FP policy, not historical/default output"
+  },
+  {
+    "fixture": "tests/fixtures/cake-mild-strict.dat",
+    "sha256": "13bc4527fb70c4a0c2f373c6a4208e86d221e760ed2bcec470305bc9107cab98",
+    "input": "examples/cake-mild.inp",
+    "input_sha256": "9e65d690db0a07494c8690be4f7c26a3a6e63c19daada90be8c4577c14247ebb",
+    "generator": "unmodified 2026 JCP C++ source with common -ffp-contract=off, GCC14.2.0 -O2, GSL2.8; new mild cake case, not historical evidence"
+  }
+]

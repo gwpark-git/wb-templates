@@ -1,0 +1,18 @@
+# Build the selected CSV-only Python distribution with Setuptools.
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+# Public CSV package identity, minimal dependencies and portable license files.
+[project]
+name = "wb-scientific-io"
+version = "0.1.1"
+description = "Generic CSV-only public subset; no inherited research-format readers"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+license = "MIT"
+license-files = ["LICENSE", "LICENSE_CSV", "NOTICE.md"]
+
+# Include only the selected package modules from the assembly overlay.
+[tool.setuptools]
+packages = ["wb_scientific_io"]

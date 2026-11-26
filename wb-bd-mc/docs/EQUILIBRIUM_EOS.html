@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Periodic hard-sphere Monte Carlo and osmotic pressure</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="EQUILIBRIUM_EOS.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#scientific-scope" id="toc-scientific-scope">Scientific
+scope</a></li>
+<li><a href="#mc-update" id="toc-mc-update">Physical and mathematical
+update</a></li>
+<li><a href="#brownian-time" id="toc-brownian-time">Soft Brownian model
+and physical time</a></li>
+<li><a href="#virtual-compression" id="toc-virtual-compression">Pressure
+observables and method references</a></li>
+<li><a href="#transport-observables"
+id="toc-transport-observables">Transport observables and their
+interpretation</a></li>
+<li><a href="#standalone-entrypoint-and-verification"
+id="toc-standalone-entrypoint-and-verification">Standalone entrypoint
+and verification</a></li>
+<li><a href="#level-3-acceptance" id="toc-level-3-acceptance">Level 3
+exchange contract and acceptance scope</a></li>
+<li><a href="#reference-and-provenance"
+id="toc-reference-and-provenance">Reference and provenance</a></li>
+</ul></nav>
+    <main>
+      <h1>Periodic hard-sphere Monte Carlo and osmotic pressure</h1>
+      <section id="scientific-scope" class="level1">
+      <h1>Scientific scope</h1>
+      <p>The standalone sampler produces equilibrium configurations of
+      monodisperse hard spheres in a periodic cubic box at fixed
+      particle count and volume. The temperature enters the pressure
+      normalization. The hard-core measure is uniform on nonoverlapping
+      configurations. The sampler attaches no physical time to its
+      updates. The soft reference experiment instead uses LAMMPS
+      explicit overdamped Brownian dynamics with a finite cosine
+      potential, Brownian time, and pair-force pressure. Both engines
+      report EOS observables at the same nominal diameter, number
+      density and temperature scale.</p>
+      </section>
+      <section id="mc-update" class="level1">
+      <h1>Physical and mathematical update</h1>
+      <p>Use the particle diameter
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+      as the length unit. In a cube of side
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>,
+      the relative periodic displacement is the componentwise minimum
+      image
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi><mo>,</mo><mi>α</mi></mrow></msub><mo>↦</mo><mi>Δ</mi><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi><mo>,</mo><mi>α</mi></mrow></msub><mo>−</mo><mi>L</mi><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">r</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">d</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi><mo>,</mo><mi>α</mi></mrow></msub><mi>/</mi><mi>L</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Delta r_{ij,\alpha} \mapsto \Delta r_{ij,\alpha} -
+      L\,\mathrm{round}(\Delta r_{ij,\alpha}/L)</annotation></semantics></math>.
+      The set
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math>
+      contains configurations for which every minimum-image distance is
+      at least one. The dimensionless potential is zero on
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>+</mi><mi>∞</mi></mrow><annotation encoding="application/x-tex">+\infty</annotation></semantics></math>
+      outside it.</p>
+      <p>One trial proceeds in this order.</p>
+      <ol>
+      <li>Select a particle label uniformly from
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>,</mo><mi>…</mi><mo>,</mo><mi>N</mi></mrow><annotation encoding="application/x-tex">1,\ldots,N</annotation></semantics></math>,
+      with replacement across trials. Draw each of three displacement
+      components independently and uniformly in
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><mi>d</mi><mo>,</mo><mi>d</mi><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">[-d,d]</annotation></semantics></math>.
+      The native code uses the retained PCG32 generator with unbiased
+      bounded label selection.</li>
+      <li>Propose
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>𝐫</mi><mi>i</mi></msub><mi>′</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>𝐫</mi><mi>i</mi></msub><mo>+</mo><mi>𝛅</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mspace width="0.222em"></mspace><mo>mod</mo><mspace width="0.222em"></mspace><mi>L</mi></mrow></mrow><annotation encoding="application/x-tex">\mathbf r_i&#39;=(\mathbf r_i+\boldsymbol{\delta})\bmod L</annotation></semantics></math>.
+      Inspect the 27 linked cells surrounding the
+      <strong>target</strong> cell. Cell width is at least 1.05
+      diameters, so these cells cover all possible overlaps and the
+      largest measured contact shell. The initialization also checks
+      every pair independently of the cell list.</li>
+      <li>Accept iff
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mi>′</mi><msup><mrow></mrow><mn>2</mn></msup><mo>≥</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">r_{ij}&#39;{}^2\geq 1</annotation></semantics></math>
+      for every other particle. On acceptance update the wrapped
+      coordinate, displacement bookkeeping and cell links. On rejection
+      retain the previous particle state. The random stream has consumed
+      the proposal in either outcome. The implementation rejects
+      strictly below one in floating-point geometry.</li>
+      </ol>
+      <p>The displacement law is symmetric on the torus, so the proposal
+      density satisfies
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐑</mi><mo>,</mo><mi>𝐑</mi><mi>′</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>𝐑</mi><mi>′</mi><mo>,</mo><mi>𝐑</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">q(\mathbf R,\mathbf R&#39;)=q(\mathbf R&#39;,\mathbf R)</annotation></semantics></math>.
+      For two allowed configurations the Metropolis ratio is one, since
+      both have the same Boltzmann weight. A proposed overlapping
+      configuration has zero weight and is rejected, contributing a
+      self-transition. This establishes detailed balance for the target
+      configurational measure in the mathematical rule. Mixing and
+      sampling error remain finite-run questions. One sweep counts
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+      such trials. The step
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+      controls acceptance and mixing. The optional unwrapped
+      displacement is bookkeeping for the Markov chain. Physical
+      Brownian diffusion, shear relaxation and viscosity require a
+      dynamics model and a physical clock.</p>
+      </section>
+      <section id="brownian-time" class="level1">
+      <h1>Soft Brownian model and physical time</h1>
+      <p>The original LAMMPS study used the cosine interaction to vary
+      repulsion at fixed nominal diameter and density with one
+      parameter. The current comparison retains that law for direct
+      replay. At fixed cutoff diameter
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>U</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>A</mi><mrow><mo stretchy="true" form="prefix">[</mo><mn>1</mn><mo>+</mo><mo>cos</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mi>r</mi><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">U(r)=A[1+\cos(\pi r/\sigma)]</annotation></semantics></math>
+      for
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>r</mi><mo>&lt;</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">0\le r&lt;\sigma</annotation></semantics></math>
+      and zero for
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>≥</mo><mi>σ</mi></mrow><annotation encoding="application/x-tex">r\ge\sigma</annotation></semantics></math>.
+      The outward radial force is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mi>A</mi><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>sin</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>π</mi><mi>r</mi><mi>/</mi><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">(\pi A/\sigma)\sin(\pi r/\sigma)</annotation></semantics></math>
+      inside the cutoff. Both potential and force reach zero
+      continuously there. The center barrier is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>A</mi></mrow><annotation encoding="application/x-tex">2A</annotation></semantics></math>.
+      Increasing
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>/</mi><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi></mrow><annotation encoding="application/x-tex">A/k_BT</annotation></semantics></math>
+      from 10 to 100 raises the energy cost of penetration while
+      preserving the shape and nominal
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>=</mo><mi>π</mi><mi>N</mi><msup><mi>σ</mi><mn>3</mn></msup><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>6</mn><mi>V</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\phi=\pi N\sigma^3/(6V)</annotation></semantics></math>.
+      These amplitudes are finite. Thermal penetration and the choice of
+      timestep affect the comparison to excluded-volume spheres. The
+      template's polynomial BD is a distinct interaction. <a
+      href="https://github.com/lammps/lammps/blob/611ca3b7f8525ba802373b04f9e3d632d515f7e3/doc/src/pair_soft.rst">LAMMPS
+      soft potential, checked edition</a></p>
+      <p>The separate physical dynamics is the overdamped Itô equation
+      with configuration-independent single-particle mobility
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mn>0</mn></msub><mo>=</mo><msubsup><mi>γ</mi><mi>t</mi><mrow><mi>−</mi><mn>1</mn></mrow></msubsup></mrow><annotation encoding="application/x-tex">\mu_0=\gamma_t^{-1}</annotation></semantics></math>
+      and bare diffusivity
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>0</mn></msub><mo>=</mo><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><msub><mi>μ</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">D_0=k_BT\mu_0</annotation></semantics></math>.
+      LAMMPS uses the explicit old-state update
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msub><mi>𝐫</mi><mi>i</mi></msub><mo>=</mo><msub><mi>μ</mi><mn>0</mn></msub><msub><mi>𝐅</mi><mi>i</mi></msub><mi>Δ</mi><mi>t</mi><mo>+</mo><msqrt><mrow><mn>2</mn><msub><mi>D</mi><mn>0</mn></msub><mi>Δ</mi><mi>t</mi></mrow></msqrt><mspace width="0.167em"></mspace><msub><mi>𝐆</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\Delta\mathbf r_i=\mu_0\mathbf F_i\Delta t+
+      \sqrt{2D_0\Delta t}\,\mathbf G_i</annotation></semantics></math>,
+      with independent unit normal components in
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>𝐆</mi><mi>i</mi></msub><annotation encoding="application/x-tex">\mathbf G_i</annotation></semantics></math>.
+      This makes
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><msub><mi>D</mi><mn>0</mn></msub><mi>Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">2D_0\Delta t</annotation></semantics></math>
+      the free diffusion variance per coordinate. The diameter-based
+      Brownian time is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mi>σ</mi></msub><mo>=</mo><msup><mi>σ</mi><mn>2</mn></msup><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\tau_\sigma=\sigma^2/D_0</annotation></semantics></math>,
+      so a reduced time
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>t</mi><mo>*</mo></msup><mo>=</mo><mi>n</mi><mi>Δ</mi><msup><mi>t</mi><mo>*</mo></msup></mrow><annotation encoding="application/x-tex">t^*=n\Delta t^*</annotation></semantics></math>
+      maps to
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><msup><mi>t</mi><mo>*</mo></msup><msub><mi>τ</mi><mi>σ</mi></msub></mrow><annotation encoding="application/x-tex">t=t^*\tau_\sigma</annotation></semantics></math>.
+      At radius
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>=</mo><mi>σ</mi><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">a=\sigma/2</annotation></semantics></math>,
+      the radius-based convention is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mi>a</mi></msub><mo>=</mo><msup><mi>a</mi><mn>2</mn></msup><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub><mo>=</mo><msub><mi>τ</mi><mi>σ</mi></msub><mi>/</mi><mn>4</mn></mrow><annotation encoding="application/x-tex">\tau_a=a^2/D_0=\tau_\sigma/4</annotation></semantics></math>.
+      For an isolated sphere with hydrodynamic diameter
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>,
+      Stokes–Einstein gives
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>0</mn></msub><mo>=</mo><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mi>π</mi><msub><mi>η</mi><mi>s</mi></msub><mi>σ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_0=k_BT/(3\pi\eta_s\sigma)</annotation></semantics></math>.
+      The soft simulation sets
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mo>=</mo><msub><mi>γ</mi><mi>t</mi></msub><mo>=</mo><msub><mi>D</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=k_BT=\gamma_t=D_0=1</annotation></semantics></math>.
+      <a
+      href="https://github.com/lammps/lammps/blob/611ca3b7f8525ba802373b04f9e3d632d515f7e3/doc/src/fix_brownian.rst">LAMMPS
+      Brownian update, checked edition</a></p>
+      <p>In the hard MC run, one sweep counts
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+      trials of the configurational chain. Changing the trial width
+      changes that chain's displacement per sweep while keeping its
+      equilibrium target. A dynamics-based hard-sphere transport
+      calculation would need its own evolution rule, collision treatment
+      and time validation. Even the free-particle trial variance gives
+      only a dilute reference for a dynamical mapping. The present MC
+      trajectories establish equilibrium quantities such as pressure and
+      contact structure.</p>
+      </section>
+      <section id="virtual-compression" class="level1">
+      <h1>Pressure observables and method references</h1>
+      <p>With
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ρ</mi><mo>=</mo><mn>6</mn><mi>ϕ</mi><mi>/</mi><mi>π</mi></mrow><annotation encoding="application/x-tex">\rho=6\phi/\pi</annotation></semantics></math>
+      in reduced units, the soft osmotic pressure is the ideal
+      contribution
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ρ</mi><annotation encoding="application/x-tex">\rho</annotation></semantics></math>
+      plus the pair virial divided by
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>V</mi></mrow><annotation encoding="application/x-tex">3V</annotation></semantics></math>.
+      The instantaneous virial is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow></msub><msub><mi>𝐫</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>⋅</mo><msub><mi>𝐅</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\sum_{i&lt;j}\mathbf r_{ij}\cdot\mathbf F_{ij}</annotation></semantics></math>,
+      with periodic minimum-image vectors and each unordered pair
+      counted once. The LAMMPS observable uses <code
+      class="verbatim">compute pressure NULL pair</code>. The ideal term
+      uses
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi></mrow><annotation encoding="application/x-tex">k_BT</annotation></semantics></math>
+      at the imposed bath temperature. The overdamped displacement
+      increment serves the position update. <a
+      href="https://github.com/lammps/lammps/blob/611ca3b7f8525ba802373b04f9e3d632d515f7e3/doc/src/compute_pressure.rst">LAMMPS
+      pair pressure, checked edition</a></p>
+      <p>For hard-sphere pressure, Allen and Tildesley give an explicit
+      precedent in the companion NVT program for <em>Computer Simulation
+      of Liquids</em>, 2nd ed. (Oxford University Press, 2017). In <code
+      class="verbatim">calc_variables</code> the program shrinks the box
+      length from
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>
+      to
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ϵ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">L/(1+\epsilon)</annotation></semantics></math>,
+      counts the overlapping pairs
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mi>ϵ</mi></msub><annotation encoding="application/x-tex">C_\epsilon</annotation></semantics></math>,
+      and uses
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>C</mi><mi>ϵ</mi></msub><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>3</mn><mi>ϵ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">C_\epsilon/(3\epsilon)</annotation></semantics></math>
+      as the virial estimator. This estimates the small-compression
+      limit using a pair count. Our study instead calculates the
+      probability that the entire configuration survives the compression
+      and uses a finite logarithmic difference. The prior study recorded
+      the same pressure identity and fixed
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+      before execution. <a
+      href="https://github.com/Allen-Tildesley/examples/blob/master/python_examples/mc_nvt_hs.py">Allen–Tildesley
+      NVT example</a></p>
+      <p>For the logarithmic difference choose
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mo>ln</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mi>/</mi><mi>V</mi><mi>′</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">u=\ln(V/V&#39;)</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mi>N</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">x=Nu</annotation></semantics></math>.
+      Thus
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mi>′</mi><mo>=</mo><mi>V</mi><msup><mi>e</mi><mrow><mi>−</mi><mi>u</mi></mrow></msup></mrow><annotation encoding="application/x-tex">V&#39;=Ve^{-u}</annotation></semantics></math>
+      specifies a one-sided change of volume, and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>=</mo><mn>3</mn><mo>ln</mo><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>ϵ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">u=3\ln(1+\epsilon)</annotation></semantics></math>
+      for the box perturbation above. Write the hard-sphere
+      configurational integral
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Q(V)</annotation></semantics></math>
+      in fractional coordinates at fixed
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>.
+      The affine coordinate transformation to the smaller box has
+      Jacobian
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mi>′</mi><mi>/</mi><mi>V</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>N</mi></msup><mo>=</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>N</mi><mi>u</mi></mrow></msup></mrow><annotation encoding="application/x-tex">(V&#39;/V)^N=e^{-Nu}</annotation></semantics></math>.
+      The hard-core Boltzmann weight on the original equilibrium
+      configurations becomes the survival indicator. Scaling lengths by
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>e</mi><mrow><mi>−</mi><mi>u</mi><mi>/</mi><mn>3</mn></mrow></msup><annotation encoding="application/x-tex">e^{-u/3}</annotation></semantics></math>
+      leaves the configuration allowed iff
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>r</mi><mo>min</mo></msub><mi>/</mi><mi>σ</mi><mo>≥</mo><msup><mi>e</mi><mrow><mi>u</mi><mi>/</mi><mn>3</mn></mrow></msup></mrow><annotation encoding="application/x-tex">r_\min/\sigma\ge e^{u/3}</annotation></semantics></math>.
+      Taking the equilibrium mean
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>u</mi></msub><annotation encoding="application/x-tex">p_u</annotation></semantics></math>
+      of that indicator yields
+      <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>Q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mi>′</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>Q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>=</mo><msup><mi>e</mi><mrow><mi>−</mi><mi>N</mi><mi>u</mi></mrow></msup><msub><mi>p</mi><mi>u</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>Z</mi><mi>x</mi></msub><mo>=</mo><mi>−</mi><mfrac><mrow><mo>ln</mo><mi>Q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mi>′</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mo>ln</mo><mi>Q</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>N</mi><mi>u</mi></mrow></mfrac><mo>=</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mo>ln</mo><msub><mi>p</mi><mi>u</mi></msub></mrow><mi>x</mi></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+      \frac{Q(V&#39;)}{Q(V)}=e^{-Nu}p_u,\qquad
+      Z_x=-\frac{\ln Q(V&#39;)-\ln Q(V)}{Nu}=1-\frac{\ln p_u}{x}.
+      </annotation></semantics></math> The ideal term one is the
+      coordinate Jacobian. With
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Π</mi><mo>=</mo><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mspace width="0.167em"></mspace><msub><mi>∂</mi><mi>V</mi></msub><mo>ln</mo><mi>Q</mi></mrow><annotation encoding="application/x-tex">\Pi=k_BT\,\partial_V\ln Q</annotation></semantics></math>,
+      integration gives
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Z</mi><mi>x</mi></msub><mo>=</mo><msup><mi>u</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><msubsup><mo>∫</mo><mn>0</mn><mi>u</mi></msubsup><mi>Z</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ϕ</mi><msup><mi>e</mi><mi>s</mi></msup><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>d</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">Z_x=u^{-1}\int_0^u Z(\phi e^s)\,ds</annotation></semantics></math>.
+      The finite
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+      result therefore averages the compressibility factor over the
+      compressed density interval. The limit
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>→</mo><msup><mn>0</mn><mo>+</mo></msup></mrow><annotation encoding="application/x-tex">u\to0^+</annotation></semantics></math>
+      gives the differential pressure at the original density. At
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0.25</mn><mo>,</mo><mi>N</mi><mo>=</mo><mn>216</mn></mrow><annotation encoding="application/x-tex">x=0.25,N=216</annotation></semantics></math>,
+      the volume reduction is about
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.116</mn><mi>%</mi></mrow><annotation encoding="application/x-tex">0.116\%</annotation></semantics></math>.
+      Keep the prespecified
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>0.25</mn></mrow><annotation encoding="application/x-tex">x=0.25</annotation></semantics></math>
+      result and use the other compressions to assess sensitivity. Zero
+      observed survival and queries beyond the recorded minimum-distance
+      cap are explicit failures.</p>
+      <p>An alternate estimator from the same configurations uses exact
+      shell volume. For mean unordered pair count
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>C</mi><mi>w</mi></msub><annotation encoding="application/x-tex">C_w</annotation></semantics></math>
+      within
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>r</mi><mo>&lt;</mo><mn>1</mn><mo>+</mo><mi>w</mi></mrow><annotation encoding="application/x-tex">1\leq r&lt;1+w</annotation></semantics></math>,
+      the canonical
+      finite-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+      normalization gives
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Z</mi><mi>w</mi></msub><mo>=</mo><mn>1</mn><mo>+</mo><msub><mi>C</mi><mi>w</mi></msub><mi>/</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>N</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>3</mn></msup><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">Z_w=1+C_w/[N((1+w)^3-1)]</annotation></semantics></math>.
+      It approaches the contact-route pressure for small
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>
+      with sufficient sampling. A finite shell is an average, with its
+      own bandwidth sensitivity. Agreement with the volume route should
+      be checked as a separate statistic. Carnahan–Starling is an
+      external equilibrium EOS comparator. A finite soft repulsion may
+      give lower pressure than the nominal-diameter hard-sphere
+      reference without indicating a software error. <a
+      href="https://doi.org/10.1063/1.1672048">Carnahan and Starling, J.
+      Chem. Phys. 51, 635–636 (1969)</a></p>
+      </section>
+      <section id="transport-observables" class="level1">
+      <h1>Transport observables and their interpretation</h1>
+      <p>The equilibrium soft BD trajectories retain periodic image
+      counters. Reconstruct
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>𝐫</mi><mi>i</mi><mrow><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>𝐫</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>L</mi><msub><mi>𝐈</mi><mi>i</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbf r_i^\mathrm{unwrap}(t)=\mathbf r_i(t)+L\mathbf I_i(t)</annotation></semantics></math>.
+      Average
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msubsup><mi>𝐫</mi><mi>i</mi><mrow><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo>+</mo><mi>Δ</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msubsup><mi>𝐫</mi><mi>i</mi><mrow><mi mathvariant="normal">u</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">w</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi></mrow></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msup><mo stretchy="false" form="postfix">|</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\lvert\mathbf r_i^\mathrm{unwrap}(t+\Delta t)-
+      \mathbf r_i^\mathrm{unwrap}(t)\rvert^2</annotation></semantics></math>
+      over particles and available origins. The three-dimensional
+      long-time Einstein relation uses one sixth of the MSD slope. A
+      finite fitted window estimates tagged-particle
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>D</mi><mi>s</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">f</mi><mi mathvariant="normal">f</mi></mrow></msubsup><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">D_s^\mathrm{eff}/D_0</annotation></semantics></math>.
+      Compare slopes across windows before making an asymptotic claim.
+      Long-wavelength collective diffusion is a separate property. See
+      <a href="DIFFUSION.html">self and collective diffusion</a> for the
+      coherent density estimator, wavevector limits and the expected
+      concentration trends.</p>
+      <p>For equilibrium constant-mobility BD without interparticle HI,
+      an EOS-based thermodynamic estimate uses
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>c</mi></msub><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mi>−</mi><mn>1</mn></mrow></msup><mi>∂</mi><mi>Π</mi><mi>/</mi><mi>∂</mi><mi>ρ</mi><mo>=</mo><msub><mi>∂</mi><mi>ϕ</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>ϕ</mi><mi>Z</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ϕ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">D_c/D_0=(k_BT)^{-1}\partial\Pi/\partial\rho=\partial_\phi[\phi Z(\phi)]</annotation></semantics></math>
+      at fixed potential and temperature. An interval secant estimates
+      the average thermodynamic factor over that interval. A dilute
+      endpoint may use
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>lim</mo><mrow><mi>ϕ</mi><mo>→</mo><mn>0</mn></mrow></msub><mi>Z</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\lim_{\phi\to0} Z=1</annotation></semantics></math>.
+      The estimate does not measure the time decay of collective density
+      modes or a direction-dependent diffusivity under shear.</p>
+      <p>For viscosity use the symmetric configurational pair-pressure
+      tensor in units
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mi>/</mi><msup><mi>σ</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">k_BT/\sigma^3</annotation></semantics></math>,
+      with only the pair forces of the soft model. With mean-subtracted
+      deviatoric tensor
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><msup><mi>𝚷</mi><mi>d</mi></msup></mrow><annotation encoding="application/x-tex">\delta\boldsymbol{\Pi}^d</annotation></semantics></math>,
+      the isotropic equilibrium Green–Kubo integrand is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>G</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">f</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>V</mi><mi>/</mi><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="prefix">⟨</mo><mi>δ</mi><msup><mi>𝚷</mi><mi>d</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>:</mo><mi>δ</mi><msup><mi>𝚷</mi><mi>d</mi></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">⟩</mo><mi>/</mi><mn>10</mn></mrow><annotation encoding="application/x-tex">G_\mathrm{conf}(t)=(V/k_BT)\langle
+      \delta\boldsymbol{\Pi}^d(0):\delta\boldsymbol{\Pi}^d(t)\rangle/10</annotation></semantics></math>.
+      Integrate to a declared lag to obtain the finite configurational
+      contribution. Its unit is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><msub><mi>τ</mi><mi>σ</mi></msub><mi>/</mi><msup><mi>σ</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">k_BT\tau_\sigma/\sigma^3</annotation></semantics></math>.
+      Under the Stokes–Einstein diameter convention, adding the solvent
+      once gives the partial ratio
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>η</mi><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">t</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">l</mi></mrow></msub><mi>/</mi><msub><mi>η</mi><mi>s</mi></msub><mo>=</mo><mn>1</mn><mo>+</mo><mn>3</mn><mi>π</mi><msubsup><mi>η</mi><mrow><mi mathvariant="normal">c</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">n</mi><mi mathvariant="normal">f</mi></mrow><mo>*</mo></msubsup></mrow><annotation encoding="application/x-tex">\eta_\mathrm{partial}/\eta_s=1+3\pi\eta_\mathrm{conf}^*</annotation></semantics></math>.
+      This includes the modeled configurational relaxation and the
+      chosen solvent term. Hydrodynamic stresslets, lubrication and
+      other missing stress terms require a separate model. Lag-window
+      and replica sensitivity determine the strength of any viscosity
+      inference. <a href="POSTPROCESSING.html">Estimator definitions</a>
+      <a href="https://doi.org/10.1143/JPSJ.12.570">Kubo, J. Phys. Soc.
+      Jpn. 12, 570–586 (1957), linear-response background</a></p>
+      </section>
+      <section id="standalone-entrypoint-and-verification"
+      class="level1">
+      <h1>Standalone entrypoint and verification</h1>
+      <pre class="bash" data-org-language="sh"><code>cmake -S modern -B /tmp/bdmc-equilibrium -DCMAKE_BUILD_TYPE=Release \
+  -DBDMC_BUILD_PYTHON=OFF -DBDMC_BUILD_HYDRODYNAMICS=OFF \
+  -DBDMC_BUILD_HARD_SPHERE_MC=ON
+cmake --build /tmp/bdmc-equilibrium --parallel 2
+ctest --test-dir /tmp/bdmc-equilibrium --output-on-failure
+/tmp/bdmc-equilibrium/equilibrium/bdmc_hard_sphere_mc \
+  0.15 6 0.15 91371 11 10000 100000 5 &gt; hard_phi015.csv
+</code></pre>
+      <p>The positional inputs are volume fraction, particles per side
+      of a simple cubic start, displacement half-width, PCG seed and
+      stream, discarded sweeps, production sweeps and sample stride. The
+      optional final argument <code class="verbatim">fcc</code> starts
+      from shuffled FCC sites with vacancies at the same particle count
+      and volume. Its initialization RNG is separate from the MC
+      proposal stream. The default is the earlier simple-cubic start.
+      CSV records sweep, capped minimum separation squared, cumulative
+      unordered counts for widths 0.0025 to 0.04, unwrapped MC
+      displacement and acceptance. Clear physical interpretation and
+      immutable scalar data make the observable usable by a separate
+      process. The analysis example reads selected hard-MC CSV and
+      LAMMPS run tables with explicit plans and archived comparators,
+      and writes a common table and a PDF/PNG pair. Raw study data are
+      separate from the template source.</p>
+      <p>The native tests check exact contact, periodic overlap, shell
+      counting, ideal moves and equality of linked-cell and brute-force
+      seeded trajectories. The EOS case uses
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>=</mo><mn>216</mn></mrow><annotation encoding="application/x-tex">N=216</annotation></semantics></math>,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>=</mo><mn>0.05</mn><mo>,</mo><mn>0.15</mn><mo>,</mo><mn>0.30</mn></mrow><annotation encoding="application/x-tex">\phi=0.05,0.15,0.30</annotation></semantics></math>,
+      four MC replicas per condition and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>σ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\sigma=1</annotation></semantics></math>.
+      Soft BD uses
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mi>/</mi><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mo>=</mo><mn>10</mn><mo>,</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">A/k_BT=10,100</annotation></semantics></math>,
+      three replicas per condition, time step
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>10</mn><mrow><mi>−</mi><mn>5</mn></mrow></msup><annotation encoding="application/x-tex">10^{-5}</annotation></semantics></math>,
+      two Brownian times discarded and eight sampled. Keep engine,
+      model, seed, clock, pressure estimator and uncertainty with every
+      reused result. These equilibrium outputs can qualify pressure or
+      structure workflows. Cross-scale transport qualification remains
+      separate.</p>
+      <p><a href="../modern/equilibrium/hs_mc.c">Native trial update</a>
+      <a href="../python/bdmc/equilibrium.py">Pressure estimators</a> <a
+      href="../examples/compare_equilibrium_eos.py">Cross-engine
+      analysis example</a> <a
+      href="MODERNIZATION_LEVELS.html">Modernization levels</a></p>
+      </section>
+      <section id="level-3-acceptance" class="level1">
+      <h1>Level 3 exchange contract and acceptance scope</h1>
+      <p>The reusable slice is equilibrium pressure and near-contact
+      structure for monodisperse spheres in a quiescent periodic cube.
+      The native producer owns its sampler state and PCG stream. An
+      independent Python process can consume its CSV using NumPy and the
+      functions in <code class="verbatim">bdmc.equilibrium</code>. The
+      producer does not need Python, LAMMPS, mBLA or a wb plugin at
+      runtime.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Boundary</th>
+      <th>Contract</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Hard-sphere observations</td>
+      <td>Nine named columns in the order emitted by the CLI. <code
+      class="verbatim">sweep</code> counts trial batches. <code
+      class="verbatim">min_r2_capped</code> is the minimum squared
+      separation in diameter units, capped at
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mn>1.05</mn><mn>2</mn></msup><annotation encoding="application/x-tex">1.05^2</annotation></semantics></math>.
+      The five cumulative shell columns count unordered pairs. <code
+      class="verbatim">mc_msd</code> is displacement in squared diameter
+      units on the trial clock. <code class="verbatim">acceptance</code>
+      is the fraction of accepted proposals in the latest output
+      block.</td>
+      </tr>
+      <tr>
+      <td>Pressure exchange</td>
+      <td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Z</mi><mo>=</mo><mi>Π</mi><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ρ</mi><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">Z=\Pi/(\rho k_BT)</annotation></semantics></math>,
+      a dimensionless equilibrium osmotic pressure, paired with nominal
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϕ</mi><annotation encoding="application/x-tex">\phi</annotation></semantics></math>,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>,
+      model identity and estimator. Hard MC uses a compression survival
+      secant or a finite contact shell; LAMMPS soft BD uses the pair
+      virial with the ideal term.</td>
+      </tr>
+      <tr>
+      <td>State and reproducibility</td>
+      <td>Keep temperature/length conventions, potential and amplitude
+      or hard exclusion, seed and stream, box and boundary conditions,
+      equilibration, sampling cadence, fit/estimator windows,
+      uncertainty and source/data edition alongside values.</td>
+      </tr>
+      <tr>
+      <td>Consumer and domain</td>
+      <td>The comparison consumes pressure at sampled concentrations.
+      Conversion to Pa needs the receiving model's
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi></mrow><annotation encoding="application/x-tex">k_BT</annotation></semantics></math>
+      and number density. A table, interpolation and applicability
+      checks belong to the receiving workflow. Dynamic coefficients or a
+      new scale mapping require independent qualification.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>The native test checks contact, periodic overlap, shell counts
+      and seeded cell/brute-force agreement. The retained numerical
+      replay checks the imported MC behavior against the original
+      recorded observations. Independent physical evidence comes from
+      the Carnahan–Starling comparison and a separate position-based
+      check of the soft-BD virial. The comparable observable is pressure
+      at a matched nominal state; the soft and hard interaction laws
+      carry different model identities.</p>
+      <p>For a compact detached producer–consumer check, use the build
+      above from the copied package root with NumPy available. Save the
+      CSV in a fresh directory.</p>
+      <pre class="bash" data-org-language="sh"><code>sample_dir=&quot;$(mktemp -d)&quot;
+/tmp/bdmc-equilibrium/equilibrium/bdmc_hard_sphere_mc \
+  0.15 3 0.15 91371 11 1000 4000 5 &gt; &quot;$sample_dir/hard_smoke.csv&quot;
+PYTHONPATH=python python3 - &quot;$sample_dir/hard_smoke.csv&quot; &lt;&lt;&#39;PY&#39;
+import sys
+
+import numpy as np
+from bdmc.equilibrium import hard_sphere_survival, virtual_compression_z
+
+data = np.genfromtxt(sys.argv[1], delimiter=&quot;,&quot;, names=True)
+np.testing.assert_array_equal(data[&quot;sweep&quot;], np.arange(1005, 5001, 5))
+for compression in (0.25, 0.50):
+    survives = hard_sphere_survival(data[&quot;min_r2_capped&quot;], particles=27,
+                                    compression=compression)
+    print(compression, virtual_compression_z(survives.mean(), compression))
+PY
+</code></pre>
+      <p>Changing compression exercises the same recorded geometry with
+      a different estimator setting. A compression beyond the distance
+      cap is rejected. Short fixed-seed runs demonstrate data exchange;
+      use the longer replicated study for EOS comparisons. The
+      active-shear transient-network modernization remains a separate
+      workflow with an open Level 2 acceptance step.</p>
+      </section>
+      <section id="reference-and-provenance" class="level1">
+      <h1>Reference and provenance</h1>
+      <p>For the NVT hard-sphere trial method, see Allen and Tildesley,
+      <em>Computer Simulation of Liquids</em>. The engine uses Melissa
+      O'Neill's PCG32 C source under Apache-2.0. The soft-BD comparison
+      uses LAMMPS 22 Jul 2025 Update 4. <a
+      href="../NOTICE.html">Third-party notices</a></p>
+      <p>Scientific direction by Gunwoo Park.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

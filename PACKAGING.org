@@ -1,0 +1,24 @@
+#+title: wb-templates — copying and source reference
+#+language: en
+
+* Collection
+The catalog =templates.json= identifies each reusable child and its entry
+document. The wb-python entry supplies documentation for a separately supplied
+runtime. Each scientific template owns its interfaces, data formats, tests,
+dependencies, scientific assumptions and applicable licenses.
+
+* Verify and copy
+Run =python3 tools/verify_manifest.py= to compare distributed paths, byte
+counts and SHA-256 hashes. Use =tools/export_template.py= with a new output
+directory to copy one child or the collection. Copy dependencies separately
+and use the child guide to run a supported example. For mBLA Level 3,
+copy the whole mBLA package so the example can build against its Level 2 solver.
+
+* Maintained documentation
+Place concise explanations at meaningful source, script and configuration
+units. Keep user-facing technical documentation and exact data-field
+contracts linked from the child entry.
+
+* Navigation
+Org is plain text. Headings use * and **, and file links name source documents.
+The companion wb-plugins collection describes reusable methodology.

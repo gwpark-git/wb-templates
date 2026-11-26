@@ -1,0 +1,7 @@
+{
+  "n_particles": 8,
+  "dimension": 3,
+  "box_lengths": [8.0, 8.0, 8.0],
+  "dt": 0.001,
+  "seed": 100
+}

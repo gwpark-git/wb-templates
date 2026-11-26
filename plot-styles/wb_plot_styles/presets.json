@@ -1,0 +1,125 @@
+{
+  "personal": {
+    "defaults": {
+      "figsize": [
+        6,
+        6
+      ],
+      "dpi": 300,
+      "linewidth": 2.5,
+      "markersize": 8,
+      "labelsize": 15,
+      "tick_labelsize": 15,
+      "bbox_inches": "tight"
+    },
+    "rc": {
+      "xtick.direction": "in",
+      "ytick.direction": "in",
+      "xtick.major.size": 6,
+      "ytick.major.size": 6,
+      "xtick.major.width": 1.2,
+      "ytick.major.width": 1.2,
+      "xtick.minor.size": 3,
+      "ytick.minor.size": 3,
+      "xtick.minor.width": 0.8,
+      "ytick.minor.width": 0.8,
+      "axes.linewidth": 1.5
+    },
+    "font": "DejaVu Sans",
+    "notes": [
+      "Selected personal default: top-level vertical helper presentation plus matrix helper marker size; no universal source default exists.",
+      "300 dpi is a new explicit raster-export fallback; no source dpi was specified.",
+      "Personal font uses installed Matplotlib default DejaVu Sans; top-level helpers specify no font family."
+    ],
+    "dash_patterns": {
+      "loosely dotted": [
+        1,
+        10
+      ],
+      "dotted": [
+        1,
+        1
+      ],
+      "densely dotted": [
+        1,
+        1
+      ],
+      "loosely dashed": [
+        5,
+        10
+      ],
+      "dashed": [
+        5,
+        5
+      ],
+      "densely dashed": [
+        5,
+        1
+      ],
+      "loosely dashdotted": [
+        3,
+        10,
+        1,
+        10
+      ],
+      "dashdotted": [
+        3,
+        5,
+        1,
+        5
+      ],
+      "densely dashdotted": [
+        3,
+        1,
+        1,
+        1
+      ],
+      "dashdotdotted": [
+        3,
+        5,
+        1,
+        5,
+        1,
+        5
+      ],
+      "loosely dashdotdotted": [
+        3,
+        10,
+        1,
+        10,
+        1,
+        10
+      ],
+      "densely dashdotdotted": [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "-..": [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "-...": [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      ":": [
+        1,
+        1
+      ]
+    }
+  }
+}

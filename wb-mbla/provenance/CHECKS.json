@@ -1,0 +1,448 @@
+{
+  "scope": "current internal C++ template; not historical/default-FMA reproduction or complete cake validation",
+  "environment": {
+    "architecture": "aarch64",
+    "system": "Linux",
+    "compiler": "GCC14.2.0",
+    "cmake": "3.31.6",
+    "gsl": "2.8",
+    "gsl_boltzmann_J_per_K": 1.3806504e-23,
+    "floating_point_contraction": "off",
+    "build_workers": 2
+  },
+  "release_ctest": {
+    "cases": [
+      {
+        "case": "noncake",
+        "status": "passed",
+        "seconds": 1.8674593760006246,
+        "printed_values_exact": true,
+        "max_scaled_error": 0.0,
+        "wall_phi_outlet": 0.3673897,
+        "cake_resistance_ratio_outlet": 0.0,
+        "particle_flux_relative_drift": 0.0
+      },
+      {
+        "case": "cake",
+        "status": "passed",
+        "seconds": 0.8879669169982662,
+        "printed_values_exact": true,
+        "max_scaled_error": 0.0,
+        "wall_phi_outlet": 0.494,
+        "cake_resistance_ratio_outlet": 6.137766,
+        "particle_flux_relative_drift": 0.2351796708064149
+      },
+      {
+        "case": "cake-mild",
+        "status": "passed",
+        "seconds": 0.3557139170006849,
+        "printed_values_exact": true,
+        "max_scaled_error": 0.0,
+        "wall_phi_outlet": 0.494,
+        "cake_resistance_ratio_outlet": 0.7613366,
+        "particle_flux_relative_drift": 0.0007894598806316155
+      }
+    ],
+    "invalid_input_cases_rejected": 11,
+    "iteration_limit_status": "passed",
+    "whitespace_status": "passed",
+    "constant_table_equivalence": "passed",
+    "detailed_output_schema": "passed",
+    "independent_printed_darcy_diagnostic": {
+      "rows": 25,
+      "columns": [
+        "z_m",
+        "phi_wall",
+        "pressure_Pa",
+        "permeate_m_s",
+        "axial_factor_m_s",
+        "osmotic_pressure_Pa",
+        "particle_flux_m3_s",
+        "cake_ratio_times_radius_m",
+        "transmembrane_pressure_Pa",
+        "cake_thickness_over_radius"
+      ],
+      "phi_wall_outlet": 0.494,
+      "cake_resistance_ratio_outlet": 0.7613366,
+      "max_recorded_particle_flux_relative_drift": 0.0007894598806316155,
+      "darcy_starling_max_residual_normalized_by_max_wall_velocity": 4.2624049108611733e-07,
+      "inferred_permeate_pressure_range_Pa": [
+        91389.956,
+        91390.042
+      ],
+      "limits": "Printed-value diagnostics only; iterative stopping and conservation/grid acceptance are separate."
+    },
+    "limits": "Current-source fixed regression, not a historical tolerance or a general physical/cake convergence claim."
+  },
+  "sanitizer": "AddressSanitizer + UndefinedBehaviorSanitizer + leak detection, Debug CTest 2/2 passed in 48.34s",
+  "mutation": "series resistance denominator-sign mutation detected by independent unit expectation",
+  "cake_diagnostics": {
+    "prospective_accuracy_diagnostic": "1% max recorded particle-flux drift; observation only, no post-hoc tolerance change",
+    "cases": [
+      {
+        "case": "cake-mild",
+        "TMP_parameter_Pa": 10000,
+        "Nz": 25,
+        "Nr": 120,
+        "status": 0,
+        "seconds": 0.3933934170017892,
+        "phi_wall_outlet": 0.494,
+        "cake_ratio_outlet": 0.7613366,
+        "flux_drift": 0.0007894598806316155
+      },
+      {
+        "case": "cake-mild-refined",
+        "TMP_parameter_Pa": 10000,
+        "Nz": 49,
+        "Nr": 240,
+        "status": 3,
+        "seconds": 20.002472259999195
+      },
+      {
+        "case": "cake-refined",
+        "TMP_parameter_Pa": 20000,
+        "Nz": 49,
+        "Nr": 240,
+        "status": 0,
+        "seconds": 3.5916811259994574,
+        "phi_wall_outlet": 0.494,
+        "cake_ratio_outlet": 4.96141,
+        "flux_drift": 0.10134714483398732
+      }
+    ]
+  },
+  "fresh_python_native": {
+    "status": "not_accepted",
+    "scope": "new non-cake comparison only",
+    "python_module_sha256": {
+      "sol_solvent.py": "1431a1ab705d19241b3643fd866d50c6f199b32086aab671edca4f567b32c760",
+      "sol_CT.py": "08c58c251367cba0361410ff8bf50d3d9e5e7eb3653044e1ccbe181aec55f14a",
+      "sol_GT.py": "3a7161eae90c6b6b0c38cdc93ce3fb848f63465931ea862b00562ecbe4cd9afb",
+      "transport_properties_SPHS.py": "9b2f24829d73ac3c61c655fdf27133963894e475b6d75ba6d93eb3dc1416b1a7",
+      "osmotic_pressure_CS.py": "828a189f8bf421bc601e8990145c15306d1766a8d2d5cc812a2901653ff00229",
+      "membrane_geometry_functions.py": "8d250056aad76a2daf147e0cf8b9f524daff1e7c4095477ea580ec9ccd092209",
+      "aux_functions.py": "07c2869e1b5f0683b71dcbd30439620a467b58e6c48069c9b96ee194073b7911"
+    },
+    "numpy": "2.2.4",
+    "scipy": "1.15.3",
+    "python_iterations": 128,
+    "python_seconds": 9.134441587997571,
+    "python_final_max_relaxed_increment": 9.039574111469051e-07,
+    "observed": {
+      "wall_concentration_max_relative_difference": 0.1052696359566071,
+      "wall_permeate_max_relative_difference": 0.0001585136241055718,
+      "axial_center_factor_max_relative_difference": 0.0033588742603952726,
+      "pressure_max_absolute_difference_Pa": 0.04950378742069006
+    },
+    "new_acceptance": "<1% maximum relative difference in wall concentration, permeate and axial center factor",
+    "differences": "Python native adaptive radial grid and integral axial pressure; C++ logarithmic radial grid and finite-difference pressure.",
+    "history": "Researcher-established prior non-cake agreement remains valid reported evidence; historical conditions/tolerance not recovered here.",
+    "cake": "Python source has no cake extension; no cake parity claim"
+  },
+  "fresh_python_common_grid": {
+    "status": "not_accepted",
+    "scope": "new non-cake comparison only",
+    "python_module_sha256": {
+      "sol_solvent.py": "1431a1ab705d19241b3643fd866d50c6f199b32086aab671edca4f567b32c760",
+      "sol_CT.py": "08c58c251367cba0361410ff8bf50d3d9e5e7eb3653044e1ccbe181aec55f14a",
+      "sol_GT.py": "3a7161eae90c6b6b0c38cdc93ce3fb848f63465931ea862b00562ecbe4cd9afb",
+      "transport_properties_SPHS.py": "9b2f24829d73ac3c61c655fdf27133963894e475b6d75ba6d93eb3dc1416b1a7",
+      "osmotic_pressure_CS.py": "828a189f8bf421bc601e8990145c15306d1766a8d2d5cc812a2901653ff00229",
+      "membrane_geometry_functions.py": "8d250056aad76a2daf147e0cf8b9f524daff1e7c4095477ea580ec9ccd092209",
+      "aux_functions.py": "07c2869e1b5f0683b71dcbd30439620a467b58e6c48069c9b96ee194073b7911"
+    },
+    "numpy": "2.2.4",
+    "scipy": "1.15.3",
+    "radial_grid": "cpp-log",
+    "Nr": 120,
+    "python_iterations": 128,
+    "python_seconds": 8.672265420998883,
+    "python_final_max_relaxed_increment": 9.013757553688606e-07,
+    "observed": {
+      "wall_concentration_max_relative_difference": 0.10452200696531366,
+      "wall_permeate_max_relative_difference": 0.00013404114256565514,
+      "axial_center_factor_max_relative_difference": 0.0033594780916528233,
+      "pressure_max_absolute_difference_Pa": 0.04947895259829238
+    },
+    "new_acceptance": "<1% maximum relative difference in wall concentration, permeate and axial center factor",
+    "differences": "Python radial grid is explicitly named; C++ uses logarithmic grid. Python integral axial pressure differs from C++ finite-difference pressure.",
+    "history": "Researcher-established prior non-cake agreement remains valid reported evidence; historical conditions/tolerance not recovered here.",
+    "cake": "Python source has no cake extension; no cake parity claim"
+  },
+  "fma_sensitivity": {
+    "scope": "default-FMA legacy vs bounds-only source at identical GCC14.2.0 -O2 AArch64/GSL2.8; original fixture unchanged",
+    "legacy_stop_iteration": 93,
+    "bounds_only_stop_iteration": 36,
+    "columns": [
+      {
+        "column_1based": 1,
+        "max_abs_difference": 0.0,
+        "max_relative_difference_nonzero_baseline": 0
+      },
+      {
+        "column_1based": 2,
+        "max_abs_difference": 0.035163203000000004,
+        "max_relative_difference_nonzero_baseline": 0.9568210692617122
+      },
+      {
+        "column_1based": 3,
+        "max_abs_difference": 0.20000000001164153,
+        "max_relative_difference_nonzero_baseline": 1.97273677770304e-06
+      },
+      {
+        "column_1based": 4,
+        "max_abs_difference": 5.59734e-07,
+        "max_relative_difference_nonzero_baseline": 0.3324641599627463
+      },
+      {
+        "column_1based": 5,
+        "max_abs_difference": 0.00013455000000000064,
+        "max_relative_difference_nonzero_baseline": 0.006824059450174026
+      },
+      {
+        "column_1based": 6,
+        "max_abs_difference": 39.699413,
+        "max_relative_difference_nonzero_baseline": 0.9625864279611002
+      },
+      {
+        "column_1based": 7,
+        "max_abs_difference": 4.86173e-12,
+        "max_relative_difference_nonzero_baseline": 0.2652669267103492
+      },
+      {
+        "column_1based": 8,
+        "max_abs_difference": 0.0006989249999999998,
+        "max_relative_difference_nonzero_baseline": 0.3037380740678933
+      },
+      {
+        "column_1based": 9,
+        "max_abs_difference": 0.1900000000023283,
+        "max_relative_difference_nonzero_baseline": 9.488187207043646e-06
+      },
+      {
+        "column_1based": 10,
+        "max_abs_difference": 0.0,
+        "max_relative_difference_nonzero_baseline": 0
+      }
+    ],
+    "strict_FP_comparison": "unmodified vs modern off/off equality is a new common floating-point policy, not reproduction of the original default output"
+  },
+  "historical_non_cake_agreement": "Researcher-established reported evidence, exact historical source/conditions/tolerance not recovered; unchanged by fresh failures",
+  "license_status": "Internal work authorized; inherited research source/fixtures and GSL-linked redistribution require separate review",
+  "detached_copy": "46 maintained files copied into a separate source directory; new CMake Release build and CTest 2/2 passed in7.01s; no original-workspace dependency",
+  "engineering_feedback_20261114": {
+    "edition": "same science/FP/fixtures; late-write and N_iter contract corrections",
+    "scope": "actual LinuxAArch64/GCC14.2/GSL2.8 execution; prior result groups remain dated historical evidence",
+    "as_of_utc": "2026-11-14T11:08:50.649277+00:00",
+    "release_ctest": {
+      "status": "PASS",
+      "tests": 4,
+      "seconds": 7.340950795005483
+    },
+    "asan_ubsan_leak_ctest": {
+      "status": "PASS",
+      "tests": 4,
+      "build_type": "RelWithDebInfo",
+      "seconds": 19.341696801006037,
+      "ASAN_OPTIONS": "detect_leaks=1:halt_on_error=1",
+      "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1"
+    },
+    "same_boundary_oracle_pre_fix": {
+      "cases": [
+        {
+          "behavior": "typed-count-baseline",
+          "status": "PASS"
+        },
+        {
+          "behavior": "typed-count-scientific",
+          "input": "2.4e3",
+          "consumed_count": "2",
+          "same_printed_output_as_decimal": false,
+          "returncode": 3,
+          "status": "FAIL"
+        },
+        {
+          "behavior": "typed-count-hexadecimal",
+          "input": "0x960",
+          "consumed_count": "0",
+          "same_printed_output_as_decimal": false,
+          "returncode": 3,
+          "status": "FAIL"
+        },
+        {
+          "behavior": "late-write-primary",
+          "target": "result.dat",
+          "baseline_ok": true,
+          "baseline_bytes": 3275,
+          "limited_bytes": 1024,
+          "returncode": 0,
+          "diagnostic": "",
+          "status": "FAIL"
+        },
+        {
+          "behavior": "late-write-outlet-sidecar",
+          "target": "result.dat.Rout",
+          "baseline_ok": true,
+          "baseline_bytes": 9480,
+          "limited_bytes": 1024,
+          "returncode": 0,
+          "diagnostic": "",
+          "status": "FAIL"
+        },
+        {
+          "behavior": "late-write-integral-sidecar",
+          "target": "result.dat.Fval",
+          "baseline_ok": true,
+          "baseline_bytes": 1325,
+          "limited_bytes": 1024,
+          "returncode": 0,
+          "diagnostic": "",
+          "status": "FAIL"
+        }
+      ]
+    },
+    "same_boundary_oracle_repaired": {
+      "cases": [
+        {
+          "behavior": "typed-count-baseline",
+          "status": "PASS"
+        },
+        {
+          "behavior": "typed-count-scientific",
+          "input": "2.4e3",
+          "consumed_count": "2400",
+          "same_printed_output_as_decimal": true,
+          "returncode": 0,
+          "status": "PASS"
+        },
+        {
+          "behavior": "typed-count-hexadecimal",
+          "input": "0x960",
+          "consumed_count": "2400",
+          "same_printed_output_as_decimal": true,
+          "returncode": 0,
+          "status": "PASS"
+        },
+        {
+          "behavior": "late-write-primary",
+          "target": "result.dat",
+          "baseline_ok": true,
+          "baseline_bytes": 3275,
+          "limited_bytes": 1024,
+          "returncode": 2,
+          "diagnostic": "mbla: output write failed: result.dat",
+          "status": "PASS"
+        },
+        {
+          "behavior": "late-write-outlet-sidecar",
+          "target": "result.dat.Rout",
+          "baseline_ok": true,
+          "baseline_bytes": 9480,
+          "limited_bytes": 1024,
+          "returncode": 2,
+          "diagnostic": "mbla: output write failed: result.dat.Rout",
+          "status": "PASS"
+        },
+        {
+          "behavior": "late-write-integral-sidecar",
+          "target": "result.dat.Fval",
+          "baseline_ok": true,
+          "baseline_bytes": 1325,
+          "limited_bytes": 1024,
+          "returncode": 2,
+          "diagnostic": "mbla: output write failed: result.dat.Fval",
+          "status": "PASS"
+        }
+      ]
+    },
+    "strict_printed_regression": [
+      {
+        "case": "noncake",
+        "status": "passed",
+        "seconds": 1.9099626669994905,
+        "printed_values_exact": true,
+        "max_scaled_error": 0.0,
+        "wall_phi_outlet": 0.3673897,
+        "cake_resistance_ratio_outlet": 0.0,
+        "particle_flux_relative_drift": 0.0
+      },
+      {
+        "case": "cake",
+        "status": "passed",
+        "seconds": 0.9364902090019314,
+        "printed_values_exact": true,
+        "max_scaled_error": 0.0,
+        "wall_phi_outlet": 0.494,
+        "cake_resistance_ratio_outlet": 6.137766,
+        "particle_flux_relative_drift": 0.2351796708064149
+      },
+      {
+        "case": "cake-mild",
+        "status": "passed",
+        "seconds": 0.3624987080038409,
+        "printed_values_exact": true,
+        "max_scaled_error": 0.0,
+        "wall_phi_outlet": 0.494,
+        "cake_resistance_ratio_outlet": 0.7613366,
+        "particle_flux_relative_drift": 0.0007894598806316155
+      }
+    ],
+    "observed_history_safety_substitutions": {
+      "noncake": 0,
+      "cake-mild": 1255,
+      "cake": 647
+    },
+    "pressure_grid_errors_Pa": {
+      "clean_pressure_inlet": [
+        0.00223494,
+        0.00055875
+      ],
+      "uniform_cake_Ln_0_25": [
+        0.000143189,
+        3.57978e-05
+      ],
+      "velocity_inlet_clean": [
+        0.00351246,
+        0.000878677
+      ]
+    },
+    "grid_scope": "independent zero-osmotic linear BVP; uniform25/49 axial nodes with common endpoints; not nonlinear cake or publication-grid validation",
+    "method_owner": "docs/FIXED_POINT_METHOD.org",
+    "executed_code_sha256": {
+      "CMakeLists.txt": "c5f09672cdecf25ea858249ef5bc5937d2b986d654c3021f5672a055bd49880b",
+      "src/boost_matrix.cpp": "799db8cbd7406233d66b2914d0fe06b3d2a03f695a3746bb03a90222c374380e",
+      "src/boost_matrix.h": "2eb241959fb04ac00e5bacef869abf2f72e4f2a6e598c3eadd0d9265310cf341",
+      "src/calculation_CP_profile.cpp": "d0e6fb9e1e292300ba15179984343bf26c5d067d612bac1d899cd25d27445698",
+      "src/dispersion_properties.cpp": "c5809dee4cf145f20812c3c134ad674e98a2fc440568cd60886ec210a0a91dad",
+      "src/dispersion_properties.h": "1d6d85c1c58b7cff7bcd8d9ce5884442dcd707818d17219fe11602e101461d19",
+      "src/file_IO.cpp": "e54289a3725dfd74c6e179353469c757701cf69a74109475f13226216888a7c0",
+      "src/file_IO.h": "12ccaa3ab52bdc0b0e20d77f6e1b3367991e1662dae57193da85a418ef916bfd",
+      "src/matrix.cpp": "ad93683f56a939595ee402257b40701adb416cddaf235e59ca3fbe77e969322d",
+      "src/matrix.h": "09362329f79b73074acfb7f8050ece7046b40a914fcb85e75e2e8e2b5d3c5d53",
+      "src/osmotic_pressure_CS.cpp": "b2df877f567e6e9c6c38d25b4a05dfc4b2d25eb0450525f7f31676e37dac4c60",
+      "src/osmotic_pressure_CS.h": "9a275b3bacb5894d9303eee8df3485ddf35c9aec3ed3b8956ae2ca8b81c3c437",
+      "src/parameters.cpp": "ae08cd12b0717c2e8d69c9409d1cd262134ca23f49ddcaf817785aaa8c3d8959",
+      "src/parameters.h": "4174b1d10098cef63ee7ebdcfc849ec3aecafcca084350b1de39756acfcf0a78",
+      "src/ported_lib.cpp": "ee732e815194b1d790b273cc9fbe1cb9583cd7aabdb2f18503d06fdbfe9b32bd",
+      "src/ported_lib.h": "503cb04167014ac3cb9d3a255035cf0db7a3aa02143495a7e6b06d1c0019acaf",
+      "src/transport_properties_INTERPOLATE.cpp": "7a3f92820b3b63958fbfd6355638f7cd6eacad463ca27d089cb38e2457ef58ac",
+      "src/transport_properties_INTERPOLATE.h": "d0c6dfd4dc4d86510858b3329b15799a00cb9266a99fe3a91a00e0c915617769",
+      "src/transport_properties_SID.cpp": "e5fd6bc7f53ae4e9312bb830f3771f07046d899407660b979452251f5e5a763b",
+      "src/transport_properties_SID.h": "59ed66af2004b26c6e7b272fcf910fa0197634d64900f94c86b57be46694cb07",
+      "src/transport_properties_SPHS.cpp": "80a98d7d2939571786684378c6ed3c37d68d275104fe56a5815b9d079d21d5ed",
+      "src/transport_properties_SPHS.h": "b4beb0298cdb476f6e714d8cc43021b0da4738de25265db7268f28e885b6634f",
+      "tests/boundaries.py": "ffca1af7e678aaf4e352baffef44846cc2b6baa1f09577ff3acf93b34d5e44cd",
+      "tests/fixtures/cake-mild-strict.dat": "13bc4527fb70c4a0c2f373c6a4208e86d221e760ed2bcec470305bc9107cab98",
+      "tests/fixtures/cake-strict.dat": "39d5badc708083de5b6c472ddaf2cc21c8878429ab99e360be8ab99350c8cce2",
+      "tests/fixtures/cake.dat": "4fb23e1395729890df2c2604371d7f22e92fa99c1b057f254613474fddfc454f",
+      "tests/fixtures/noncake-strict.dat": "adf2a27341576b646891081456a49c0e4ea5209a5fa471cb0a8e4bc8f4da3a1a",
+      "tests/fixtures/noncake.dat": "adf2a27341576b646891081456a49c0e4ea5209a5fa471cb0a8e4bc8f4da3a1a",
+      "tests/regression.py": "5b28df9f5d78398dfe61b5e73da80d29b65f1e41800934e77d81dab963bb4857",
+      "tests/unit.cpp": "588244043297bda8a8e629242b022fee015b2e517cc707afd61af957c9f3149f",
+      "tools/compare_python.py": "c5aca3e55db35c3a0bd49616d01bf8fc3193573681b0a7781260caa5037cd60e",
+      "tools/inspect_output.py": "190eb433abf1657b69da636b08fdfa1dc272fe2da08c5564a02394ad689ac5a2"
+    },
+    "preserved_limits": "original-default output differs; fresh Python1percent check remains failed; nonlinear cake flux/refinement unaccepted; no causal first-branch trace or generalized non-monotonic model",
+    "pressure_error_precision": "actual unit stdout precision"
+  }
+}

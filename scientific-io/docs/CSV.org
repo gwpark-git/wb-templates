@@ -1,0 +1,68 @@
+#+title: wb scientific IO — generic CSV adapter
+#+date: 2026-11-15
+#+language: en
+
+* Narrow new adapter
+wb_scientific_io.csv_table is new generic MIT code, separate from the archived
+mBLA schemas and source-derived conventions. Existing scientific readers and
+their interpretation are unchanged. No pandas/schema framework is required.
+
+=inspect_csv(path, *, delimiter=",", encoding="utf-8")= reads the actual file
+and returns path, format, delimiter, encoding, header, row_count, column_count,
+shape, blank_record_count, per-column numeric/missing/invalid/nonfinite counts
+and unit_inference=False. Header names are stripped and must be nonempty and
+unique. Header spelling/case otherwise stays exact. Rectangular row shape is
+required. Empty physical records are counted/skipped; an all-empty delimited
+record remains a row with missing cells. CSV quoting is handled by Python csv.
+
+=read_csv(path, *, columns=[...], delimiter=",", encoding="utf-8", missing="error")=
+returns ={"columns": {name: numpy.float64 array}, "metadata": {...}}=.
+Requested column order is retained and arrays are one-dimensional/equal length.
+Metadata adds selected_columns, selected_shape and missing_policy. At least one
+data row is required. Only selected columns must be finite numeric data;
+unrelated text/missing columns are reported but do not block numeric selection.
+
+Only missing="error" is supported. Missing/nonfinite/nonnumeric selected cells,
+absent/duplicate requested columns, malformed CSV or inconsistent widths raise
+the existing FormatError(ValueError) with source/column context. Missing files
+raise FileNotFoundError. No row removal, imputation, smoothing, normalization,
+unit inference, scientific naming or data mutation occurs. Delimiter/encoding
+are explicit; use utf-8-sig explicitly for a BOM-bearing UTF-8 header if needed.
+
+* Example
+#+begin_src python
+from wb_scientific_io.csv_table import inspect_csv, read_csv
+info = inspect_csv("measurement.csv")
+table = read_csv("measurement.csv", columns=["time", "pressure"])
+x, y = table["columns"]["time"], table["columns"]["pressure"]
+#+end_src
+Meaning/units must come from the actual header, researcher context or explicit
+user instruction; this adapter does not decide what a selected column means.
+The plotting plugin can inspect, map and validate columns without duplicating
+CSV parsing in the generated script.
+
+* Verification and license
+Six tests cover actual quoted/text headers and row summaries, selected finite
+numeric arrays, unrelated text/missing fields, malformed/duplicate headers,
+ragged rows, invalid/nonfinite/missing selected data, explicit delimiter,
+blank records, empty datasets, missing paths/columns and unsupported policies.
+All fixtures are synthetic and no original data are bundled or modified.
+[[file:../LICENSE_CSV][LICENSE_CSV]] grants MIT only for this new generic module, its tests
+and this documentation; inherited scientific assets retain their own scope.
+
+* Code and companion fields
+=csv_table.py:_records= normalizes the header and attaches physical line
+numbers to each retained CSV record. =_metadata= counts missing, invalid and
+non-finite entries for each column. =inspect_csv= returns that scan, and
+=read_csv= selects the named arrays plus the metadata. Their error type is
+the package =FormatError=, with a missing file handled by the underlying IO.
+=tests/test_csv_table.py= records fixture/admission/results oracles at each
+test. Tests use only explicitly constructed strings.
+
+The collection example =examples/plot_csv.py= writes =synthetic.csv= as
+=x,y,label= with finite unitless x/y and an unconsumed text label. The script
+renders PNG and PDF and writes =rendering.json= with =synthetic= and the
+style context. The CSV-only distribution manifest uses =pyproject.toml=
+to include the generic package and its license files; =provenance.json=
+names the selected files, edition and rights. This example is available with
+the collection public overlay.

@@ -1,0 +1,6 @@
+Selected formulas and the tabulated near-field resistance corrections derive from JFSD: a Python implementation of Fast Stokesian Dynamics with Jax, by William Torre and contributors.
+Repository: https://github.com/torrewk/Python-Jax-Fast-Stokesian-Dynamics
+Revision: 5234c959c0fdb0ba7ba32d6015d0478014a512c7
+Upstream is licensed under Apache License 2.0; the MIT classifier in its package metadata is inconsistent with its actual LICENSE.
+The added hi_sd.cpp invariant-tensor implementation and derived resistance_table.h retain Apache-2.0 provenance. The existing BD-MC source retains its original MIT license.
+Changes: native C++11/GSL dense direct solve; physical-unit adapter; uniform/per-particle arbitrary symmetric-traceless strain; explicit isolated-sphere treatment and overlap/parameter guards; tensor contraction fixes described in docs/HI_SD.org.

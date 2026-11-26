@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Style and color references</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../index.html">wb-templates</a>
+      <a href="../documentation/README.html">Documentation</a>
+      <a data-source-link href="REFERENCES.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#style-and-color-references"
+id="toc-style-and-color-references">Style and color references</a>
+<ul>
+<li><a href="#researcher-authored-style"
+id="toc-researcher-authored-style">Researcher-authored style</a></li>
+<li><a href="#color-source" id="toc-color-source">Color source</a></li>
+<li><a href="#named-dash-presets" id="toc-named-dash-presets">Named dash
+presets</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section id="style-and-color-references" class="level1">
+      <h1>Style and color references</h1>
+      <section id="researcher-authored-style" class="level2">
+      <h2>Researcher-authored style</h2>
+      <p>Gunwoo Park authored the original Python plotting scripts and
+      style used for: G. W. Park, J. K. G. Dhont and G. Nägele,
+      “Modeling crossflow filtration: Effect of shear on
+      particle-enriched polarization and cake layers,” <em>The Journal
+      of Chemical Physics</em> <strong>164</strong>, 244119 (2026), <a
+      href="https://doi.org/10.1063/5.0336005">doi:10.1063/5.0336005</a>.
+      The examples use synthetic data. Citation is distinct from
+      software licensing.</p>
+      </section>
+      <section id="color-source" class="level2">
+      <h2>Color source</h2>
+      <p>The independent <code>plot-styles</code> color mode uses
+      <strong>batlow</strong> from <strong>Fabio Crameri</strong>,
+      <em>Scientific colour maps</em>, version8.0 (2023), <a
+      href="https://doi.org/10.5281/zenodo.8035877">doi:10.5281/zenodo.8035877</a>.
+      It is accessed through <strong>Callum Rollo’s cmcrameri</strong>
+      Python package, <a
+      href="https://github.com/callumrollo/cmcrameri">project
+      source</a>. Version1.10’s actual wheel metadata explicitly
+      identifies this colour-map edition. The monochrome
+      <code>wb-style</code> example does not call a colormap; this
+      reference explains the color resource used by the collection, not
+      a new dependency of wb-style.</p>
+      <p>The inspected cmcrameri1.10 license is MIT: colormaps
+      copyright2020 Fabio Crameri; Python scripts/packaging
+      copyright2020 Callum Rollo. Preserve its copyright and permission
+      notice if copying/substantially redistributing the software/data.
+      The collection reads the independently installed batlow resource;
+      it does not bundle or replace that data. The retained actual
+      license is in the color package’s THIRD_PARTY_NOTICES directory.
+      Scientific colour maps citation and cmcrameri packaging
+      attribution serve different purposes. Other dependencies retain
+      their own terms; a palette license does not clear unrelated
+      inherited style code.</p>
+      </section>
+      <section id="named-dash-presets" class="level2">
+      <h2>Named dash presets</h2>
+      <p>The <a
+      href="https://matplotlib.org/devdocs/gallery/lines_bars_and_markers/linestyles.html">official
+      Matplotlib Linestyles gallery</a> is the reference for named dash
+      tuples, including <strong>dashdotdotted</strong>. The <a
+      href="https://github.com/matplotlib/matplotlib/blob/v3.10.7/galleries/examples/lines_bars_and_markers/linestyles.py">Matplotlib
+      v3.10.7 gallery source</a> was used for the comparison. The
+      packages store on/off lengths in points as JSON arrays and supply
+      zero offset to Matplotlib. Existing local variants retain their
+      stored lengths. See the child technical reference for the exact
+      differences. The <a
+      href="THIRD_PARTY_NOTICES/Matplotlib-3.10.7-LICENSE.txt">Matplotlib
+      license notice</a> is included with the distribution.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

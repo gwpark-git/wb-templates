@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>mBLA C++</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../index.html">wb-templates</a>
+      <a href="../documentation/README.html">Documentation</a>
+      <a data-source-link href="README.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#mbla-c" id="toc-mbla-c">mBLA C++</a>
+<ul>
+<li><a href="#modernization-levels"
+id="toc-modernization-levels">Modernization levels</a></li>
+<li><a href="#evidence-from-the-jcp-2026-reference"
+id="toc-evidence-from-the-jcp-2026-reference">Evidence from the JCP 2026
+reference</a></li>
+<li><a href="#build-the-root-c-baseline"
+id="toc-build-the-root-c-baseline">Build the root C++ baseline</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section id="mbla-c" class="level1">
+      <h1>mBLA C++</h1>
+      <p><a href="modern-lv2/tools/profile-explorer.html">Open mBLA
+      interactive validation</a></p>
+      <p>Select a recorded case to compare the archive, Level 1 and
+      Level 2 at stored axial stations and across the outlet radius. The
+      separate <strong>Site hollow-fibre reference</strong> tab shows
+      saved concentration and velocity profiles through a selected
+      point.</p>
+      <p>The independent <a href="modern-lv1/README.html">Level 1</a> and
+      <a href="modern-lv2/README.html">Level 2</a> packages each have
+      CMake, Make, local CLI installation and tests. Level 2 refactors
+      the fixed-point controller, wall updates and cake search within
+      the existing numerical architecture. The current C++ case driver
+      declares the Level 3 local-equilibrium transport interface. <a
+      href="modern-lv2/src/case_driver.h">Case driver header</a> The <a
+      href="modern-lv3/README.html">Level 3 package</a> builds a provider
+      example on that driver and compares it with the Level 2 result.
+      The <a href="docs/LEVEL_3_DESIGN.html">Level 3 design record</a>
+      describes the wider scientific-composability workflow. <a
+      href="docs/MODERNIZATION.html">Modernization overview</a></p>
+      <section id="modernization-levels" class="level2">
+      <h2>Modernization levels</h2>
+      <table>
+      <colgroup>
+      <col style="width: 50%" />
+      <col style="width: 50%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Level</th>
+      <th>Implemented and checked scope</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Level 1 — portable baseline</td>
+      <td>Build and interface modernization keeps the reference C++
+      calculation. See the <a
+      href="modern-lv1/docs/VALIDATION.html">Level 1 validation
+      guide</a>.</td>
+      </tr>
+      <tr>
+      <td>Level 2 — numerical organization</td>
+      <td>The fixed-point architecture and output contract are retained.
+      The current C++ solver and the Python/Numba inner cake-resistance
+      kernel have separate replay evidence below.</td>
+      </tr>
+      <tr>
+      <td>Level 3 — scientific composition</td>
+      <td><code>EquilibriumTransport</code> supplies scalar
+      <code>D_c/D_0</code> and <code>eta/eta_s</code> to paired
+      <code>LIVE</code> closures. The recorded native BD–MC/mBLA
+      benchmark ran a 5 kPa, 10 nm non-cake case with on-demand and
+      pretabulated providers. The live and cached linear paths matched
+      all 250 axial and 1,440 radial printed values in that case.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p><code>modern-lv3</code> uses the transport interface in the
+      Level 2 source tree. The composition benchmark applies to a
+      local-equilibrium, low particle Péclet number case with
+      free-draining particle dynamics and the built-in osmotic-pressure
+      law. Full suspension viscosity and cake-regime applicability
+      require their own scientific evidence. <a
+      href="modern-lv2/docs/SCIENTIFIC_GUIDE.html">Runtime transport
+      contract</a></p>
+      </section>
+      <section id="evidence-from-the-jcp-2026-reference" class="level2">
+      <h2>Evidence from the JCP 2026 reference</h2>
+      <p>The <a href="modern-lv2/docs/PROFILE_EXPLORER.html">regression
+      data guide</a> explains the stored grids, quantities and case
+      coverage. Open the <a
+      href="modern-lv2/tools/profile-explorer.html">profile explorer</a>
+      to compare the full axial and outlet radial sections side by side.
+      The site reference tab shows axial and radial concentration and
+      flow through a selected point in the independent hollow-fibre
+      preview.</p>
+      <p>The reference is the C++ solver used in Park, Dhont and Nägele,
+      <a href="https://doi.org/10.1063/5.0336005">J. Chem. Phys. 164,
+      244119 (2026)</a>. Level 1 modernizes the build and interfaces.
+      Level 2 preserves the numerical architecture and ports the
+      <strong>inner cake-resistance search</strong> from C++ to Python,
+      with optional Numba acceleration. The outer solver and CLI are
+      C++. Eight selected CASE1/CASE2 TMP runs at 200 × 400 reproduce
+      Level 1 output byte-for-byte and match archived mean TMP and
+      permeate velocity at stored precision. The accepted profiles span
+      the full axial domain, with CASE2 run at the reference setting b =
+      1. Mesh convergence and the high-TMP inlet regime have their own
+      applicability limits. The <a
+      href="modern-lv2/docs/PYTHON_CAKE.html">Python/Numba replay</a>
+      agrees with C++ on 42 saved searches and 9,712 trials. These are
+      bounded modernization checks for the recorded conditions and
+      routines.</p>
+      </section>
+      <section id="build-the-root-c-baseline" class="level2">
+      <h2>Build the root C++ baseline</h2>
+      <p>Run these commands from the mBLA package root to build its
+      baseline CLI. For a modernization-level build, use the <a
+      href="modern-lv1/README.html">Level 1 guide</a>, <a
+      href="modern-lv2/README.html">Level 2 guide</a>, or <a
+      href="modern-lv3/README.html">Level 3 guide</a>. The Level 3
+      provider example builds against the sibling Level 2 source.</p>
+      <p>A C++17 template for Gunwoo Park’s cross-flow ultrafiltration
+      solver, preserving its hollow-fibre concentration-polarization and
+      cake-resistance calculations. It provides a CMake library/CLI,
+      owned matrix storage, validated configuration and tables, and
+      small immutable reference cases. This is internal research
+      preparation; <strong>redistribution of the inherited unpublished
+      source needs review</strong>. See <a href="LICENSE">license
+      scope</a>, <a href="NOTICE">notices</a> and <a
+      href="THIRD_PARTY_NOTICES.html">third-party evidence</a>.</p>
+      <p>Install or otherwise provide a C++17 compiler, CMake 3.16+, GSL
+      2+ and Python 3 for the standard-library test runner. No network,
+      plugin, original dataset or Python scientific stack is needed for
+      the C++ build and standard tests.</p>
+      <pre class="sh"><code>cmake -S . -B /tmp/mbla-build -DCMAKE_BUILD_TYPE=Release
+cmake --build /tmp/mbla-build -j2
+ctest --test-dir /tmp/mbla-build --output-on-failure
+mkdir /tmp/mbla-run
+cp examples/cake-mild.inp /tmp/mbla-run/case.inp
+cd /tmp/mbla-run
+/tmp/mbla-build/mbla case.inp</code></pre>
+      <p><code>fout=result.dat</code> is resolved against the run
+      directory and overwritten. A completed run prints
+      <code>MBLA_STATUS=converged</code>; this names the inherited
+      stopping criterion. Inspect conservation before interpreting its
+      predictions. Run <code>tools/inspect_output.py</code> from the
+      copied template with the resulting table:</p>
+      <pre class="sh"><code>python3 tools/inspect_output.py /tmp/mbla-run/result.dat \
+  --radius 0.0005 --permeability 6.7e-10 --csv /tmp/mbla-run/result.csv</code></pre>
+      <p>The examples distinguish a non-cake case, a mild cake case, and
+      a demanding cake regression. The latter exposes substantial
+      particle-flux error; the mild case also lacks a successful
+      refined-grid confirmation. These are useful engineering and
+      numerical diagnostics, <strong>not grid-converged cake
+      validation</strong>. The inherited output has mixed normalization
+      in its cake column; read the <a
+      href="docs/SCIENTIFIC_GUIDE.html">scientific/I/O guide</a> before
+      using it.</p>
+      <p><a href="docs/FIXED_POINT_METHOD.html">Fixed-point method</a>
+      explains the history-dependent cake safety rule and the
+      researcher-stated limit for non-monotonic wall profiles. <a
+      href="docs/VALIDATION.html">Validation</a> records current-source
+      equivalence under an explicit common floating-point policy,
+      independent checks, observed failures and limits. Historical
+      Python/C++ non-cake agreement remains established
+      researcher-reported evidence. Fresh Python comparisons are
+      separate; Python has no cake extension.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

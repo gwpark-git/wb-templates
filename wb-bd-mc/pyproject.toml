@@ -1,0 +1,37 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.13"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "AI_modulated_bd_mc"
+version = "0.1.0"
+description = "AI-modulated modernization of Gunwoo Park's network and colloidal dynamics code; limited validation"
+readme = "README.md"
+authors = [{name = "Gunwoo Park"}]
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.urls]
+Original-Source = "https://github.com/gwpark-git/dynamics_of_networks_and_colloids.git"
+
+[project.scripts]
+bdmc = "bdmc.cli:main"
+
+[project.optional-dependencies]
+reference = ["scipy>=1.10"]
+ml = ["scikit-learn>=1.4"]
+torch = ["torch>=2.2"]
+test = ["pytest>=8"]
+
+[tool.scikit-build]
+cmake.source-dir = "modern"
+wheel.packages = ["python/bdmc"]
+build-dir = "build/python/{wheel_tag}"
+sdist.include = ["README.md", "CITATION.cff", "NOTICE.md", "LICENSE", "AGENTS.md", ".gitignore", "pyproject.toml", "docs/**", "provenance/**", "examples/**", "lib/**", "src/**", "Makefile", "short_test.inp", "modern/**", "python/**", "third_party/hi_native/**", "tests/**", "tools/**"]
+sdist.exclude = ["build/**", "runs/**", ".venv/**", "**/__pycache__/**", "**/.pytest_cache/**", "**/*.pyc"]
+wheel.license-files = ["LICENSE", "NOTICE.md", "third_party/hi_native/third_party/hi_sd/LICENSE", "third_party/hi_native/third_party/hi_sd/NOTICE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+

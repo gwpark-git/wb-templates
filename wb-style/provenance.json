@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "asset": "wb-style",
+  "version": "0.2.0",
+  "style_author": "Gunwoo Park",
+  "style_origin": "Researcher-authored Python scripts used for the cited paper.",
+  "paper": {
+    "title": "Modeling crossflow filtration: Effect of shear on particle-enriched polarization and cake layers",
+    "authors": [
+      "Gun Woo Park",
+      "Jan K. G. Dhont",
+      "Gerhard Nägele"
+    ],
+    "journal": "The Journal of Chemical Physics",
+    "volume": "164",
+    "issue": "24",
+    "article": "244119",
+    "year": 2026,
+    "doi": "10.1063/5.0336005",
+    "license": "CC-BY-4.0, except where otherwise noted; paper first-page notice"
+  },
+  "adaptation": {
+    "scope": "Later reusable implementation, packaging, synthetic examples, tests and documentation.",
+    "project_direction": "Gunwoo Park"
+  },
+  "examples": {
+    "data": "Deterministic synthetic scalar series with neutral x/series_a/series_b CSV columns",
+    "original_data_files_or_formats_included": false
+  },
+  "rights": {
+    "project_owned_plotting_and_adaptations": "MIT, same grant as wb-templates",
+    "third_party": "Matplotlib gallery and separately obtained dependencies retain their terms"
+  },
+  "linestyle_reference": {
+    "official_docs": "https://matplotlib.org/devdocs/gallery/lines_bars_and_markers/linestyles.html",
+    "verified_source": "https://github.com/matplotlib/matplotlib/blob/v3.10.7/galleries/examples/lines_bars_and_markers/linestyles.py",
+    "source_sha256": "bb3118494b4d7eedb8c3d17aea4261ac5f2d7708d7eb847c57c57c62466460d6",
+    "license_notice": "THIRD_PARTY_NOTICES/Matplotlib-3.10.7-LICENSE.txt",
+    "local_adaptation": "Selected dash tuples as JSON stroke/gap arrays, with the package's existing local variants and zero offset."
+  }
+}

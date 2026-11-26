@@ -1,0 +1,160 @@
+{
+  "edition": "modern-lv2",
+  "checked_on": "2026-11-25",
+  "environment": {
+    "platform": "Linux aarch64",
+    "compiler": "GCC 14.2.0",
+    "cmake": "3.31.6",
+    "gsl": "2.8",
+    "python": "3.13.5",
+    "flags": "-O3 -DNDEBUG -std=c++17 -ffp-contract=off"
+  },
+  "source": {
+    "level_1_manifest": "LEVEL_1_BASELINE.sha256",
+    "level_2_production_hashes": {
+      "src/calculation_CP_profile.cpp": "654a2595896ffb91c0cfb887607d49f7f59c89855646d8a5205eb2f1c2bc2e4a",
+      "src/osmotic_pressure_CS.h": "9a275b3bacb5894d9303eee8df3485ddf35c9aec3ed3b8956ae2ca8b81c3c437",
+      "src/ported_lib.cpp": "077632926d8141b34a3a1f946a12eb716cac2599a6e341f12ade5c7a9789c315",
+      "src/boost_matrix.cpp": "799db8cbd7406233d66b2914d0fe06b3d2a03f695a3746bb03a90222c374380e",
+      "src/transport_properties_INTERPOLATE.h": "d0c6dfd4dc4d86510858b3329b15799a00cb9266a99fe3a91a00e0c915617769",
+      "src/dispersion_properties.h": "1d6d85c1c58b7cff7bcd8d9ce5884442dcd707818d17219fe11602e101461d19",
+      "src/parameters.h": "4174b1d10098cef63ee7ebdcfc849ec3aecafcca084350b1de39756acfcf0a78",
+      "src/parameters.cpp": "dbd3aec1fafcb6571564d702f2ccd2e4f6b6317d9a849fe03a5cdb8724d813e2",
+      "src/transport_properties_SID.h": "59ed66af2004b26c6e7b272fcf910fa0197634d64900f94c86b57be46694cb07",
+      "src/matrix.h": "09362329f79b73074acfb7f8050ece7046b40a914fcb85e75e2e8e2b5d3c5d53",
+      "src/ported_lib.h": "503cb04167014ac3cb9d3a255035cf0db7a3aa02143495a7e6b06d1c0019acaf",
+      "src/file_IO.h": "12ccaa3ab52bdc0b0e20d77f6e1b3367991e1662dae57193da85a418ef916bfd",
+      "src/file_IO.cpp": "bd3d855335f79e63c8c1afe3fa7e16c4f8e7e151d5e48a9e5a528d610a5eca74",
+      "src/matrix.cpp": "e4374265b047f9c94585eb6e8d90fad6115cd13c7e0791561248e6005facda2b",
+      "src/transport_properties_SID.cpp": "e1a7e4e1053fa813cb7998671917a2801559fda9901c0433d0d3e15293f99f9f",
+      "src/fixed_point_controls.h": "7ac4c0bd3891f14f3742cc09d6f820253f6049851517382da0dcca11c96b782d",
+      "src/boost_matrix.h": "c320fb12bdc91ff085ec5373056b2146d6cf9a45b4cb532472c47bc2078efa6e",
+      "src/transport_properties_INTERPOLATE.cpp": "98bb0ccee31f2dd2b1c50f0698bf5bdbc210a8f7e1ba7b561202abc036259d84",
+      "src/dispersion_properties.cpp": "7887b154625636e80a11518657b58f03f0acee187f8414c66743b68bfbe7aa1a",
+      "src/transport_properties_SPHS.cpp": "c79d9a87bb59c0aa3b5493058bfe149f6ad633b1d687b1f153c1745d4da990b1",
+      "src/transport_properties_SPHS.h": "b4beb0298cdb476f6e714d8cc43021b0da4738de25265db7268f28e885b6634f",
+      "src/osmotic_pressure_CS.cpp": "6722420dbe9a72390eb4498a55623c485b921203dd947375095a206c36e93aa7"
+    },
+    "files_changed": [
+      "src/boost_matrix.h",
+      "src/calculation_CP_profile.cpp",
+      "src/dispersion_properties.cpp",
+      "src/file_IO.cpp",
+      "src/fixed_point_controls.h",
+      "src/matrix.cpp",
+      "src/osmotic_pressure_CS.cpp",
+      "src/parameters.cpp",
+      "src/ported_lib.cpp",
+      "src/transport_properties_INTERPOLATE.cpp",
+      "src/transport_properties_SID.cpp",
+      "src/transport_properties_SPHS.cpp"
+    ],
+    "files_added": [
+      "src/fixed_point_controls.h"
+    ],
+    "unchanged_example_and_fixture_bytes": true,
+    "comment_only_final_update": [
+      "src/boost_matrix.h",
+      "src/calculation_CP_profile.cpp",
+      "src/dispersion_properties.cpp",
+      "src/file_IO.cpp",
+      "src/fixed_point_controls.h",
+      "src/matrix.cpp",
+      "src/osmotic_pressure_CS.cpp",
+      "src/parameters.cpp",
+      "src/ported_lib.cpp",
+      "src/transport_properties_INTERPOLATE.cpp",
+      "src/transport_properties_SID.cpp",
+      "src/transport_properties_SPHS.cpp"
+    ],
+    "commented_executable_repeated_ctest": "PASS; verified release executable byte-identical"
+  },
+  "ctest": {
+    "mbla_units": "PASS",
+    "mbla_regression": "PASS",
+    "mbla_input_contract": "PASS",
+    "mbla_output_contract": "PASS"
+  },
+  "negative_check": "Changing the history predicate from < to <= is rejected at exact freeze.",
+  "path_comparison": {
+    "result": "PASS",
+    "scope": "Three 25 × 120 fixtures compared with ordinary and instrumented Level 1/Level 2 executables.",
+    "cases": [
+      {
+        "case": "noncake",
+        "counts": {
+          "saved": 1071,
+          "hydraulic": 1071,
+          "wall": 25704,
+          "search": 0,
+          "updated": 1071,
+          "stop": 1071,
+          "guard_hits": 0,
+          "search_steps": 0
+        },
+        "trace_sha256": "13c46d6e4e7d8caaf582c04a3e175a495a63849fe961e06580293d113b3305c0"
+      },
+      {
+        "case": "cake-mild",
+        "counts": {
+          "saved": 90,
+          "hydraulic": 90,
+          "wall": 2160,
+          "search": 2086,
+          "updated": 90,
+          "stop": 90,
+          "guard_hits": 1255,
+          "search_steps": 143968
+        },
+        "trace_sha256": "67f09d616d7220f8312858913b86242275f701f904e26c100fdd17ed0d085ead"
+      },
+      {
+        "case": "cake",
+        "counts": {
+          "saved": 93,
+          "hydraulic": 93,
+          "wall": 2232,
+          "search": 1926,
+          "updated": 93,
+          "stop": 93,
+          "guard_hits": 647,
+          "search_steps": 1062942
+        },
+        "trace_sha256": "5cbeaff39f3a4ad3c47711d7c31ea9a905296c2869b8d3495d1da54e9ff68c0d"
+      }
+    ]
+  },
+  "jcp_benchmark": {
+    "status": "PASS",
+    "selected_cases": 8,
+    "grid": [
+      200,
+      400
+    ],
+    "case2_b": 1,
+    "compared_to_level_1": "Byte-identical main table, .Rout, .Fval and solver diagnostics for each case.",
+    "compared_to_archive": "Exact mean TMP and mean permeate velocity in all eight cases at stored precision.",
+    "archive_data": "Original inputs, continuation data and raw outputs stay with the originating study."
+  },
+  "installation": {
+    "make_test_install": "PASS",
+    "example": "cake-mild",
+    "result": "The detached installed executable reproduced the local CTest table byte-for-byte."
+  },
+  "scope": "Architecture and selected calculation path preservation under the tested build. Entrance matching, further mesh accuracy and other build environments have separate evidence.",
+  "python_cake_search": {
+    "scope": "Optional alternative for the inner resistance search. The C++ executable remains the full solver.",
+    "result": "42 captured search inputs and 9712 trials. Zero observed residual difference from C++ in either Python backend.",
+    "environment": {
+      "numba": "0.61.2",
+      "llvmlite": "0.44.0",
+      "numpy": "2.2.4"
+    },
+    "method": "Three-batch median timings and separate first JIT call",
+    "guide": "../docs/PYTHON_CAKE.org",
+    "sha256": {
+      "python/mbla_cake.py": "1219dfe301738eac6de358bb131c9c717299457af18aeea3aff8d30aba478e20",
+      "tests/compare_python_cake.py": "40182c38947ccfef3c51414a4679d1df65c10d840b7a19df8af5453db26943a9"
+    }
+  }
+}

@@ -1,0 +1,822 @@
+{
+  "schema": "wb.documentation-provenance.v1",
+  "project_author": "Gunwoo Park",
+  "project": "Agentic Workbench (wb)",
+  "languages": {
+    "selected_complete_collection_readmes": [
+      "en",
+      "de",
+      "ko"
+    ],
+    "canonical": "en",
+    "translation_maintenance": "Manual, complete root/selected new child editions; detailed child guides primarily English. No native-speaker review claimed."
+  },
+  "current_revision": {
+    "date": "2026-11-26"
+  },
+  "standard_legal_texts": "The retained license grants and notices preserve the original source material.",
+  "files": [
+    {
+      "path": "AGENTS.html",
+      "sha256": "50f46063a9720066ac4ab7ec326382e9810879c512c28fff14f67061cf778ac9"
+    },
+    {
+      "path": "AGENTS.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "150011897423b135ee45e095a9a59810395206b0789bd33dd79f0a569547ebff"
+    },
+    {
+      "path": "CITATION.cff",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "f2c10ee19714756fdc94db2a389bc18d3352dc0cc6c944f99d882713f522ba30"
+    },
+    {
+      "path": "LICENSE_SCOPE.html",
+      "sha256": "b2ea347a3b014d4535aaf94bb50716fd4c06718ea6f3b5db287fc0daa4cea953"
+    },
+    {
+      "path": "LICENSE_SCOPE.md",
+      "author": "Gunwoo Park project direction",
+      "sha256": "a8292f48f74836dd32d2329cfba3fa15d5116a7f1ac1ecd58ba64d249612f1b7"
+    },
+    {
+      "path": "NOTICE.html",
+      "sha256": "dbaf55168068edaf72986d1a8b394895edfd2f15a8f11622fafbea793c8897f2"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "0e2bf408bfb5231ef3c8d8b900610a538e1509ea092715a8f01c4c61d0328cd2"
+    },
+    {
+      "path": "PACKAGING.html",
+      "sha256": "04b58c23a820e0375c5b1bd28c7127aac12adea5cf51fc3f5a6caf20041564f6"
+    },
+    {
+      "path": "PACKAGING.org",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "d8723bb241720fe51b2b789cba45eedd6ce585704d115f475a6fc55aa9b22b82"
+    },
+    {
+      "path": "README.de.html",
+      "sha256": "067b25a79e130f05076efefe95ae21337afb7f97d5f0443932f82734a28f2762"
+    },
+    {
+      "path": "README.de.md",
+      "sha256": "7c54c21961d7863ddb6f36f1dbe843d643e2bee178d223142fe3dcbc459eb3b9"
+    },
+    {
+      "path": "README.html",
+      "sha256": "29a175abef10f3ecbcd3c31e96bd5cfb0d089f359b33a47519719408c3225667"
+    },
+    {
+      "path": "README.ko.html",
+      "sha256": "7f3d5760ff6c392f108364d1a3ef3c4a5be7cffa9ae969bf67e0a7180c64f9e1"
+    },
+    {
+      "path": "README.ko.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "cf059c42f494513fd5909f23b68ceedefc7946b5f971673cb31003349b8a1f8d"
+    },
+    {
+      "path": "README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "1ef172a3bd51607f5d16e3e5275a4a7d17bb0298d3709d372f49ba75f8aab89c"
+    },
+    {
+      "path": "documentation/README.html",
+      "sha256": "d8b118d5a2aea723456a015bf37f228189a452dc87d3135e167d59290ace5c80"
+    },
+    {
+      "path": "documentation/README.md",
+      "sha256": "3cc4f8b06831aaa10c8ef060d5e10b0791c1548480a346a71051b90c88ca6afd"
+    },
+    {
+      "path": "documentation/collection-guide/_guide.html",
+      "sha256": "1f672b84ccd92edc37dacccbd7b93e4f5daee2340ff17128ef723efbfdc55713"
+    },
+    {
+      "path": "documentation/collection-guide/_guide.md",
+      "sha256": "fbabfd41097346bc2edee28a0eef832e324506580c520fccb1d71e246de97520"
+    },
+    {
+      "path": "documentation/collection-guide/_reference.html",
+      "sha256": "dabe493d1fb59511cf0e4cc9445b401fd14bc07cf6315d92910927546f06d5c2"
+    },
+    {
+      "path": "documentation/collection-guide/_reference.md",
+      "sha256": "646bc7e5858c0c4034804f89fe6c503a75729325d391e1cc6e54003050c0c464"
+    },
+    {
+      "path": "documentation/collection-guide/report.html",
+      "sha256": "3af07b5939c8721327451cf485c2d78c5a557d416c5a6ef39f493579baf2c3e8"
+    },
+    {
+      "path": "documentation/collection-guide/report.qmd",
+      "sha256": "07567681202cc7aa01471718c764641ca48bdb851643d16f87baf38469f9d945"
+    },
+    {
+      "path": "documentation/examples/python-package/README.html",
+      "sha256": "8a1e92b7d7f1e75a3c605eba26f20eb82d53d92189aad6303cf7933f8e6e4b9f"
+    },
+    {
+      "path": "documentation/examples/python-package/README.md",
+      "sha256": "486f113045775aee0d89e1aa1e45c1ddbd6f7c0050a4d45a3dff34480ea7ec73"
+    },
+    {
+      "path": "documentation/examples/python-package/guide.html",
+      "sha256": "52a73018aed570b20aa4817bff42e9c4cda48e4ab0063708b7e6f7f92af0a63c"
+    },
+    {
+      "path": "documentation/examples/python-package/guide.md",
+      "sha256": "8994af207a4fd11a387221a7ae87f96c5b71d95eee6da049d23e2c717e28c5b9"
+    },
+    {
+      "path": "documentation/examples/python-package/preview.html",
+      "sha256": "222452c3612c5157129083f3117fcf5df0378682def3258d309c54d2e1e9599f"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/README.html",
+      "sha256": "45ead07709bb3a5c02bd0c08c8dfd169b9efa0c989445ed7822e0fb776368fdb"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/README.md",
+      "sha256": "52b0b98ccf0690f3ea4cfa4b4465422fd3fb6ad342039f804aa2966363919db9"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/THIRD_PARTY_NOTICES.html",
+      "sha256": "ef6f3df86881d828a87aeb2b0cc276c7716fcc006c76692922cd8fac6357b59a"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/THIRD_PARTY_NOTICES.md",
+      "sha256": "c4f87528ff600b9415310bc743897748a7187381c021d96f10bef3ef9d1f10df"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_code.html",
+      "sha256": "cd9e8a1bd071c2505cdd90450a7733b4b80e44e6646f4ad56b89c4e830263be5"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_code.md",
+      "sha256": "9463eec3c922c1018a1203d58ce04841ee89b1d245b14c1e9fcb4c465c6958ca"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_guide.html",
+      "sha256": "1f43b9e7ba8b255e28e68467d6dc51bab1b35a06a33d3dafafa51137fa5401cc"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_guide.md",
+      "sha256": "60c7acb783fd7024ebf067d192ca4f82a1b69f7ff7afb8110a90121596e509b7"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_methods.html",
+      "sha256": "4080ee6c2f603f46dd6f37c5e64871cb5e69129ba64e5fa3076b9b0904ba2bf8"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_methods.md",
+      "sha256": "11741891236dc0c7d944397283c3482610f5770c0549682983abfe99b44cec83"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_publication-info.html",
+      "sha256": "19f2967f2a01be99f20281fb8d3b5ce70ba7855cc73af23850339b35ac2afbb0"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_publication-info.md",
+      "sha256": "9ffba3bba7910a72eed4cb9de7a879c5f21066904ecc377a78ab2c68fdede705"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_results.html",
+      "sha256": "ad0f821e37dd67cca1c049419bfb5db77e9c0e57ccd15e5765aa5011843eab92"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_results.md",
+      "sha256": "66f662ccef866f02474ae828221eb800fa0c1ada61db4bb4b32820e84db93870"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_review.html",
+      "sha256": "3b9ad3d50c59157cd101cd7bf8c7099121a6101caeceab995e0a26722372532a"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/_review.md",
+      "sha256": "5c6f6506952081bdcd18ad9df1a32c809fac185ea77306dc4dabffbf98dd0338"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/figures/comparison.pdf",
+      "sha256": "b977120be8844a7146191432a6c0506762575e71bb6be2de7d2e159c9c65f22a"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/report.html",
+      "sha256": "7019fc5e1ba5dace1cc2fec107c29d4fb78e0291c0b5f4ffc42d2137b268099e"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/report.qmd",
+      "sha256": "c0e575a96188e4c56fdc0381a18422c404f628f9039678a148552757f7b74743"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/slide-navigation.html",
+      "sha256": "b0237bc724b9ffc284852cc62c1ae6528af02c92f7b617c77f7073ff45ca5614"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/slides.html",
+      "sha256": "a543a8dc932a50fbf48e0492c70d94fb950c1b3aff952fc5cdda36004542e2d7"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/slides.pdf",
+      "sha256": "995dd04a0bd03636fc5616da5022e25bf3d8b49ece64ac525a55af4a1d606897"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/slides.qmd",
+      "sha256": "a13dc360f1bfb283a8506c266200cbd5b357ba6812c865fbd9064e2b96a8385c"
+    },
+    {
+      "path": "documentation/examples/quarto-comparison/title-slide.html",
+      "sha256": "539fbbf7011732c79a8cea01a4a102ea7aa67aed44f31c398baac637d304b048"
+    },
+    {
+      "path": "documentation/templates/python-package-guide/reader.html",
+      "sha256": "44382520679499bb81629756d4b9b02151a73e49bf94b644c7096d1586524c6b"
+    },
+    {
+      "path": "documentation/templates/python-package-guide/starter.html",
+      "sha256": "240c14aab70db72d1cbe7667d8a99110fb11c86f0da15c303ed1e697e36a0f1a"
+    },
+    {
+      "path": "documentation/templates/python-package-guide/starter.md",
+      "sha256": "9072fa5f7965893f2f2e0e70b964e95699edfda3cb7dee976a8a9ac41b004887"
+    },
+    {
+      "path": "documentation/wb-python-preset.html",
+      "sha256": "edff30fa275e57830e8d7c4a8ef148586dc449704e18f93c8a7cb72e514898bf"
+    },
+    {
+      "path": "documentation/wb-python-preset.md",
+      "sha256": "db5cc13435d2dd307de8e180c3b565965522a02e95c4077024f0ec3254ecf5c3"
+    },
+    {
+      "path": "examples/bdmc-eos/README.html",
+      "sha256": "34268cb2133df532d8bd25ff426405dee3d6537e44d71536f6099f6259d892f1"
+    },
+    {
+      "path": "examples/bdmc-eos/README.md",
+      "sha256": "ccbc2f8b578c70fbcd0f0fad5eef063cf79647c501f9f7a9788b2b7d553f57f4"
+    },
+    {
+      "path": "examples/bdmc-eos/equation_of_state.pdf",
+      "sha256": "af6c502f0f7ea4bb5538241e44e2680a327ae08ec68b5328d6eb09d9dcfdaffe"
+    },
+    {
+      "path": "index.html",
+      "sha256": "29a175abef10f3ecbcd3c31e96bd5cfb0d089f359b33a47519719408c3225667"
+    },
+    {
+      "path": "plot-styles/AGENTS.html",
+      "sha256": "dfdae8bd41572d3fe1fd0a29b56791837ad9750fa58b18b23935931a30679755"
+    },
+    {
+      "path": "plot-styles/AGENTS.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "77b5b278304aa859c927123bc457d755d1ec867a607bd795c03810339f211ff3"
+    },
+    {
+      "path": "plot-styles/NOTICE.html",
+      "sha256": "9d863da6e9c7f908e765e89b4d6011583c365a5736108aed2a330a821982158c"
+    },
+    {
+      "path": "plot-styles/NOTICE.md",
+      "author": "Gunwoo Park project direction",
+      "sha256": "ec6a07b09cfff23d57e772546d7073f004a4932f2c2193173d37210b62ffdf09"
+    },
+    {
+      "path": "plot-styles/README.html",
+      "sha256": "6b3f98940f497115f307a7ebefd5a669fa19067c8a4c7414d8b9c868048a7d08"
+    },
+    {
+      "path": "plot-styles/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "e4edb50eac1c91ae27a8513ac5ac33d9d251e9e3952da874c4772c23ecee3368"
+    },
+    {
+      "path": "plot-styles/REFERENCES.html",
+      "sha256": "6691a7f0c32fd214407a7be2be6caac36df38b0dc7a866caafb29b56b46c9036"
+    },
+    {
+      "path": "plot-styles/REFERENCES.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "62f8f6b1942e6b9047c479ddb9b1527e1f8defcfb86a112dba7f62ef55b3de4a"
+    },
+    {
+      "path": "plot-styles/docs/DEVELOPER.html",
+      "sha256": "b1ef5f0a344b4b573d23124de3badb6b4731e96354258b152bd4aed11a79a876"
+    },
+    {
+      "path": "plot-styles/docs/DEVELOPER.org",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "8ce013e88291263354ede76da74cf0b867f0d32aea28ba49707fbeeaec713002"
+    },
+    {
+      "path": "provenance/VALIDATION.html",
+      "sha256": "d5958479d75697f5bc6712371ba434176c880d0f1470e55905656266e3073720"
+    },
+    {
+      "path": "provenance/VALIDATION.org",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "8a11c26f717bf5f91fcc99e532e0272c3b06839b4ceb79061f8308446a0e5f59"
+    },
+    {
+      "path": "scientific-io/NOTICE.html",
+      "sha256": "200b49ca7de090fac401356a4ba06a769c832869d5e9e4aab670caf58c35377a"
+    },
+    {
+      "path": "scientific-io/NOTICE.md",
+      "sha256": "8bd6ff5c2bee9ceb6573e86c8a65417e62399b85924913e492eb4899faae0c73"
+    },
+    {
+      "path": "scientific-io/README.html",
+      "sha256": "2f795700ac29ff6e66b2ed60994bb09cfad588010a2189dd8150a184aa6d0f36"
+    },
+    {
+      "path": "scientific-io/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "bd9605fb5b37ba1c781912b06f01aa347ec5b3d36c25426696f6666ac4a924d4"
+    },
+    {
+      "path": "scientific-io/docs/CSV.html",
+      "sha256": "eab0b54a6d2de3d80ba704302c6aea1121e2fa8d0f4cd5cf42cc21d0e322e22c"
+    },
+    {
+      "path": "scientific-io/docs/CSV.org",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "6cfdef3c3171d1bf863c7d9d0f6df3ac3c884113d7fb090a84b5fee37ec6eaee"
+    },
+    {
+      "path": "wb-bd-mc/AGENTS.html",
+      "sha256": "5d4ad23d7ab1b1933ebef3fb52cb4542acc8be6a21c4041213d615eecd5dc7cc"
+    },
+    {
+      "path": "wb-bd-mc/AGENTS.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "f66a2867533ce78e9ba3cf8cc2f14fd595cdc5a924decbefa25c33fc8e47cbab"
+    },
+    {
+      "path": "wb-bd-mc/CITATION.cff",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "c706baee0c7b78632c902d22f856c746e1072dbc715a4791e995849c33b86bc9"
+    },
+    {
+      "path": "wb-bd-mc/NOTICE.html",
+      "sha256": "f2ca4f73e6cae5fdd4599b5c0737b1dc8a2fb22e3f25d7f4c370d1a262ec9183"
+    },
+    {
+      "path": "wb-bd-mc/NOTICE.md",
+      "sha256": "6749b4bb2b226482a3f15304f2342ebe991f02e59af957e29a7105f803eee0a5"
+    },
+    {
+      "path": "wb-bd-mc/README.html",
+      "sha256": "0d05cececc73c72969c1e2659397eddaa271de6c682a7401823bfcaa68522526"
+    },
+    {
+      "path": "wb-bd-mc/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "3bfd15fb03a1562bbceaf0908f90ab182268b9b44b31b5f40d5aabc95cf98c0a"
+    },
+    {
+      "path": "wb-bd-mc/docs/AI_UPDATE_SCOPE.html",
+      "sha256": "458ed0b613f62fd26d4e974faff05a7685683be614d07a54d7b3a4c4515b8080"
+    },
+    {
+      "path": "wb-bd-mc/docs/AI_UPDATE_SCOPE.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "c7067841ba38f0843519398656519bcad5c5c06b2d114b250b088970098e05b6"
+    },
+    {
+      "path": "wb-bd-mc/docs/BUILD_AND_USAGE.html",
+      "sha256": "41cbc40e5a336050200db56f77434c20552bff19463b3ee314840c1457f01021"
+    },
+    {
+      "path": "wb-bd-mc/docs/BUILD_AND_USAGE.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "7211ee5ad1142f240827f94537622abbe211eb0db34f51805dda7e62dbcfc142"
+    },
+    {
+      "path": "wb-bd-mc/docs/CODE_GUIDE.html",
+      "sha256": "d4bd86965faf8f6db451485bd2bb67be71c403fbd3d3c5a242622193bb5a9d7b"
+    },
+    {
+      "path": "wb-bd-mc/docs/CODE_GUIDE.org",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "62c271d167df9f6ee6c54e22411b6871f7f96aeb875730d0c429ce0e7dcdd288"
+    },
+    {
+      "path": "wb-bd-mc/docs/DIFFUSION.html",
+      "sha256": "b186037b991818b07fd5ffc1fd2faeda79f4169416440040df0965b1ad51820e"
+    },
+    {
+      "path": "wb-bd-mc/docs/DIFFUSION.org",
+      "author": "Gunwoo Park project direction",
+      "sha256": "390b9c344e9e1499c90cafe8f4f91414fbfdd5825ef372f834b2c137b01447e2"
+    },
+    {
+      "path": "wb-bd-mc/docs/EQUILIBRIUM_EOS.html",
+      "sha256": "890fda8f9fbc72172a9fa8fff50a7676bfa10ccb1363429e51322f1d3339f871"
+    },
+    {
+      "path": "wb-bd-mc/docs/EQUILIBRIUM_EOS.org",
+      "author": "Gunwoo Park project direction",
+      "sha256": "740f48e9fef5c43291addf57f74fdc2a02dc0b94694dd5a6624b38aa5d49be6c"
+    },
+    {
+      "path": "wb-bd-mc/docs/HI_EQUILIBRIUM.html",
+      "sha256": "b989cbdcd57b99f055968b8e11d4ce19389048e97a5f8f12e6cf34e23c8352d3"
+    },
+    {
+      "path": "wb-bd-mc/docs/HI_EQUILIBRIUM.org",
+      "author": "Gunwoo Park project direction",
+      "sha256": "fe0482e4d1f3e04b9e3d62cc36795df399239caee56ed05cee6f8e39b34247b3"
+    },
+    {
+      "path": "wb-bd-mc/docs/HI_SD.html",
+      "sha256": "84728788b42d2873b348584f8fe209631d86ae322e0c895d733f03ebc659224c"
+    },
+    {
+      "path": "wb-bd-mc/docs/HI_SD.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "3c0d4a42dac76d3bad8400732315796b0909df26008f2d64977aa07a6bba2fcb"
+    },
+    {
+      "path": "wb-bd-mc/docs/METAL_BENCHMARK.html",
+      "sha256": "337c2e6a7d69889f453bd3805595baa83899168ccbd6d6c079329674c46e24c2"
+    },
+    {
+      "path": "wb-bd-mc/docs/METAL_BENCHMARK.org",
+      "author": "Gunwoo Park project direction",
+      "sha256": "7e6d700425508deba1cb5b16db9773f30c9717a88a9f700a332494676aaabf6b"
+    },
+    {
+      "path": "wb-bd-mc/docs/MODERNIZATION_LEVELS.html",
+      "sha256": "a5ee1ff438be4a819f6390ad3da4e715f4f51a1859939474549db88046c99691"
+    },
+    {
+      "path": "wb-bd-mc/docs/MODERNIZATION_LEVELS.org",
+      "sha256": "7ac4f7a9177c5bb448e2740f077823d5d879f707fcdd4d6085e7c9f8e286a8c7"
+    },
+    {
+      "path": "wb-bd-mc/docs/POSTPROCESSING.html",
+      "sha256": "a43c97526b684a01f5a1c689561eebfb995d9c05b1b4c66fa33caeae7bdf7e6a"
+    },
+    {
+      "path": "wb-bd-mc/docs/POSTPROCESSING.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "78d7812d0d6a6fb2027d0b9e21337960ecea26581ca0565ea75603fb149da53b"
+    },
+    {
+      "path": "wb-bd-mc/docs/VALIDATION.html",
+      "sha256": "7e3bb51ddeb95d7261243035fbaba0076fcff3011fb0881c8bf0646c601a5970"
+    },
+    {
+      "path": "wb-bd-mc/docs/VALIDATION.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "5a26158b6ef25e0eba2b4cb431bc3dc53e7273c201bf8c272b931d6399229075"
+    },
+    {
+      "path": "wb-bd-mc/modern/README.html",
+      "sha256": "1432f9c170e175e792b733cacdfb4a3a2267edaa8728a12907b96ec3918999ae"
+    },
+    {
+      "path": "wb-bd-mc/modern/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "19b9160d52bbc1f4dba6cda3f0f93cdc5bb8cac09f5d8b60dc052c991cc5e1d3"
+    },
+    {
+      "path": "wb-bd-mc/tests/reference/v1/README.html",
+      "sha256": "d2470a215fe75d67fcd75de5895cae453da4f33375b214a2d003de804601d907"
+    },
+    {
+      "path": "wb-bd-mc/tests/reference/v1/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "fac9e644e5c6288548f7f880d343767d358bd7e303cf85ef7b519eba2f52b4aa"
+    },
+    {
+      "path": "wb-bd-mc/tests/reference/v2/README.html",
+      "sha256": "5aa31800c3df95518ac55d7725f0be913c6f156c3a969330fae78b51c606521d"
+    },
+    {
+      "path": "wb-bd-mc/tests/reference/v2/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "eb04f37dbf89e61a25da3a6fae0aeb122fff79550827cefa6e9a2a1a5810ce54"
+    },
+    {
+      "path": "wb-mbla/AGENTS.html",
+      "sha256": "3c734441f546e63b287606dd4aa5efab3da792e07d557e268dc37ef558619102"
+    },
+    {
+      "path": "wb-mbla/AGENTS.md",
+      "sha256": "a8c4d9429c60ad86d4ab5b37d6114a36e4c38f08bf395b36dc1388994ef771bb"
+    },
+    {
+      "path": "wb-mbla/README.html",
+      "sha256": "7338161f17be0798aebd516c0c4d7d3889b3676ec1b831b4b391ad07f163382a"
+    },
+    {
+      "path": "wb-mbla/README.md",
+      "sha256": "13927d2aa0a671492ec37cd9561a3cc0ea1fdc196f6452de24ff9838fcd1334c"
+    },
+    {
+      "path": "wb-mbla/THIRD_PARTY_NOTICES.html",
+      "sha256": "487f5c8ff9df412c3486dc5c2e88d07a330ea2ad6a8eae21a14dd13a867fc50f"
+    },
+    {
+      "path": "wb-mbla/THIRD_PARTY_NOTICES.org",
+      "sha256": "4b6cd3d85896f861b441cc49377491b338eb67225117b75a3ba2662f0d8d92ce"
+    },
+    {
+      "path": "wb-mbla/docs/FIXED_POINT_METHOD.html",
+      "sha256": "fee2c02e70bad78509d386838e02341a9ae78c82efbb69f107cee5fec13916e3"
+    },
+    {
+      "path": "wb-mbla/docs/FIXED_POINT_METHOD.org",
+      "sha256": "bbd8d3d0acc0fc56833d1c97b2e4b2d54b68119d9d2cd843981ce0fcbbd2b545"
+    },
+    {
+      "path": "wb-mbla/docs/LEVEL_3_DESIGN.html",
+      "sha256": "5d46fb40d67517e211beb41fd27c57807b6235293603df41a59b13e4c24979a7"
+    },
+    {
+      "path": "wb-mbla/docs/LEVEL_3_DESIGN.org",
+      "sha256": "9609ebaa63af3a3b301cffbc21ffaea2da2f977029de7f6b62612e0a6d593300"
+    },
+    {
+      "path": "wb-mbla/docs/MODERNIZATION.html",
+      "sha256": "d1d7a6bed67afd63389733714dd4e763db26297302f673c6a4d810051a740c2c"
+    },
+    {
+      "path": "wb-mbla/docs/MODERNIZATION.md",
+      "sha256": "7a8c85ff3ebd59c4dc67ae311b33f45a3c946b9630883011277cebc9f1c4f7cb"
+    },
+    {
+      "path": "wb-mbla/docs/SCIENTIFIC_GUIDE.html",
+      "sha256": "cdfdc93f7c625232e763527f572685dba1d1e05bb7d414c5aea1e4804d62a7fd"
+    },
+    {
+      "path": "wb-mbla/docs/SCIENTIFIC_GUIDE.org",
+      "sha256": "45debf9bda19310adda374fbf6af7d30927ac0bd7dee481f6824d41f192b4965"
+    },
+    {
+      "path": "wb-mbla/docs/VALIDATION.html",
+      "sha256": "79391e53bbba6724abe430aab91b85f607226bd28980e20381b5b50bf0928a82"
+    },
+    {
+      "path": "wb-mbla/docs/VALIDATION.org",
+      "sha256": "afbbed2336c93182210a3a8fc4cd05e742d36addeaee0be1359bab13c2e5fe3e"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/AGENTS.html",
+      "sha256": "aeac6cfabffad59c230ce40d70aad840a87e674fd9ffba93c493ba4325d97bd4"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/AGENTS.md",
+      "sha256": "a8c4d9429c60ad86d4ab5b37d6114a36e4c38f08bf395b36dc1388994ef771bb"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/README.html",
+      "sha256": "1257e2592ae832d5f8f2507a0aeed7d6798c88f7fd598297c2666e2aa3c51b0d"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/README.md",
+      "sha256": "982ba65df4fa4ea979bb811f6f0d373a0f2ba7f4f971c0f5f7cf5c159260621e"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/THIRD_PARTY_NOTICES.html",
+      "sha256": "cd634df359fb3a82c39dc754b797bc2d7a30712812738310df0acafb81cd5ffc"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/THIRD_PARTY_NOTICES.org",
+      "sha256": "4b6cd3d85896f861b441cc49377491b338eb67225117b75a3ba2662f0d8d92ce"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/FIXED_POINT_METHOD.html",
+      "sha256": "791ed7a694394d680890ce5722ee6b6d2ddfa1983eabdb314eb4d02f72a78e0e"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/FIXED_POINT_METHOD.org",
+      "sha256": "e5ed425c1cf1a723efdcdee6c8d639d0e63be0124acf05ce0abd9ab70ecacf8e"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/PROFILE_EXPLORER.html",
+      "sha256": "c8abc22e7c2a20c6d411e502772a61c408ebe03290e55ea713c428e7360b4047"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/PROFILE_EXPLORER.md",
+      "sha256": "6332f9f16a13b07c914c922b8c878935b3d57115c2d7451510a5ae0f225d169c"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/SCIENTIFIC_GUIDE.html",
+      "sha256": "e7aa08a5c8bc3739fb7636ad7706c137ba069834af2dc6e1dda9e6d42b200bc5"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/SCIENTIFIC_GUIDE.org",
+      "sha256": "45debf9bda19310adda374fbf6af7d30927ac0bd7dee481f6824d41f192b4965"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/VALIDATION.html",
+      "sha256": "ec24e152ed8488db7fdeb497c5de0cb89f2a0f287e5a099a512d6a4ce8171303"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/docs/VALIDATION.org",
+      "sha256": "7ecb4edefa25e442cf9c2a32c22d3eaf75a07a514475fb207845b6aa7dce4be6"
+    },
+    {
+      "path": "wb-mbla/modern-lv1/tools/profile-explorer.html",
+      "sha256": "3164525984147fc852558c8bdffea9e58a7b10ce682a051b35c90c6d9091623e"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/AGENTS.html",
+      "sha256": "24537823ec190a192d89f2661f5fa762dfd4455b1d094571b14ea966833c4da1"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/AGENTS.md",
+      "sha256": "b0222e249e7142326e2f55e2a8ca604fb1f79cc6d955e0275d1b5412e613c4cc"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/README.html",
+      "sha256": "9196b9fdbb297a8cf0812ce3cb5d9a1482275fd2d5069659bea50705bbb6499e"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/README.md",
+      "sha256": "01a4b391d89721265132dd954235f1e8b6af5365a3effb24030425bc3506c28a"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/THIRD_PARTY_NOTICES.html",
+      "sha256": "85d5d1d996d41e7fcd8a9bd388ec2bb24be5d4345157e569834dd27117bae672"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/THIRD_PARTY_NOTICES.org",
+      "sha256": "11358b312fe3122070568f0a0cdbbc0e2b72409a73fd4ab0a7c866810da3eb14"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/FIXED_POINT_METHOD.html",
+      "sha256": "7885705f454484b38a3a4c9d5c5522de9c97156ab58e1893725db4a8376937d5"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/FIXED_POINT_METHOD.org",
+      "sha256": "5031b380142016d5231d5a3484e5e7e0fdff6859f95689117cdce9f0ec861639"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/LEVEL_2.html",
+      "sha256": "b0b1deaea681cb8af34b0bf2f6dccdac4729b7a8334a7747d12416fb4b41a507"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/LEVEL_2.org",
+      "sha256": "ea83b9a072969b6de74d406788e83206c200ca1679a306e7f2e7f4eb8688c0ce"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.html",
+      "sha256": "b553b9b25dffc25649061ad0c9a84d7239925021f231927b7766d11a2ed465ff"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md",
+      "sha256": "c313af1f0f9fa93795707a5fe49455a419533689cf850e0cd4f89482ac53a1f5"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/PYTHON_CAKE.html",
+      "sha256": "ce8edd19f25ab9b0458c5542c8b555708713284c84b9f6d0b1191ed604f58304"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/PYTHON_CAKE.org",
+      "sha256": "6bfb3fb532aae552e740b4837459025fa4a3ed2258544e3e80b018ecec4d30f2"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/SCIENTIFIC_GUIDE.html",
+      "sha256": "1130fbe4cb24c12c11a66545d7031a6ba63e9ec21baadf71b059631e17631402"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/SCIENTIFIC_GUIDE.org",
+      "sha256": "10e0db51601a53e543d1bbb0c98742affe0e6fb22177b953733108f842395fd5"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/VALIDATION.html",
+      "sha256": "3b3b5a0cdae2182e221ae186782163da3d83e221062639b742a63c7602c81b9a"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/docs/VALIDATION.org",
+      "sha256": "c47ad2ec93aee333b2c9e053ceb9d3f29b86009d4200106e8270d792ed9694c5"
+    },
+    {
+      "path": "wb-mbla/modern-lv2/tools/profile-explorer.html",
+      "sha256": "1bf4109b979020f7574e6039691e86d1acd61695ad94768c09d266cdcd8e1d07"
+    },
+    {
+      "path": "wb-mbla/modern-lv3/README.html",
+      "sha256": "794a7af10448aa8c2d3a7a7c172528d0c38b58b9c9c4fbc6e7b7c7288b862b04"
+    },
+    {
+      "path": "wb-mbla/modern-lv3/README.md",
+      "sha256": "d8734791724cae119c6d052798b14a1285ead96b2346a305c0714eaea6f0dcc6"
+    },
+    {
+      "path": "wb-mbla/modern-lv3/docs/PYTHON_NUMBA_ML.html",
+      "sha256": "ee78d8e464964cbf86728a0531f8663a4c82e8edde49dba2be34612dfe6d57cd"
+    },
+    {
+      "path": "wb-mbla/modern-lv3/docs/PYTHON_NUMBA_ML.org",
+      "sha256": "e5a813e5a7de393aab467d8a082850c2a6740e19f4576e52871503d46b6e3ed9"
+    },
+    {
+      "path": "wb-python/README.html",
+      "sha256": "b0e471ab4fca6f951e3f75f064d44bd28e661206cb0783cb2ce7558f7685a27d"
+    },
+    {
+      "path": "wb-python/README.md",
+      "sha256": "9b543c7c86174066c9783dbb7e52f950382b895177184b04fbe9ce32b77e32ea"
+    },
+    {
+      "path": "wb-python/docs/API.html",
+      "sha256": "d5d75998f774b626cc6a3c0db8b016c196ab9212ae5333a11d8415f9595bda07"
+    },
+    {
+      "path": "wb-python/docs/API.org",
+      "sha256": "01d23c7b1cbbd46cb9ef47c643d032b62fb9635f5065b788db410fd8a41b3af0"
+    },
+    {
+      "path": "wb-python/docs/READER_GUIDE.html",
+      "sha256": "4c2699d66d86a8c28eab5ea747c716ff88b59578d6491428d522227b15731110"
+    },
+    {
+      "path": "wb-python/docs/READER_GUIDE.org",
+      "sha256": "089ffcfa576ef387355eb373f87448680cd2843f7217842eae98da8d6b61fd1f"
+    },
+    {
+      "path": "wb-python/docs/REMOTE.html",
+      "sha256": "11acbe0ce0d2fd1bbfa3a4e102bf5dbe2d27c413137cb6def297d0027c0ab063"
+    },
+    {
+      "path": "wb-python/docs/REMOTE.org",
+      "sha256": "f87b9c38e9f0f0dab947b61f5b3ea8b2394243999c742b9a099c69f6522512f6"
+    },
+    {
+      "path": "wb-python/docs/SECURITY.html",
+      "sha256": "bafe366ab51f1fb2060bf2da7f24091787a2f1b66f6017a7f546a5e9bf6ca9e9"
+    },
+    {
+      "path": "wb-python/docs/SECURITY.org",
+      "sha256": "db2063bdac81cefe74f56e144cd3e35d51f4357791e6b7858408a6375b2c8905"
+    },
+    {
+      "path": "wb-python/docs/VALIDATION.html",
+      "sha256": "2a9808621432cd79afecaabc8ca83ae375581fc74fcf17f763b5dd9855bb4ffc"
+    },
+    {
+      "path": "wb-python/docs/VALIDATION.org",
+      "sha256": "8f9364801a21caeba2f35f4716be91615eb626aa806d9b747c2ffdb9ff31f4e2"
+    },
+    {
+      "path": "wb-style/AGENTS.html",
+      "sha256": "0a48d43661605ec9e7c7df56089f1ae528032a04c5931eb12e334750db40a5fb"
+    },
+    {
+      "path": "wb-style/AGENTS.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "4ad46b3a9a6e99c8c659bab69d492820e2cbdea21ce1d3384285e51107ea511c"
+    },
+    {
+      "path": "wb-style/CITATION.cff",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "1e67ac2e27fe852a50ac37a1197447f0f476ab1d7df36e64cd76df1543b517b6"
+    },
+    {
+      "path": "wb-style/NOTICE.html",
+      "sha256": "0440d9de01f7736aff5850d1fb5471bc202a0ff9deb3f4cf58afb8d1d381be59"
+    },
+    {
+      "path": "wb-style/NOTICE.md",
+      "author": "Gunwoo Park project direction",
+      "sha256": "78effeec3957bf4834f582a2fec5ce206730a2f4361b164ec06a76e906952713"
+    },
+    {
+      "path": "wb-style/README.html",
+      "sha256": "541cfd4071cc6871f06e6bc7f8f0a7a541cfb5f13c2942fe5a510046cbbe90ce"
+    },
+    {
+      "path": "wb-style/README.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "9c2343d3c875fb3de74aa56a6a2462bde3f7ff402347a2b3047c2da5c5683477"
+    },
+    {
+      "path": "wb-style/REFERENCES.html",
+      "sha256": "d1d311bab0f83fa771cd28e42b53cfecc871641c8a6d55ad71911b950d91e0ed"
+    },
+    {
+      "path": "wb-style/REFERENCES.md",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "57721115ce0e74d6e8dc47f510af6f8eb70d874c91addcb1b0f015c2af4ed22c"
+    },
+    {
+      "path": "wb-style/docs/STYLE_AND_VALIDATION.html",
+      "sha256": "a365a71545d164ee24bc7a13467d8f99c0dc42469c48f844edfaac72638689a3"
+    },
+    {
+      "path": "wb-style/docs/STYLE_AND_VALIDATION.org",
+      "author": "Gunwoo Park project direction; original research scripts/style researcher-authored, third-party attribution retained",
+      "sha256": "be47ebfcaa4811b019493a4489819adb5efa829c853ec11101f351b4d9b1912d"
+    }
+  ],
+  "style_authorship": "Gunwoo Park authored the original paper plotting scripts and style.",
+  "documentation_origin": "AI-generated text: The documentation was prepared with AI assistance under Gunwoo Park's direction."
+}

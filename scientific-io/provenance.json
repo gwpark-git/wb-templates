@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "asset": "wb-scientific-io",
+  "edition": "csv",
+  "version": "0.1.1",
+  "sources": [
+    "scientific-io/wb_scientific_io/csv_table.py",
+    "scientific-io/tests/test_csv_table.py",
+    "scientific-io/docs/CSV.org",
+    "scientific-io/LICENSE_CSV"
+  ],
+  "implementation": "Directed by Gunwoo Park"
+}

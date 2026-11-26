@@ -1,0 +1,57 @@
+{
+  "schema": "bdmc.hi-source-snapshot.v1",
+  "source_root": "hi/code",
+  "destination_root": "code/third_party/hi_native",
+  "source_branch": "dev_HI",
+  "source_head": "105fd3c96cd289b2f502ace04a332a2555e3307e",
+  "snapshot_started_at": "2026-11-11T19:54:58.519982+00:00",
+  "snapshot_verified_at": "2026-11-11T19:54:58.544647+00:00",
+  "source_is_dirty": true,
+  "scope": "Selected native kernels and physical tests only. No live worktree runtime/build dependency. Source hashes identical before and after import.",
+  "files": {
+    "lib/hi_bd.h": {
+      "sha256": "cdca8f631625a10ce9da2bf8671e330522880c9d6d6cfdab9f5b63c8ac02dd45",
+      "bytes": 1830
+    },
+    "lib/hi_bd.cpp": {
+      "sha256": "95d1471217e8845d4304f9571f1de35dc399b0a59dc25c6a3c1ed2673824f8f7",
+      "bytes": 7343
+    },
+    "lib/hi_sd.h": {
+      "sha256": "9580fe48a1158a3da3d23211fe892275bc735b0f59976ba622e8e2e4a895b15f",
+      "bytes": 1475
+    },
+    "lib/hi_sd.cpp": {
+      "sha256": "76af6797ebe856ef9894379170efc419f24214739bc65955cdeb563a40c7e70d",
+      "bytes": 12743
+    },
+    "tests/test_hi_bd.cpp": {
+      "sha256": "2adf361ff5c4a434aa373f9d897d1c196552c69bf89aaa28d04a9a2a6c761210",
+      "bytes": 7891
+    },
+    "tests/test_hi_sd.cpp": {
+      "sha256": "ff1ff54b266146d9e3aeb398cd780c027b0829c7e29eae855ee12970ccdd9d0e",
+      "bytes": 8700
+    },
+    "third_party/hi_sd/resistance_table.h": {
+      "sha256": "96b759ddc9ae3dfac06c1a48bec78227ad9680d992b56fa33d22e16f63a42f66",
+      "bytes": 417209
+    },
+    "third_party/hi_sd/LICENSE": {
+      "sha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+      "bytes": 11357
+    },
+    "third_party/hi_sd/NOTICE": {
+      "sha256": "7fd87fbe3733996877bef5b1e8e302042f8fb9b34a0661e712daf9b5a439d824",
+      "bytes": 860
+    },
+    "third_party/hi_sd/SOURCE.json": {
+      "sha256": "3b7c12c1a76bd18e4600c6a0943e2d2469aea37d51ce6a4823d1be10bb35c4f2",
+      "bytes": 1136
+    },
+    "third_party/hi_sd/reference_cases.json": {
+      "sha256": "8470febe5218c49661baeab9bab639d8c4886b2821f7c8a1dd835f7076fb0e32",
+      "bytes": 3281
+    }
+  }
+}

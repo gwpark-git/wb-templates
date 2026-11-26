@@ -1,0 +1,83 @@
+#+title: mBLA C++ — scientific contract, configuration and output
+#+date: 2026-11-14
+#+language: en
+
+* Scope and unchanged model
+The source is the researcher's 2026 JCP C++ mBLA edition. It models steady cross-flow ultrafiltration in a cylindrical hollow fibre, with an axial pressure solve, transverse matched concentration profiles, concentration/shear-dependent transport closures and a thresholded cake hydraulic-resistance extension. This template changes engineering interfaces and numerical failure reporting; it does not adopt a new physical closure. The public Python model lacks the cake extension. Agreement with Python is meaningful only for matched non-cake conditions, closure editions and numerical accuracy.
+
+The maintained source manifest identifies the 21 copied .cpp/.h files by portable source ID and SHA-256. Original datasets, backups, object files, plotting scripts and manuscript material are not part of this template.
+
+* Fixed-point method and applicability
+The inherited history-safety predicate, its ordering before relaxation/clamping, resistance persistence and stopping semantics are explained in [[file:FIXED_POINT_METHOD.org][the fixed-point method owner]]. The researcher identifies physically non-monotonic wall-concentration regions as outside this method's present applicability. The code does not automatically validate that physical regime; modernization preserves the safeguard.
+
+* Responsibilities and source landmarks
+| Component | Responsibility / extension boundary |
+|-----------+-------------------------------------|
+| file_IO | Strict key=value parser and setting validation; no input exec |
+| parameters | SI-to-dimensionless scales and inherited boundary conventions |
+| matrix | Vector-owned row-major storage, legacy access interface and GSL LU view |
+| dispersion_properties | Selected analytic closures or declared property tables |
+| transport_properties_* / osmotic_pressure_CS | Inherited scientific constitutive equations |
+| ported_lib | Pressure/velocity assembly, transverse RK stepping, flux functional and cake search |
+| boost_matrix | Reusable auxiliary arrays; the name does not mean Boost is a dependency |
+| calculation_CP_profile | Serial case orchestration, fixed-point stopping and output |
+| tools/inspect_output.py | Strict reader, CSV export and independent printed Darcy/flux diagnostics |
+
+MATRIX::data remains a non-owning public alias for compatibility with GSL. Do not reassign it, change public dimensions or hold a view across initial(), copy_obj() or destruction. Copies own independent vector storage; indexing rejects invalid row/column/flat indices. GSL LU overwrites its matrix argument. Unused historical matrix helper APIs are retained, but the tests cover the solver's active subset, not every old printer/diagonalization helper.
+
+* Units and scaling
+Inputs use metres, seconds, kelvin, pascal and volume fractions. R_channel is channel radius, L_channel is axial length, a_particle is excluded-volume radius and gamma=a_H/a is hydrodynamic/excluded radius ratio. eta0 is Pa s and Lp is m/(Pa s). Pressure-inlet DLP=Pin-Pout; ref_Pout is absolute outlet pressure.
+
+Inherited scales are u0=R^2 DLP/(4 eta0 L), vw0=Lp DTP_HP, k=4 sqrt(L^2 Lp eta0/R^3), D0=kT/(6 pi eta0 a_H), Pi_ast=kT/Va and Va=4 pi a^3/3. get_Pper preserves Pper=Pout+DLP/2-ref_DTP; ref_DTP is the linear Hagen-Poiseuille reference pressure parameter, not measured suspension mean TMP. The pure-solvent mean pressure applies 2 tanh(k/2)/k separately. Velocity-inlet u_inlet sets the corresponding Hagen-Poiseuille DLP scale; actual Pin can differ after solving the Neumann inlet condition.
+
+The GSL physical constant is deliberately unchanged. GSL 2.8 supplies k_B=1.3806504e-23 J/K, rather than the current exact SI value. A library/constant update changes numerical identity and needs a labelled comparison.
+
+* Configuration grammar and supported controls
+Each nonempty line is key=value; whitespace and # comments are allowed. N_iter consumes the complete finite integral numeric value checked by the parser: 2400, 2.4e3 and 0x960 all mean 2400; nonintegral values fail. Duplicate/unknown keys, partially parsed numbers, nonfinite values, missing required fields and unsupported law names fail. Paths are literal filesystem paths relative to the process working directory, not the input file directory; there is no shell expansion. Serial positional inputs run in argument order; a failed case stops the remaining batch.
+
+| Required fields | Meaning |
+|-----------------+---------|
+| N_iter, weight | Maximum fixed-point iterations; under-relaxation in (0,1] |
+| Nz, Nr | Axial and logarithmic transverse nodes, each >=3 |
+| R_channel, L_channel, Lp, eta0, T | Positive geometry, permeability, solvent viscosity, temperature |
+| ref_Pout, ref_DTP | Outlet pressure and positive reference TMP parameter |
+| DLP or u_inlet | Positive inlet scale selected by inlet_BC |
+| phi_bulk, phiw_init, phi_freeze | Feed, initial wall concentration and freezing threshold; 0<phi_bulk<phi_freeze<1 |
+| a_particle, gamma | Positive excluded radius and 0<gamma<=1 |
+| TOL_phiw, TOL_delta_f | Positive inherited fixed-point/search stopping settings |
+| fcn_Dc_div_D0, fcn_eta_div_eta0, fcn_Pi | Named closure or property-table filename |
+| fout | Main output destination; existing file is overwritten |
+
+Optional inlet_BC defaults to pressure; velocity is the other supported value. CONT, DETAILED_REPORT and ACCOUNT_CAKE_THICKNESS default to FALSE and accept only TRUE/FALSE. CONT=TRUE requires FN_CONT: a finite rectangular table with exactly Nz rows and >=2 columns; column 2 initializes the wall concentration. The caller must ensure matching axial coordinates/physical conditions. ACCOUNT_CAKE_THICKNESS=TRUE requires positive membrane_thickness (metres). Without this flag, resistance is still calculated; geometric cake thickness stays zero. Numerical limits are Nz<=400, Nr<=4000 and N_iter<=100000. These are finite default bounds, not a performance guarantee; select smaller limits and a time/data budget in a destination.
+
+TOL_phiw is applied to RMS differences of phi_wall/phi_bulk, including the fixed inlet (whose increment is zero), even though the inherited log labels it like a relative norm. TOL_delta_f enters resistance increment/search and relative outlet-resistance stopping. The inherited stopping flag can latch before the mandatory minimum iteration count. Exit 0/MBLA_STATUS=converged therefore names the inherited stopping event only. Exit 3/iteration_limit means exhausted iterations; output is retained for diagnosis. Invalid input/output (including a failed write, flush or close), nonfinite numerics or a stalled cake search fail with exit 2. Do not equate any exit-0 result with conservation or grid acceptance.
+
+* Constitutive choices and tables
+Diffusion supports SPHS/HS (both mapped to the inherited SPHS diffusion), SID and CT (unity). Viscosity supports SPHS, HS, TEST, TEST_EQ and CT. TEST variants are inherited shear-stress-dependent research options, not separately validated production models. Osmotic pressure supports CS and NO, or a table. The code preserves the source's high-frequency-viscosity expression; it does not replace its multiplication by a published denominator or unify the HS/SPHS variants.
+
+A property table has exactly two finite numeric columns, at least three rows, strictly increasing volume fraction, and coverage of [0,phi_freeze]. Blank lines and # comments are accepted. Diffusion/viscosity ordinates must be positive; they are dimensionless D/D0 and eta/eta0. Osmotic-pressure ordinates are in Pa, then normalized by Pi_ast. The inherited natural cubic spline caps concentration above phi_freeze; values below its domain fail. A valid table need not be a physically acceptable constitutive law; cubic interpolation can overshoot.
+
+phi_cake and porosity are accepted legacy metadata with an explicit warning: the inherited implementation ignores these inputs and fixes phi_cake=0.64. Changing this behavior requires a separately reviewed physical/model change.
+
+* Ten-column inherited output
+The main file is whitespace-delimited, no header, one axial sample per row, with six digits after the decimal point in scientific notation. Column numbers below are one-based. Do not silently reinterpret column 8 as cake thickness.
+
+| Column | Stored quantity | Unit / meaning |
+|--------+-----------------+----------------|
+| 1 | z | m |
+| 2 | phi_wall | volume fraction |
+| 3 | P | Pa |
+| 4 | v_wall | m/s, positive permeation direction |
+| 5 | u0 times dimensionless axial pressure-gradient factor | m/s; not cross-sectional mean velocity |
+| 6 | osmotic pressure | Pa |
+| 7 | inherited integrated particle-volume flux | m^3/s |
+| 8 | (Rcake/Rmem) times R_channel | m as a mixed-normalization storage convention |
+| 9 | P-Pper | Pa |
+| 10 | geometric cake thickness/R_channel | dimensionless; zero when thickness accounting is disabled |
+
+Recover Rcake/Rmem by dividing column 8 by the configured radius. Hydraulic permeability is Lp/(1+Rcake/Rmem); thus a useful independently reconstructed printed-value check is v_wall=Lp*(column9-column6)/(1+column8/R).
+
+With DETAILED_REPORT=TRUE, inherited .Rout has six columns: yt/R_channel, phi, dimensionless shear rate, dimensionless shear stress, D/D0 and eta/eta0. yt already means y/R; the extra division makes its first column y/R^2 (1/m). Multiply by R_channel to recover y/R. This known source mistake is retained. .Fval has z/L, F1, F2 and modified F2. These sidecars describe the iteration state before final analysis and can lag its final recomputation; they are not a complete synchronized 2D field export. Inspect that contract before adapting.
+
+* Documentation provenance
+Equations and source ownership remain with the researcher.

@@ -1,0 +1,213 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "cpu",
+      "displayName": "Portable C++17 CPU reference",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/../build/validation/preset-${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BDMC_BUILD_NETWORK": "ON",
+        "BDMC_BUILD_TESTS": "ON",
+        "BDMC_BUILD_PYTHON": "ON"
+      }
+    },
+    {
+      "name": "openmp",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_ENABLE_OPENMP": "ON"
+      }
+    },
+    {
+      "name": "mpi",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_ENABLE_OPENMP": "ON",
+        "BDMC_ENABLE_MPI": "ON"
+      }
+    },
+    {
+      "name": "cuda",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_ENABLE_CUDA": "ON"
+      }
+    },
+    {
+      "name": "apple-accelerate",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_ENABLE_ACCELERATE": "ON",
+        "BDMC_APPLE_NATIVE": "ON",
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
+      "name": "apple-metal",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_ENABLE_ACCELERATE": "ON",
+        "BDMC_ENABLE_METAL": "ON",
+        "BDMC_APPLE_NATIVE": "ON",
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
+      "name": "apple-mpi",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_ENABLE_ACCELERATE": "ON",
+        "BDMC_ENABLE_MPI": "ON",
+        "BDMC_APPLE_NATIVE": "ON",
+        "CMAKE_OSX_ARCHITECTURES": "arm64"
+      }
+    },
+    {
+      "name": "legacy-cxx17",
+      "inherits": "cpu",
+      "cacheVariables": {
+        "BDMC_BUILD_LEGACY": "ON",
+        "BDMC_NETWORK_LEGACY_ORACLE": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "cpu",
+      "configurePreset": "cpu",
+      "jobs": 2
+    },
+    {
+      "name": "openmp",
+      "configurePreset": "openmp",
+      "jobs": 2
+    },
+    {
+      "name": "mpi",
+      "configurePreset": "mpi",
+      "jobs": 2
+    },
+    {
+      "name": "cuda",
+      "configurePreset": "cuda",
+      "jobs": 2
+    },
+    {
+      "name": "apple-accelerate",
+      "configurePreset": "apple-accelerate",
+      "jobs": 2
+    },
+    {
+      "name": "apple-metal",
+      "configurePreset": "apple-metal",
+      "jobs": 2
+    },
+    {
+      "name": "apple-mpi",
+      "configurePreset": "apple-mpi",
+      "jobs": 2
+    },
+    {
+      "name": "legacy-cxx17",
+      "configurePreset": "legacy-cxx17",
+      "jobs": 2
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "cpu",
+      "configurePreset": "cpu",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "openmp",
+      "configurePreset": "openmp",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "mpi",
+      "configurePreset": "mpi",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "cuda",
+      "configurePreset": "cuda",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "apple-accelerate",
+      "configurePreset": "apple-accelerate",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "apple-metal",
+      "configurePreset": "apple-metal",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "apple-mpi",
+      "configurePreset": "apple-mpi",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    },
+    {
+      "name": "legacy-cxx17",
+      "configurePreset": "legacy-cxx17",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "jobs": 1,
+        "timeout": 180
+      }
+    }
+  ]
+}

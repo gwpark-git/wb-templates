@@ -1,0 +1,23 @@
+## Functional reference {#functional-reference}
+
+Use these links to check the implementation behind a task. For each package,
+start with its entry point, then follow its source, configuration, data and
+verification notes. The owning guides describe the individual operations.
+
+| Area | Use and configuration | Implementation, data and checks |
+|---|---|---|
+| Collection inventory and copying | [Catalog](../../templates.json), [copying contract](../../PACKAGING.org) | [Exporter](../../tools/export_template.py), [manifest verifier](../../tools/verify_manifest.py), [verification and reproduction](../../provenance/VALIDATION.org) |
+| Plot styles | [Installation, presets and examples](../../plot-styles/README.md) | [Style operations, preset schema, dependencies and tests](../../plot-styles/docs/DEVELOPER.org) |
+| wb-style | [Using the extracted plotting style](../../wb-style/README.md) | [Style keys, font settings and verification](../../wb-style/docs/STYLE_AND_VALIDATION.org), [source and palette references](../../wb-style/REFERENCES.md) |
+| Scientific CSV I/O | [Inspecting headers and reading selected columns](../../scientific-io/README.md) | [CSV functions, errors, numeric data contract and tests](../../scientific-io/docs/CSV.org), [plotting integration example](../../examples/plot_csv.py) |
+| BD–MC build and runtime | [Build, inputs and CLI](../../wb-bd-mc/docs/BUILD_AND_USAGE.md), [C++ and Python components](../../wb-bd-mc/modern/README.md) | [Code and binding guide](../../wb-bd-mc/docs/CODE_GUIDE.org), [modernization levels](../../wb-bd-mc/docs/MODERNIZATION_LEVELS.org), [tests and recorded evidence](../../wb-bd-mc/docs/VALIDATION.md) |
+| BD–MC scientific analysis | [Equilibrium pressure and structure](../../wb-bd-mc/docs/EQUILIBRIUM_EOS.org), [self and collective diffusion](../../wb-bd-mc/docs/DIFFUSION.org) | [HI equilibrium](../../wb-bd-mc/docs/HI_EQUILIBRIUM.org), [RPY and SD status](../../wb-bd-mc/docs/HI_SD.md), [post-processing](../../wb-bd-mc/docs/POSTPROCESSING.md), [Metal benchmark](../../wb-bd-mc/docs/METAL_BENCHMARK.org) |
+| BD–MC EOS worked example | [Soft-repulsive BD and hard-sphere MC](../../examples/bdmc-eos/README.md) | [Retained comparison CSV](../../examples/bdmc-eos/equation_of_state.csv), [PDF](../../examples/bdmc-eos/equation_of_state.pdf), [PNG](../../examples/bdmc-eos/equation_of_state.png) |
+| wb-python interface preset | [Reader Guide](../../wb-python/docs/READER_GUIDE.org) for setup, Session Profiles, request readback and Agent Profiles | [API](../../wb-python/docs/API.org), [remote interface](../../wb-python/docs/REMOTE.org), [security](../../wb-python/docs/SECURITY.org) and [validation](../../wb-python/docs/VALIDATION.org). [Separate Jupyter integration](../wb-python-preset.md#jupyter-integration-in-wb-applications) |
+| mBLA solvers and physical models | [Package entry](../../wb-mbla/README.md), [Level 1 build and CLI](../../wb-mbla/modern-lv1/README.md), [Level 2 build and CLI](../../wb-mbla/modern-lv2/README.md), [Level 3 provider and compatibility test](../../wb-mbla/modern-lv3/README.md) | [Scientific model and parameters](../../wb-mbla/modern-lv2/docs/SCIENTIFIC_GUIDE.org), [fixed-point and cake method](../../wb-mbla/modern-lv2/docs/FIXED_POINT_METHOD.org), [Level 3 design and interface](../../wb-mbla/docs/LEVEL_3_DESIGN.org) |
+| mBLA cake search and checks | [Python and Numba search](../../wb-mbla/modern-lv2/docs/PYTHON_CAKE.org) | [Level 1 verification](../../wb-mbla/modern-lv1/docs/VALIDATION.org), [Level 2 verification](../../wb-mbla/modern-lv2/docs/VALIDATION.org), [package rights and dependencies](../../wb-mbla/THIRD_PARTY_NOTICES.org) |
+| mBLA regression and profile viewer | [Open the recorded comparison](../../wb-mbla/modern-lv2/tools/profile-explorer.html), [modernization and evidence scope](../../wb-mbla/docs/MODERNIZATION.md) | [Coordinate selection, saved profile format, case coverage and verification](../../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md) |
+| Quarto comparison example | [Copy and render the example](../examples/quarto-comparison/README.md), [project settings](../examples/quarto-comparison/_quarto.yml) | [Models and source comparison](../examples/quarto-comparison/_code.md), [data and figure generator](../examples/quarto-comparison/tools/make_example.py), [render command](../examples/quarto-comparison/render.sh), [portable PDF links](../examples/quarto-comparison/tools/portable_pdf.py) |
+
+See the [collection license scope](../../LICENSE_SCOPE.md) and
+[documentation provenance](../../provenance/DOCUMENTATION_PROVENANCE.json).

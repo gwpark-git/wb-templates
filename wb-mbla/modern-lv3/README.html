@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>mBLA Level 3 modernization</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="README.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#mbla-level-3-modernization"
+id="toc-mbla-level-3-modernization">mBLA Level 3 modernization</a>
+<ul>
+<li><a href="#build-and-verify" id="toc-build-and-verify">Build and
+verify</a></li>
+<li><a href="#scientific-scope" id="toc-scientific-scope">Scientific
+scope</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section id="mbla-level-3-modernization" class="level1">
+      <h1>mBLA Level 3 modernization</h1>
+      <p>Level 3 supports <strong>Scientific Composability for
+      Multiscale Simulation</strong>. Use the <a
+      href="../modern-lv2/src/case_driver.h">case-driver interface</a>
+      to supply reduced collective diffusivity
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>c</mi></msub><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">D_c/D_0</annotation></semantics></math>
+      and relative viscosity
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mi>/</mi><msub><mi>η</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">\eta/\eta_s</annotation></semantics></math>
+      to the existing continuum solver. A case selects <code>LIVE</code>
+      for both properties in its input file. The osmotic-pressure law
+      remains separately selectable.</p>
+      <p>The <a href="examples/unity_provider.cpp">C++ example</a>
+      injects a synthetic constant provider and runs the existing solver
+      through <code>mbla::run_cases</code>. The held provider is valid
+      for the lifetime of that call. It returns unity for every finite
+      numerical trial so the test covers negative Runge–Kutta trial
+      concentrations as well as physical states. The unity example
+      checks the interface’s behavior. It supplies no
+      dispersion-property estimate.</p>
+      <section id="build-and-verify" class="level2">
+      <h2>Build and verify</h2>
+      <p>Keep <code>modern-lv2</code> and <code>modern-lv3</code>
+      together inside the mBLA template. Build with C++17, CMake 3.16+,
+      GSL 2+ and Python 3 for tests. From <code>modern-lv3</code>:</p>
+      <pre class="sh"><code>make test BUILD_DIR=/tmp/mbla-lv3-build</code></pre>
+      <p>For a single run, copy the <a
+      href="examples/transport-unity.inp">example input</a> into a fresh
+      working directory. Run
+      <code>/tmp/mbla-lv3-build/mbla-lv3-unity</code> with that input
+      path from the working directory. The example writes
+      <code>result.dat</code>, <code>result.dat.Fval</code> and
+      <code>result.dat.Rout</code> there.</p>
+      <p>The <a href="tests/compare_unity.py">compatibility test</a>
+      compares all three tables byte-for-byte with the Level 2
+      <code>CT</code> closures. The CMake project also runs the Level 2
+      regression and compatibility tests. The solver, numerical settings
+      and fixture inputs are shared between the two provider paths.</p>
+      </section>
+      <section id="scientific-scope" class="level2">
+      <h2>Scientific scope</h2>
+      <p>The <a href="docs/PYTHON_NUMBA_ML.html">Python/Numba and PyTorch
+      worked guide</a> walks through an inference batch, a versionable
+      table and a lookup compatible with Numba. Use it to plan the
+      Python-first solver path and validate the property boundary before
+      using supervised inference in a physical case.</p>
+      <p>See the <a href="../docs/LEVEL_3_DESIGN.html">Level 3 design and
+      internal BD–MC/mBLA benchmark</a> for the contract, benchmark
+      conditions and applicability. A physical provider must define its
+      estimators, units, state domain and numerical-trial behavior.
+      Particles and offline interpolated tables can each supply
+      properties through the same interface, subject to that
+      contract.</p>
+      <p>Original Level 3 example code, build and tests use the MIT
+      grant described in the <a href="../LICENSE">mBLA license
+      scope</a>. The collection carries the shared text in its root
+      LICENSE. A detached mBLA export carries it as LICENSE.NEW. The
+      linked Level 2 solver and its dependencies have <a
+      href="../modern-lv2/LICENSE">their own terms</a>.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

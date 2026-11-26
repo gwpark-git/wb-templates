@@ -1,0 +1,28 @@
+#+title: BD–MC modernization levels
+#+date: 2026-11-26
+#+language: en
+
+BD–MC contains the portable transient-network simulator, modern C++/Python
+components and a reusable equilibrium equation-of-state (EOS) workflow.
+Each level has its own model, numerical reference and acceptance scope.
+
+| Level | Implemented and checked scope |
+|-------+-------------------------------|
+| Level 1 — portable baseline | The portable legacy executable built with GCC/GSL and passed nine frozen current-port regressions, including driven simple- and step-shear cases with topology changes. The regressions compare recorded values with exact integer topology and declared floating-point tolerances. |
+| Level 2 — component correspondence | The modern native tests check labeled network topology, proposal and rejection behavior, and the kinetic clock against selected legacy laws. Complete operation-by-operation correspondence for the modern active-shear controller remains unverified. |
+| Level 3 — scientific composition | A standalone hard-sphere sampler with a C11 core exports equilibrium observations as CSV. A separate Python process reads those data and estimates pressure. The retained detached benchmark exercised the native sampler and independent consumer. The EOS study also compared the hard-sphere and soft-particle results with the Carnahan–Starling reference under named model conditions. |
+
+The Level 3 exchange covers equilibrium pressure and near-contact structure
+for monodisperse spheres in a quiescent periodic cube. Native tests check
+contact, periodic overlap, shell counts and seeded cell/brute-force agreement.
+The independent consumer reads the same observations with two virtual
+compression settings and rejects a compression beyond the recorded distance
+cap. The MC sweep counts trial moves. The EOS exchange supplies no physical
+transport clock. The full transient-network workflow under shear retains its
+separate Level 2 acceptance scope.
+
+[[file:BUILD_AND_USAGE.md][Build and run]] /
+[[file:VALIDATION.md][Regression and physical-check scope]] /
+[[file:EQUILIBRIUM_EOS.org::#level-3-acceptance][Level 3 exchange contract and detached check]] /
+[[file:../modern/tests/test_network.cpp][Level 2 network unit tests]] /
+[[file:../python/bdmc/equilibrium.py][Equilibrium pressure estimator]]

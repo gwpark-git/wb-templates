@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>mBLA profile explorer</title>
+  <style>
+    :root { color-scheme: light; --ink: #18201d; --muted: #505d55; --rule: #d5ded7; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 15px/1.5 Inter, system-ui, sans-serif; background: #f6f8f6; color: var(--ink); }
+    main { max-width: 1320px; margin: 0 auto; padding: 32px 24px; }
+    h1 { font-size: clamp(24px, 3vw, 34px); letter-spacing: -.035em; line-height: 1.15; margin: 0 0 6px; }
+    h2 { font-size: 15px; margin: 0 0 6px; }
+    p { margin: 0; color: var(--muted); }
+    header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px; }
+    button, select, .file-label { font: inherit; color: var(--ink); background: #fff; border: 1px solid #a0afa4; border-radius: 5px; padding: 5px 9px; }
+    button, select, .file-label, input[type="checkbox"] { cursor: pointer; }
+    :focus-visible { outline: 3px solid #3a6a51; outline-offset: 3px; }
+    .file-label:focus-within { outline: 3px solid #3a6a51; outline-offset: 3px; }
+    .file-label input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
+    .controls, .card { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; min-width: 0; }
+    .controls { display: grid; gap: 9px; margin: 19px 0 14px; }
+    .control-row { display: flex; align-items: center; gap: 10px 13px; flex-wrap: wrap; }
+    #grid-options label { display: inline-flex; align-items: center; gap: 5px; }
+    .key { display: inline-block; inline-size: 21px; border-top: 2px solid; }
+    #station { flex: 1; min-width: 120px; accent-color: #355946; }
+    #position { min-width: 160px; font-variant-numeric: tabular-nums; }
+    .plots { display: grid; grid-template-columns: 1fr 1.22fr; gap: 14px; align-items: start; }
+    .column { display: grid; gap: 14px; min-width: 0; }
+    canvas { display: block; width: 100%; height: 205px; }
+    canvas[data-axial] { cursor: crosshair; }
+    #radial-chart { height: 350px; }
+    .radial-header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; margin-bottom: 6px; }
+    .table { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums; }
+    th, td { padding: 5px 7px; border-top: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; }
+    footer { margin-top: 14px; font-size: 13px; }
+    #error { color: #a12424; padding-top: 8px; }
+    @media (max-width: 800px) { .plots { grid-template-columns: 1fr; } main { padding: 18px 12px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><h1 id="title">mBLA profile explorer</h1><p id="subtitle"></p></div>
+    <label class="file-label">Open profile data<input id="file" type="file" accept=".json,application/json"></label>
+  </header>
+  <p id="error" role="alert" hidden></p>
+  <section class="controls" aria-label="Profile controls">
+    <div id="grid-options" class="control-row" role="group" aria-label="Visible grids"></div>
+    <div class="control-row">
+      <label for="station">Axial node</label>
+      <input id="station" type="range" min="0" step="1">
+      <output id="position" for="station" aria-live="polite"></output>
+    </div>
+    <div class="control-row">
+      <button type="button" id="inlet">Inlet</button>
+      <button type="button" id="peak-flux">Peak particle-flux drift</button>
+      <button type="button" id="peak-profile">Largest radial difference</button>
+    </div>
+  </section>
+  <div class="plots">
+    <div class="column">
+      <section class="card">
+        <h2>Wall volume fraction φ<sub>w</sub></h2>
+        <canvas id="wall-chart" data-axial role="img" aria-label="Wall volume fraction by axial position"></canvas>
+      </section>
+      <section class="card">
+        <h2>Axial particle-flux deviation from inlet (%)</h2>
+        <canvas id="flux-chart" data-axial role="img" aria-label="Axial particle-flux deviation as a percentage"></canvas>
+      </section>
+    </div>
+    <section class="card">
+      <div class="radial-header">
+        <h2>Radial volume fraction φ</h2>
+        <label>Radial range <select id="radial-range"><option value="1">Full radius</option><option value=".08">Near wall</option></select></label>
+      </div>
+      <canvas id="radial-chart" role="img" aria-label="Radial volume fraction at the selected axial node"></canvas>
+      <div class="table">
+        <table aria-label="Values at the selected axial node">
+          <thead><tr><th scope="col">Grid</th><th scope="col">Wall φ</th><th scope="col">Minimum φ</th><th scope="col">ΔΦ (%)</th></tr></thead>
+          <tbody id="values"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <footer><p>ΔΦ is 100 × [Φ(z) / Φ(0) − 1] for each grid. The slider and axial plots select the same node.</p></footer>
+</main>
+<script id="profile-data" type="application/json">{}</script>
+<script>
+"use strict";
+const get = (id) => document.getElementById(id);
+const appearances = [
+  {color: "#222222", dash: [7, 5], style: "dashed"},
+  {color: "#767676", dash: [7, 3, 2, 3], style: "dashed"},
+  {color: "#c62828", dash: [], style: "solid"},
+  {color: "#343434", dash: [2, 4], style: "dotted"},
+];
+const demo = {
+  schema: "wb.mbla.profile-explorer.v1", title: "mBLA profile explorer",
+  subtitle: "Synthetic example. Open profile data to view your own matched-grid comparison",
+  length_mm: 50, z_over_L: [0, .25, .5, .75, 1],
+  peaks: {maxFluxDrift: 1, maxProfileDifference: 2},
+  series: [
+    {label: "Synthetic coarse", wall: [.01, .15, .2, .3, .3], particleFlux: [1, 1.2, 1.14, 1.03, 1],
+     radialPosition: [0, .04, .5, 1], radialProfiles: [[.01, .01, -.4, .01],[.15, .09, -.6, .01],[.2, .11, -.9, .01],[.3, .15, .015, .01],[.3, .12, .015, .01]]},
+    {label: "Synthetic fine", wall: [.01, .25, .34, .35, .35], particleFlux: [1, 1.01, 1.005, 1.002, 1],
+     radialPosition: [0, .02, .04, .2, .5, 1], radialProfiles: [[.01, .01, .01, .01, .01, .01],[.25, .18, .12, .02, .01, .01],[.34, .24, .15, .02, .01, .01],[.35, .22, .14, .02, .01, .01],[.35, .22, .14, .02, .01, .01]]},
+  ],
+};
+let data, node, controls;
+const validArray = (values, length) => Array.isArray(values) &&
+  values.length === length && values.every(Number.isFinite);
+const coordinateAxis = (values, limit) => Array.isArray(values) && values.length >= 2 &&
+  values.length <= limit && values[0] === 0 && values.every((value, i) =>
+    Number.isFinite(value) && value <= 1 + 1e-12 && (!i || value > values[i - 1]));
+const label = (value) => typeof value === "string" && value.length > 0 && value.length <= 200;
+
+function readData(input) {
+  if (!input || input.schema !== "wb.mbla.profile-explorer.v1" || !label(input.title) ||
+      !label(input.subtitle) || !(Number.isFinite(input.length_mm) && input.length_mm > 0) ||
+      !coordinateAxis(input.z_over_L, 400) || !Array.isArray(input.series) ||
+      !input.series.length || input.series.length > appearances.length) {
+    throw new Error("Expected a profile explorer data file with a shared axial grid and up to four series.");
+  }
+  const count = input.z_over_L.length;
+  const peaks = [input.peaks?.maxFluxDrift, input.peaks?.maxProfileDifference];
+  if (!peaks.every((index) => Number.isInteger(index) && index >= 0 && index < count)) {
+    throw new Error("Peak indices must identify nodes in the axial grid.");
+  }
+  input.series.forEach((series) => {
+    if (!series || !label(series.label) || !validArray(series.wall, count) ||
+        !validArray(series.particleFlux, count) || !(series.particleFlux[0] > 0) ||
+        !coordinateAxis(series.radialPosition, 4000) ||
+        !Array.isArray(series.radialProfiles) || series.radialProfiles.length !== count ||
+        !series.radialProfiles.every((profile) => validArray(profile, series.radialPosition.length))) {
+      throw new Error("Each series needs finite wall, axial flux and radial profile values on its declared grids.");
+    }
+    series.drift = series.particleFlux.map((value) => 100 * (value / series.particleFlux[0] - 1));
+    if (!series.drift.every(Number.isFinite)) throw new Error("Flux normalization exceeds the numeric range.");
+  });
+  return input;
+}
+
+function setData(input) {
+  data = readData(input);
+  get("title").textContent = data.title;
+  document.title = data.title;
+  get("subtitle").textContent = data.subtitle;
+  get("station").max = data.z_over_L.length - 1;
+  controls = data.series.map((series, index) => {
+    const field = document.createElement("label");
+    const check = document.createElement("input");
+    const key = document.createElement("span");
+    check.type = "checkbox";
+    check.checked = true;
+    check.addEventListener("change", render);
+    key.className = "key";
+    key.style.color = appearances[index].color;
+    key.style.borderTopStyle = appearances[index].style;
+    field.append(check, key, document.createTextNode(series.label));
+    return field;
+  });
+  get("grid-options").replaceChildren(...controls);
+  selectNode(data.peaks.maxFluxDrift);
+}
+
+function selectNode(index) {
+  node = index;
+  get("station").value = node;
+  render();
+}
+
+function number(value) {
+  if (value === 0) return "0";
+  return Math.abs(value) < .001 ? value.toExponential(3) : Number(value.toPrecision(6)).toString();
+}
+
+function ticks(low, high) {
+  const decimal = 10 ** Math.floor(Math.log10((high - low) / 5));
+  const step = [1, 2, 2.5, 5, 10].find((base) => base * decimal >= (high - low) / 6) * decimal;
+  const marks = [];
+  for (let index = Math.ceil(low / step); index <= Math.floor(high / step); index += 1) {
+    marks.push(index * step);
+  }
+  return marks;
+}
+
+function chart(canvas, lines, options) {
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  if (width < 100 || height < 100) return;
+  const px = window.devicePixelRatio || 1;
+  canvas.width = Math.round(width * px);
+  canvas.height = Math.round(height * px);
+  const context = canvas.getContext("2d");
+  context.setTransform(px, 0, 0, px, 0, 0);
+  const {xMax, xLabel, cursor, showNonphysical} = options;
+  const left = 67, right = width - 16, top = 12, bottom = height - 41;
+  let low = 0, high = 0;
+  for (const {x, y} of lines) {
+    y.forEach((value, i) => {
+      if (x[i] <= xMax) {
+        low = Math.min(low, value);
+        high = Math.max(high, value);
+      }
+    });
+  }
+  const pad = (high - low || 1) * .07;
+  low -= pad;
+  high += pad;
+  const xp = (value) => left + (right - left) * value / xMax;
+  const yp = (value) => bottom - (bottom - top) * (value - low) / (high - low);
+  context.font = "12px system-ui";
+  context.fillStyle = "#505d55";
+  context.textAlign = "right";
+  context.textBaseline = "middle";
+  if (showNonphysical) {
+    context.fillStyle = "#f0f0f0";
+    context.fillRect(left, yp(0), right - left, bottom - yp(0));
+    context.fillStyle = "#505d55";
+  }
+  for (const value of ticks(low, high)) {
+    context.strokeStyle = value === 0 ? "#a0aaa2" : "#e1e7e2";
+    context.beginPath();
+    context.moveTo(left, yp(value));
+    context.lineTo(right, yp(value));
+    context.stroke();
+    context.fillText(number(value), left - 8, yp(value));
+  }
+  context.textAlign = "center";
+  for (const value of ticks(0, xMax)) {
+    context.fillText(number(value), xp(value), bottom + 13);
+  }
+  context.fillText(xLabel, (left + right) / 2, height - 7);
+  context.strokeStyle = "#87958c";
+  context.strokeRect(left, top, right - left, bottom - top);
+  if (cursor !== undefined) {
+    context.beginPath();
+    context.moveTo(xp(cursor), top);
+    context.lineTo(xp(cursor), bottom);
+    context.stroke();
+  }
+  context.save();
+  context.beginPath();
+  context.rect(left, top, right - left, bottom - top);
+  context.clip();
+  for (const {x, y, style} of lines) {
+    context.strokeStyle = style.color;
+    context.lineWidth = 2;
+    context.setLineDash(style.dash);
+    context.beginPath();
+    context.moveTo(xp(x[0]), yp(y[0]));
+    for (let index = 1; index < x.length; index += 1) context.lineTo(xp(x[index]), yp(y[index]));
+    context.stroke();
+    if (cursor !== undefined) {
+      context.setLineDash([]);
+      context.fillStyle = style.color;
+      context.beginPath();
+      context.arc(xp(cursor), yp(y[node]), 3.3, 0, Math.PI * 2);
+      context.fill();
+    }
+  }
+  context.restore();
+  canvas.dataset.plotLeft = left;
+  canvas.dataset.plotWidth = right - left;
+}
+
+function render() {
+  const axial = data.z_over_L;
+  const station = axial[node];
+  const selected = data.series.flatMap((series, i) => controls[i].firstChild.checked
+    ? [{...series, style: appearances[i]}] : []);
+  get("position").textContent = `z/L ${station.toFixed(4)} / ${(station * data.length_mm).toFixed(2)} mm`;
+  chart(get("wall-chart"), selected.map((series) => ({x: axial, y: series.wall, style: series.style})),
+        {xMax: 1, xLabel: "Axial position z/L", cursor: station});
+  chart(get("flux-chart"), selected.map((series) => ({x: axial, y: series.drift, style: series.style})),
+        {xMax: 1, xLabel: "Axial position z/L", cursor: station});
+  const xMax = Number(get("radial-range").value);
+  const radial = selected.map((series) => ({x: series.radialPosition, y: series.radialProfiles[node], style: series.style}));
+  chart(get("radial-chart"), radial,
+        {xMax, xLabel: "Distance from wall y/R", showNonphysical: radial.some((line) => line.y.some((v) => v < 0))});
+  get("values").replaceChildren(...selected.map((series) => {
+    const row = document.createElement("tr");
+    const values = [series.label, number(series.wall[node]), number(Math.min(...series.radialProfiles[node])), number(series.drift[node])];
+    for (const value of values) row.insertCell().textContent = value;
+    return row;
+  }));
+}
+
+document.querySelectorAll("canvas[data-axial]").forEach((canvas) => {
+  canvas.addEventListener("click", (event) => {
+    const x = (event.clientX - canvas.getBoundingClientRect().left - Number(canvas.dataset.plotLeft)) / Number(canvas.dataset.plotWidth);
+    const nearest = data.z_over_L.reduce((best, value, index) =>
+      Math.abs(value - x) < Math.abs(data.z_over_L[best] - x) ? index : best, 0);
+    selectNode(nearest);
+  });
+});
+get("station").addEventListener("input", (event) => selectNode(Number(event.target.value)));
+get("radial-range").addEventListener("change", render);
+get("inlet").addEventListener("click", () => selectNode(0));
+get("peak-flux").addEventListener("click", () => selectNode(data.peaks.maxFluxDrift));
+get("peak-profile").addEventListener("click", () => selectNode(data.peaks.maxProfileDifference));
+get("file").addEventListener("change", async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const error = get("error");
+  try {
+    if (file.size > 32 * 1024 * 1024) throw new Error("Profile files can be up to 32 MiB.");
+    setData(JSON.parse(await file.text()));
+    error.hidden = true;
+  } catch (reason) {
+    error.textContent = reason instanceof SyntaxError ? "The selected file is not valid JSON." : reason.message;
+    error.hidden = false;
+  } finally {
+    event.target.value = "";
+  }
+});
+const embedded = JSON.parse(get("profile-data").textContent);
+setData(embedded.schema ? embedded : demo);
+window.addEventListener("resize", render);
+</script>
+</body>
+</html>

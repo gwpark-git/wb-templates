@@ -1,0 +1,28 @@
+License scope for the mBLA C++ internal template
+
+This directory is NOT covered by an unconditional whole-source MIT grant.
+
+Inherited and derived research implementation:
+  src/*.cpp, src/*.h and python/mbla_cake.py derive from Gunwoo Park's
+  unpublished 2026 JCP C++ research source. No explicit license grant was
+  recovered for that source.
+  Original notices are retained. Internal copying, engineering changes and
+  execution were expressly authorized by the researcher for this task.
+  Permission for future redistribution must be resolved separately.
+
+New independent additions:
+  CMakeLists.txt, Makefile, AGENTS.md, README.md, docs/*.org, tests/*.cpp,
+  tests/*.py, tools/*.py and tools/*.html are new build/test/documentation/tooling additions.
+  The collection's MIT license text in LICENSE.NEW applies only to original
+  contributions in those files to the extent the named rightsholder owns them.
+  It grants no rights in inherited scientific code, third-party dependencies,
+  research data or numerical reference fixtures.
+
+Derived numerical fixtures and provenance:
+  tests/fixtures/* and provenance/* preserve research-source identity and
+  current-run evidence. Citation/provenance is not a redistribution grant.
+  Treat their future release as REVIEW with the researcher.
+
+GSL is a separately obtained GPL version 3 dependency. Its headers/source
+notices and obligations concerning combined binaries remain applicable.
+No GSL source or binary is bundled here. See THIRD_PARTY_NOTICES.org.

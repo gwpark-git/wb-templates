@@ -1,0 +1,17 @@
+# Render the two explicit views with the same local source and assets.
+project:
+  type: default
+  render:
+    - report.qmd
+    - slides.qmd
+  output-dir: site
+  resources:
+    - data/comparison.csv
+    - figures/comparison.pdf
+    - models/reference.py
+    - models/candidate.py
+
+# Code appears as text. The separate example script prepares the sample data.
+execute:
+  enabled: false
+lang: en

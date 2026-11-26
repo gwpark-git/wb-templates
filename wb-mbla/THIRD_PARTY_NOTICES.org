@@ -1,0 +1,35 @@
+#+title: mBLA C++ — dependency, ancestry and release evidence
+#+date: 2026-11-14
+#+language: en
+
+* Actual dependencies and copied material
+| Component | Usage / evidence | License status / release boundary |
+|-----------+------------------+-----------------------------------|
+| Gunwoo Park's 2026 JCP C++ source | 21 inherited .cpp/.h files, hashed in SOURCE_MANIFEST.json | No explicit license recovered; researcher authorized internal copying/execution; future redistribution REVIEW |
+| Author's private MATRIX library | Original author header retained in matrix.h | Author attribution retained; no separate explicit grant recovered |
+| Earlier author file_IO implementation | Source comment named dynamics_of_networks_and_colloids ancestry | Historical source relation, not proof of license applicability to this edition |
+| GNU Scientific Library | GSL matrix/vector/LU, interpolation, sort, CBLAS, constants | Local GSL 2.8; Debian libgsl-dev 2.8+dfsg-5 copyright identifies GPL version 3; no binary/source bundled; combined distribution obligations REVIEW |
+| Boost | No actual Boost dependency; boost_matrix is an author-defined AUX_MATRIX holder | No Boost source/header/namespace found in the copied source |
+| C++ standard library / CMake | Build/toolchain, not copied third-party implementation | Destination supplies toolchain; do not infer rights in combined binaries |
+| Python standard library | Regression/diagnostic runner | Supplied by destination; no Python runtime bundled |
+| NumPy/SciPy and public mBLA Python | Optional explicitly supplied non-cake reference only | Not needed for core build/tests; not bundled; public reference has its own MIT notice; dependency rights remain separate |
+
+No third-party code was downloaded for this task. Numerical formulas, a paper
+citation, internal permission and a release license are different forms of
+evidence. No statement here grants publication or resolves all legal questions.
+
+* Scientific attribution
+The scientific source and test project are associated with Park et al.,
+Journal of Chemical Physics 164 (2026), article 244119. The inherited Python
+headers separately cite Park and Nägele, DOI 10.1063/5.0020986, and describe
+later geometry work. These are source associations, not a reconstructed full
+bibliographic verification or permission to redistribute unpublished code.
+The optional public Python checkout identity belongs in each executed result;
+no historical match is inferred from its present version.
+
+* New-file license scope
+LICENSE is authoritative for this child's exceptions. LICENSE.NEW reproduces
+the collection MIT notice only for the explicitly named new original additions.
+Derived research source and generated research fixtures are excluded from that
+grant. No original dataset is included. An eventual public package needs an
+explicit researcher/rightsholder decision and review of GSL-linked distribution.

@@ -1,0 +1,33 @@
+{
+  "edition": "modern-lv1",
+  "checked_on": "2026-11-25",
+  "environment": {
+    "platform": "Linux aarch64",
+    "compiler": "GCC 14.2.0",
+    "cmake": "3.31.6",
+    "gsl": "2.8",
+    "python": "3.13.5",
+    "flags": "-O3 -DNDEBUG -std=c++17 -ffp-contract=off"
+  },
+  "source": "Detached copy of the Level 1 package. Solver source, test harness and fixtures match the parent template.",
+  "ctest": {
+    "mbla_units": "PASS",
+    "mbla_regression": "PASS",
+    "mbla_input_contract": "PASS",
+    "mbla_output_contract": "PASS"
+  },
+  "printed_regression": {
+    "cases": ["noncake", "cake-mild", "cake"],
+    "reference": "Frozen strict-FP fixture for each case",
+    "rows_per_case": 25,
+    "columns_per_row": 10,
+    "exact_cases_at_printed_precision": 3
+  },
+  "installation": {
+    "make_test_install": "PASS",
+    "cmake_cli_only_install": "PASS",
+    "installed_regression_case": "cake-mild",
+    "result": "Both installed executables produced byte-identical tables to the CTest run."
+  },
+  "scope": "Local standalone packaging and engineering checks under the named numerical policy. Scientific acceptance, historical default-FMA reproduction and other build environments require their own evidence."
+}

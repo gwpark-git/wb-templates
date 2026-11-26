@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Scope of the modernization</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="AI_UPDATE_SCOPE.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#scope-of-the-modernization"
+id="toc-scope-of-the-modernization">Scope of the modernization</a></li>
+</ul></nav>
+    <main>
+      <section id="scope-of-the-modernization" class="level1">
+      <h1>Scope of the modernization</h1>
+      <p>Human project attribution is centralized in the <a
+      href="../README.html">README</a>.</p>
+      <p>This is a derivative of the <a
+      href="https://github.com/gwpark-git/dynamics_of_networks_and_colloids.git">original
+      software</a>. The table describes the available components. <a
+      href="MODERNIZATION_LEVELS.html">Modernization levels</a> and <a
+      href="VALIDATION.html">validation</a> document the tested scope.</p>
+      <table>
+      <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>AI update area</th>
+      <th>Included work</th>
+      <th>Boundary</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Portable legacy builds</td>
+      <td>GSL/OpenMP build cleanup, C++17 Make/CMake paths and explicit
+      build outputs</td>
+      <td>Modernized legacy sources contain behavioral repairs; this is
+      not an untouched upstream copy</td>
+      </tr>
+      <tr>
+      <td>Legacy correctness repairs</td>
+      <td>Parameter/finite-domain checks, periodic/sheared geometry,
+      recording clocks, topology update safety and analysis drivers</td>
+      <td>Supported interacting shear is 3D xy; arbitrary settings and
+      every legacy option are not validated</td>
+      </tr>
+      <tr>
+      <td>Composable core</td>
+      <td>Owned state, explicit force/mobility/noise/integrator
+      contracts, stable IDs and direct pybind11/NumPy access</td>
+      <td>Default Brownian/permanent-dumbbell core is a reference; a
+      topology callback alone supplies no physical kinetics</td>
+      </tr>
+      <tr>
+      <td>Physical references</td>
+      <td>Repulsive Brownian and Hookean/FENE dumbbell responses,
+      simple/step/oscillatory drive</td>
+      <td>Finite benchmark cases do not establish all nonlinear rheology
+      or parameter limits</td>
+      </tr>
+      <tr>
+      <td>Topology</td>
+      <td>Exact labeled endpoints, loops/multiple bridges, sparse
+      aggregate adjacency, transactional edits and transition
+      primitives</td>
+      <td>Full modern transient-network BD–MC controller and modern
+      shear-aware bonded-network integration remain unfinished; use the
+      legacy simulator where appropriate</td>
+      </tr>
+      <tr>
+      <td>Equilibrium hard spheres</td>
+      <td>Independent periodic NVT hard-core MC, virtual-compression and
+      contact-shell pressure estimates, cross-engine EOS comparison</td>
+      <td>Equilibrium state and pressure only. MC sweeps provide no
+      Brownian time or transport coefficients.</td>
+      </tr>
+      <tr>
+      <td>Search and execution</td>
+      <td>Sparse occupied-cell neighbor queries, explicit OpenMP
+      execution and real MPI independent-run ensembles</td>
+      <td>MPI is independent replicas, not single-system domain
+      decomposition</td>
+      </tr>
+      <tr>
+      <td>Accelerators</td>
+      <td>CUDA float64, Apple Metal float32 and Accelerate source/build
+      options</td>
+      <td>Full network-controller acceleration and hardware-specific
+      accuracy remain unverified</td>
+      </tr>
+      <tr>
+      <td>Restart and provenance</td>
+      <td>Default-core checkpoint/RNG cache, explicit seeds,
+      observations, lineage and independent ensemble records</td>
+      <td>Modern seeds do not reproduce old GSL paths; restart does not
+      cover every backend/model</td>
+      </tr>
+      <tr>
+      <td>Learning workflows</td>
+      <td>Dataset construction, lineage-grouped splits, ridge/GP/MLP,
+      saved/reloaded numeric inference and bounded learning-budget
+      demos</td>
+      <td>No adopted or validated learned kinetic controller, complete
+      rheology surrogate or guaranteed generalization</td>
+      </tr>
+      <tr>
+      <td>Hydrodynamics</td>
+      <td>Frozen, self-contained imported Oseen/RPY BD and deterministic
+      athermal SD references; GSL bridge and retained third-party
+      notices</td>
+      <td>Dense free-space reference bounds: BD N&lt;=128, SD N&lt;=64;
+      no complete periodic HI, thermal SD, full suspension stress or
+      coupled network/HI solver</td>
+      </tr>
+      <tr>
+      <td>Spatial analysis</td>
+      <td>RDF, directional/planar pair density, count-normalized
+      coordination and explicit correlation tools</td>
+      <td>Geometric, density and estimator domains must match the
+      data</td>
+      </tr>
+      <tr>
+      <td>Post-processing</td>
+      <td>Synchronized ragged topology, chain/edge measures, exact
+      images, linear FFT correlation, stress projection, conservative
+      virial, positive histograms/ECDF, S(q) and explicit MSD/diffusion
+      contracts</td>
+      <td>End-to-end scientific validation of the analysis workflow is
+      pending</td>
+      </tr>
+      <tr>
+      <td>Verification</td>
+      <td>Analytical/invariant tests, synthetic cases, v1/v2
+      current-port fixtures and bounded replay controls</td>
+      <td>Frozen outputs detect deviations from the captured behavior.
+      Use analytical and physical checks for independent validation</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>The preserved valid choices include chain-weighted versus
+      distinct-edge statistics, single-origin versus all-origin
+      estimators and the historical <code>1/5</code>, <code>1/30</code>
+      isotropic stress coefficients. Repairs target their mathematical
+      definitions rather than assuming every older variant was
+      wrong.</p>
+      <p>Use <code>tools/validate.py</code> for the general validation
+      checks described in <a href="BUILD_AND_USAGE.html">Build and
+      usage</a>.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

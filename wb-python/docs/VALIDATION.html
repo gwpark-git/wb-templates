@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>wb-python validation scope</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="VALIDATION.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#source-checks" id="toc-source-checks">Source
+checks</a></li>
+<li><a href="#native-evidence-and-deployment-limits"
+id="toc-native-evidence-and-deployment-limits">Native evidence and
+deployment limits</a></li>
+</ul></nav>
+    <main>
+      <h1>wb-python validation scope</h1>
+      <p><a href="../README.html#ai-assistance">AI-generated
+      text</a></p>
+      <section id="source-checks" class="level1">
+      <h1>Source checks</h1>
+      <p>From the complete reviewed wb-python source package, run its
+      existing unit tests with Python 3.11 or later. The public
+      collection provides documentation and uses a separately supplied
+      source or wheel for runtime use.</p>
+      <pre class="bash" data-org-language="sh"><code>python3 -B -m unittest discover -s tests -v
+</code></pre>
+      <p>The checked package tests used synthetic authorities and fake
+      socket and native peers. The checks covered deterministic
+      references and explicit request validation, native read and
+      refusal shapes, strict identities and scope, framing, unknown
+      acknowledgement and retry handling, receipt integrity, and
+      selected result and artifact handling. The synthetic endpoint
+      suite exercised policy admission, per-read principal scope,
+      bounded wire validation, stable handles, explicit context and
+      inert output. Its short visibility-gap case observed read-only
+      polling over the same receipt.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Check</th>
+      <th>Evidence scope</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Package and CLI</td>
+      <td>Reviewed source installation and pure Python examples</td>
+      </tr>
+      <tr>
+      <td>Profile and Thread selection</td>
+      <td>Pinned helper contract, confirmed binding and native identity
+      checks exercised with selected fixtures</td>
+      </tr>
+      <tr>
+      <td>Request continuity</td>
+      <td>Synthetic acknowledgement, receipt readback and status
+      transitions, including uncertain and mismatched cases</td>
+      </tr>
+      <tr>
+      <td>In-process restricted transport</td>
+      <td>Endpoint framing and admission, guarded exchange and close
+      behavior in synthetic tests</td>
+      </tr>
+      <tr>
+      <td>Template metadata</td>
+      <td>Explicit allowlist, one bounded catalog read, deny-default,
+      bad path and malformed input refusals</td>
+      </tr>
+      <tr>
+      <td>Native version admission</td>
+      <td>Exactly 0.171.0 and 0.172.0 accepted in initialization tests,
+      with unsupported editions refused</td>
+      </tr>
+      </tbody>
+      </table>
+      </section>
+      <section id="native-evidence-and-deployment-limits"
+      class="level1">
+      <h1>Native evidence and deployment limits</h1>
+      <p>A selected Sandbox integration exercised ordinary Python Client
+      and LocalTransport submission into native 0.172, exit of the
+      submitting process and result readback from a fresh process. Later
+      selected notebook requests used the same existing Thread in the
+      Sandbox. These observations concern their selected operations and
+      tested editions. Adapter version admission describes the editions
+      the code can recognize. A specific operation's compatibility
+      depends on corresponding native evidence.</p>
+      <p>For the direct SDK, the documented receipt-readback procedure
+      was checked with its actual SDK classes and synthetic Profile and
+      native peers. The fixtures exercised a completed request, a
+      request in progress and a mismatched receipt. They observed no
+      native mutations or receipt writes.</p>
+      <p>A real Host SSH deployment still needs evidence for
+      authentication, fixed endpoint and policy selection, Host source
+      trust, account restrictions and isolation. A receipt identifies
+      acknowledged native work. It does not guarantee exactly-once
+      execution, automatic resumption or recovery from a service
+      failure. Returned text is an Agent result. Scientific validation
+      requires a separate check.</p>
+      <p>See the <a href="READER_GUIDE.html#wbpy-evidence">Reader
+      Guide</a> for entry points and the <a href="SECURITY.html">data
+      boundaries</a> for what can be shared or executed.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

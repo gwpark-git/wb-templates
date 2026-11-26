@@ -1,0 +1,251 @@
+#+title: Equilibrium Brownian transport with free-space pair HI
+#+date: 2026-11-25
+#+language: en
+
+* What the benchmark compares
+This two-sphere test uses the same temperature, solvent, separation
+interval, potential and initial conditions for three thermal dynamics:
+pure BD with unit normalized mobility (\(K_\mathrm{sed}=1\)), RPY BD, and
+Brownian evolution based on the deterministic Stokesian mobility with
+lubrication. All use an unbounded solvent and a reflecting constraint
+on the pair separation. Fluid mobility is evaluated in free space.
+The pair configuration is bounded radially and free to rotate.
+
+The Level 3 template provides the repulsive pair force, RPY mobility and
+the deterministic Stokesian solver. The example builds a separate thermal
+pair integrator from those mobilities. It uses neither the default
+scalar BD integrator nor the full-coordinate native HI stepper for
+this constrained radial experiment. It leaves both standalone solvers
+available for their own problems.
+
+Use reduced units \(\sigma=k_BT=D_0=1\), radius \(a=\sigma/2\),
+\(\eta_s^*=1/(3\pi)\) and \(\tau_\sigma=\sigma^2/D_0\). The two spheres have
+\(1.05\le r/\sigma\le2.50\). The template polynomial repulsion uses
+\(\epsilon/k_BT=24\) and cutoff \(1.65\sigma\).
+The reflecting shell retains a positive gap compatible with the SD
+resistance table. Its volume sets the normalization for reported pair
+stress. It is a separation-space volume and carries no bulk-volume-fraction
+interpretation.
+
+* Translational mobility and thermal dynamics
+[[file:../modern/tests/benchmark_hi_equilibrium.cpp][C++ grid producer]]
+calls =bdmc::hydrodynamic_mobility= and =bdmc::solve_stokesian=.
+In the SD solver, opposite unit forces yield the relative diffusivities
+\(D_\parallel\) and \(D_\perp\) in reduced units. Equal forces yield
+the parallel and transverse center diffusivities \(D_{\mathrm{cm},\parallel}\)
+and \(D_{\mathrm{cm},\perp}\) after dividing the center velocity by the
+total force. Lubrication is enabled. The pure BD coefficients are 2
+for relative motion and \(1/2\) for the center, in all directions.
+
+[[file:../tools/equilibrium_hi_pair.py][Thermal pair runner]]
+uses the equilibrium density \(p(r)\propto w(r)=r^2e^{-U(r)/k_BT}\).
+Its radial backward generator is
+\[
+ Lf=w^{-1}\partial_r(wD_\parallel\,\partial_r f).
+\]
+The expansion gives \(D_\parallel f''+
+[D'_\parallel+2D_\parallel/r-D_\parallel U'/k_BT]f'\).
+The radial diffusion-gradient and geometric drifts are included through
+this divergence form. Adjacent cell rates share the conductance
+\(w_\mathrm{face}D_{\parallel,\mathrm{face}}/h^2\); divide by the source
+center weight. Boundary faces carry no flux. Detailed balance follows
+from equal forward and reverse flux at the Boltzmann weights.
+The angular generator is \(D_\perp r^{-2}\Delta_\Omega\). The resulting
+thermal process is the reduced two-sphere dynamics of the chosen
+mobility and potential. The deterministic SD library supplies a response
+matrix and stresslets. The example supplies thermal evolution separately.
+
+* Diffusivity, viscosity and pressure
+** Diffusivity
+The measured equivalent of unit normalized mobility in this test is
+\(H_\mathrm{pair}=2\langle 
+(D_{\mathrm{cm},\parallel}+2D_{\mathrm{cm},\perp})/3\rangle/D_0\).
+The factor of two normalizes to the free-draining pair reference.
+The average is over the common isotropic equilibrium ensemble. Pair
+mobility is a center response, whereas the relative coefficient in
+\(L\) sets internal relaxation. Neither coefficient is injected as a
+bulk mBLA \(D_c/D_0\). The explicit HI cases apply no empirical
+\(K_\mathrm{sed}\) multiplier.
+
+** Viscosity
+Define \(q(r)=-r U'(r)\) and the smooth pair-pressure deviator
+\(P^d=(q/V_\mathrm{shell})(\mathbf n\mathbf n-I/3)\).
+The Green–Kubo stress contraction in isotropic equilibrium samples the
+second angular harmonic. Conditional on the radial path, its
+correlation factor is \(\exp[-\int_0^t6 D_\perp(r_s)/r_s^2\,ds]\).
+The tensor contraction contributes \(2/3\), so the configurational
+increment in simulation units is
+\[
+ \frac{\Delta\eta_\mathrm{conf}(t_c)}{\eta_s}
+ =\frac{3\pi}{15\,V_\mathrm{shell}^*}
+ \int_0^{t_c}
+ \left\langle
+ q^*(r_0)q^*(r_t)
+ \exp[-\int_0^t6D_\perp(r_s)/r_s^2\,ds]
+ \right\rangle\,dt .
+\]
+The spectral contraction evaluates the radial generator minus the
+angular decay rate. The simulator independently samples the radial
+transitions and evaluates the conditional factor along the paths.
+The reported increment refers to the smooth configurational force;
+the table lists both the finite \(0.4\tau_\sigma\) window and the
+spectral infinite-lag limit of this bounded model.
+
+The SD solver also returns an instantaneous stresslet response.
+A symmetric traceless five-mode strain basis gives the isotropic
+trace of the stresslet operator. Divide by \(2\eta_s V_\mathrm{shell}\)
+to obtain a relative high-frequency increment. It is a separate
+diagnostic. The RPY translational mobility provides no stresslet operator.
+This experiment does not supply Brownian stresslet and stress cross
+terms or a total suspension viscosity.
+
+** Osmotic pressure and equilibrium
+The common smooth-force virial contribution is
+\(\langle q\rangle/(3 V_\mathrm{shell})\).
+The relative shell's outer thermodynamic load is
+\(k_BT e^{-U(r_\max)/k_BT}/[4\pi\int_{r_\min}^{r_\max}r^2e^{-U(r)/k_BT}dr]\).
+It is the derivative of the relative configurational partition function
+when increasing its outer volume at fixed inner radius. It is not the
+periodic osmotic equation of state. A bulk periodic calculation would
+instead evaluate the ideal particle term and all applicable interaction
+virial terms in the actual box at fixed \(\phi\).
+
+Equal weights and detailed balance predict the same equilibrium
+separation law and static pressure under the three mobilities.
+Different relative diffusivities and angular relaxation rates can
+produce different time correlations on that same ensemble.
+
+* Reference result and interpretation
+At 144 radial cells, the following values were reproduced in the finite
+pair benchmark. The pressure columns use \(k_BT/\sigma^3\).
+
+| Model | \(H_\mathrm{pair}\) | \(\Delta\eta_\mathrm{conf}(0.4\tau_\sigma)/\eta_s\) | Smooth virial | Outer load |
+|-------+---------------------+---------------------------------------------------+---------------+------------|
+| Pure BD \(K_\mathrm{sed}=1\) | 1.000000e+00 | 1.409055e-03 | 3.093502e-03 | 1.822666e-02 |
+| RPY BD | 1.252956e+00 | 2.037497e-03 | 3.093502e-03 | 1.822666e-02 |
+| Thermal SD pair | 1.248272e+00 | 2.117308e-03 | 3.093502e-03 | 1.822666e-02 |
+
+The SD high-frequency stresslet increment was 4.333653e-02 in its pair
+normalization. In this bounded geometry, positive cross-mobility
+increases center diffusion above the pure reference and relative
+motion relaxes stress more slowly. The results do not determine the sign
+or magnitude of a bulk sedimentation correction.
+
+The matched pure/RPY/SD comparison is valid for the same isolated-pair
+geometry, equilibrium weights and smooth-force definitions. Within that
+comparison, \(H_\mathrm{pair}\) and the finite configurational integral
+are common observables. The SD stresslet is a model-specific component.
+A comparison with the periodic mBLA coupling study additionally requires
+a periodic mobility with a specified mean-flow convention, a common
+particle model and density, and explicit structure and stress definitions.
+For a finite-wavevector short-time measurement one would compare the
+hydrodynamic function \(H(q)\) and structure factor \(S(q)\) on the
+same equilibrium states, before assessing a bulk \(q\to0\) limit.
+The earlier pure-BD \(K_\mathrm{sed}=1\) thermodynamic factor is
+\(\partial_\phi(\phi Z)\). It is a separate quantity from \(H_\mathrm{pair}\).
+
+For the corresponding periodic observables, see [[file:DIFFUSION.org][self and collective diffusion]].
+
+* Reproduce the benchmark
+Requires C++17, CMake and GSL for the native grid, and Python with NumPy
+and SciPy for the thermal calculation. Run from the template directory.
+
+#+begin_src sh
+work="$(mktemp -d)"
+cmake -S modern -B "$work/build" -DCMAKE_BUILD_TYPE=Release \
+  -DBDMC_BUILD_PYTHON=OFF -DBDMC_BUILD_BENCHMARKS=ON -DBDMC_BUILD_HYDRODYNAMICS=ON
+cmake --build "$work/build" --parallel 2 --target bdmc_hi_equilibrium_grid
+mkdir "$work/grids"
+for cells in 72 144 288; do
+  "$work/build/bdmc_hi_equilibrium_grid" "$cells" > "$work/grids/mobility-$cells.csv"
+done
+python3 tools/equilibrium_hi_pair.py --grids "$work/grids" --output "$work/results"
+#+end_src
+
+Output tables record mobility/transport, sampled equilibrium endpoints
+from two different starts, the running Green–Kubo integral, and sampled
+finite integrals with Monte Carlo standard error. Floating values use
+17 significant digits in scientific notation. A grid refinement,
+analytical RPY pair, isolated SD stresslet, far-separation drag and
+paired thermal-equilibrium checks are included in this reference workflow.
+The 144-cell stress test uses 4,096 paths for each of two seeds.
+
+* Fixed-density finite-size test
+The pair result supplies a check of the thermal model. To test size
+sensitivity, a second example samples equilibrium configurations in a cube
+with reflecting center boundaries. It matches \(\phi=0.10\),
+\(N=8,16,32,64\) and \(L/\sigma=(N\pi/(6\phi))^{1/3}\).
+The pair energy and minimum separation are the same as above.
+Each doubling in \(N\) scales the side by \(2^{1/3}\).
+The mechanical cube admits particle centers. The mobility solver still
+uses unbounded solvent, without periodic images or fluid walls.
+
+[[file:../modern/tests/benchmark_hi_size.cpp][C++ finite-size benchmark]]
+equilibrates each size with single-particle Metropolis moves. Use two
+seeds, discard 2,000 sweeps, and then record six blocks of 160 sweeps
+per seed. Compute mobility and SD stresslets on the same last configuration
+of each block. The Markov chain samples equilibrium. Its sweep number
+does not set a Brownian time. This design compares the equal-time
+mobility and the instantaneous SD stresslet. Only the separate pair
+experiment measures a thermal stress correlation.
+
+Apply equal force to each sphere in three Cartesian directions and compute
+\[
+ H_0^\mathrm{open}
+ =\frac{1}{3N\mu_0}\left\langle\sum_{ij}\operatorname{tr}M_{ij}\right\rangle .
+\]
+The free-draining identity gives one. Evaluate the SD stresslet in a
+symmetric \(xy\) affine strain and normalize by \(2\eta_s V E:E\).
+The reported SD quantity represents this resolved stresslet contribution.
+The benchmark provides no equivalent RPY stresslet.
+
+For pressure sample each fourth sweep of every production block.
+Use virtual compression \(V'=Ve^{-\epsilon}\) with
+\(\epsilon=0.002,0.004\). The compression estimator is
+\[
+ \Pi^* =
+ \frac{N\epsilon-\ln\langle e^{-\Delta U/k_BT}
+       \mathbf 1_\mathrm{allowed}\rangle}{(V-V')/\sigma^3}.
+\]
+Particle-center distances scale by \(e^{-\epsilon/3}\); a compressed
+configuration with a disallowed gap contributes zero weight.
+The \(N\epsilon\) term comes from the coordinate Jacobian.
+Use the smaller compression step for the primary number and retain
+both to show finite perturbation sensitivity. This is the mechanical
+confinement pressure of the chosen cube. It is shared by all three
+mobility models on the same samples.
+
+| \(N\) | \(L/\sigma\) | Pure BD \(H_0\) | RPY \(H_0^\mathrm{open}\) | SD \(H_0^\mathrm{open}\) | SD stresslet increment | \(\Pi^*,\epsilon=0.002\) |
+|-------+--------------+-------------------+---------------------------+--------------------------+------------------------+-------------------------|
+| 8 | 3.472931 | 1.000000 | 2.417993 | 2.387130 | 2.541751e-01 | 2.967094e-01 |
+| 16 | 4.375619 | 1.000000 | 3.647401 | 3.576062 | 2.519200e-01 | 3.202489e-01 |
+| 32 | 5.512935 | 1.000000 | 5.508111 | 5.376758 | 2.530998e-01 | 3.652777e-01 |
+| 64 | 6.945863 | 1.000000 | 8.645013 | 8.347808 | 2.561289e-01 | 3.833725e-01 |
+
+The size trend in open-fluid mobility is consistent with summing the
+long-range \(1/r\) coupling under a net common force. It does not
+converge to bulk \(K_\mathrm{sed}\) in this test. The SD instantaneous
+stresslet varies much less over the tested sizes. The pressure changes
+with the finite cube size, even on the shared equilibrium ensemble.
+Two seeds and one density bound the interpretation. Compact plots can
+show the seed-to-seed range and both compression steps, without treating
+them as a confidence interval or extrapolating thermodynamic limits.
+
+Reproduce from the same configured template build.
+
+#+begin_src sh
+cmake --build "$work/build" --parallel 2 --target bdmc_hi_size
+mkdir "$work/sizes"
+for seed in 51367 93481; do
+  for n in 8 16 32 64; do
+    "$work/build/bdmc_hi_size" "$n" "$seed" > "$work/sizes/N$n-seed$seed.csv"
+  done
+done
+#+end_src
+
+* Provenance
+Scientific direction by Gunwoo Park. Imports and terms are listed in
+[[file:../NOTICE.md][NOTICE]].
+[[https://doi.org/10.1063/1.436761][Ermak and McCammon, JCP 69, 1352 (1978)]]
+[[https://doi.org/10.1063/1.1670977][Rotne and Prager, JCP 50, 4831 (1969)]]
+[[https://doi.org/10.1146/annurev.fl.20.010188.000551][Brady and Bossis, Annual Review of Fluid Mechanics 20, 111 (1988)]]

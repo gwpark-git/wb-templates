@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "Cite the paper as the source of the researcher-authored plotting style; synthetic examples are unrelated to its data."
+title: "wb-style — researcher-authored plotting conventions"
+version: 0.2.0
+authors:
+  - family-names: Park
+    given-names: Gunwoo
+preferred-citation:
+  type: article
+  title: "Modeling crossflow filtration: Effect of shear on particle-enriched polarization and cake layers"
+  authors:
+    - family-names: Park
+      given-names: "Gun Woo"
+    - family-names: Dhont
+      given-names: "Jan K. G."
+    - family-names: Nägele
+      given-names: Gerhard
+  journal: "The Journal of Chemical Physics"
+  volume: "164"
+  issue: "24"
+  start: "244119"
+  year: 2026
+  doi: 10.1063/5.0336005

@@ -1,0 +1,121 @@
+{
+  "rc_params": {
+    "xtick.direction": "in",
+    "ytick.direction": "in",
+    "xtick.major.size": 6,
+    "ytick.major.size": 6,
+    "xtick.major.width": 1.5,
+    "ytick.major.width": 1.5,
+    "xtick.minor.size": 3,
+    "ytick.minor.size": 3,
+    "xtick.minor.width": 0.8,
+    "ytick.minor.width": 0.8,
+    "axes.linewidth": 1.5,
+    "font.family": "sans-serif"
+  },
+  "original_font": "Arial",
+  "portable_fallback_font": "DejaVu Sans",
+  "dash_patterns": {
+    "-..": [
+      4,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "-...": [
+      3,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    ":": [
+      1,
+      1
+    ],
+    "loosely dotted": [
+      1,
+      6
+    ],
+    "dotted": [
+      1,
+      1
+    ],
+    "densely dotted": [
+      1,
+      1
+    ],
+    "loosely dashed": [
+      5,
+      6
+    ],
+    "dashed": [
+      5,
+      5
+    ],
+    "densely dashed": [
+      5,
+      1
+    ],
+    "loosely dashdotted": [
+      3,
+      6,
+      1,
+      6
+    ],
+    "dashdotted": [
+      3,
+      5,
+      1,
+      5
+    ],
+    "densely dashdotted": [
+      3,
+      1,
+      1,
+      1
+    ],
+    "dashdotdotted": [
+      3,
+      5,
+      1,
+      5,
+      1,
+      5
+    ],
+    "loosely dashdotdotted": [
+      3,
+      6,
+      1,
+      6,
+      1,
+      6
+    ],
+    "densely dashdotdotted": [
+      3,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "plot_defaults": {
+    "figsize_inches": [
+      8,
+      6
+    ],
+    "line_width_pt": 3,
+    "marker_size_pt": 8,
+    "marker_edge_width_pt": 1.5,
+    "label_size_pt": 20,
+    "tick_label_size_pt": 20,
+    "line_color": "black",
+    "marker_face_color": "white"
+  }
+}

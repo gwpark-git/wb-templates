@@ -1,0 +1,76 @@
+#+title: Apple Metal and CPU comparison for fixed-volume transport
+#+date: 2026-11-25
+#+language: en
+
+* What the Metal backend executes
+The C++ reference models can select Metal for the all-pairs repulsive
+force, energy and virial, Hookean/FENE connector forces, and a linear
+Euler update. Metal evaluates these kernels in float32. The host
+retains control of the random stream, state, boundary handling and
+observables. The standalone hard-sphere MC sampler has a separate
+serial path. The transitory network and continuum workflows require
+their own engine-specific checks.
+
+The repulsive Metal dispatch builds command buffers, converts and
+copies arrays and waits for completion. A higher bulk-kernel throughput
+need not improve a small complete property job. For that reason the
+benchmark times the full operation including construction, transport
+sampling and the finite-window viscosity estimator.
+
+[[file:../modern/src/execution_metal.mm][Metal implementation]]
+[[file:../modern/tests/test_accelerators.cpp][Analytic, arithmetic and domain checks]]
+
+* Run on a Mac with a Metal device
+Use a local Apple C++/Objective-C++ toolchain and the installed macOS
+SDK. This run needs no GSL or Python native-extension build. From the
+copied template root:
+
+#+begin_src sh
+work_dir="$(mktemp -d)"
+cmake -S modern -B "$work_dir/build" -DCMAKE_BUILD_TYPE=Release \
+  -DBDMC_BUILD_PYTHON=OFF -DBDMC_BUILD_HYDRODYNAMICS=OFF \
+  -DBDMC_ENABLE_METAL=ON -DBDMC_BUILD_BENCHMARKS=ON
+cmake --build "$work_dir/build" --parallel 2
+ctest --test-dir "$work_dir/build" -R bdmc_accelerator_metal --output-on-failure
+python3 tools/benchmark_transport.py \
+  --executable "$work_dir/build/bdmc_transport_benchmark" \
+  --output "$work_dir/transport-metal"
+#+end_src
+
+Verify that the CTest target actually passes and the run report shows a
+Metal device. An unavailable device yields an explicit result and no fake
+timing rows. With =--cpu-only= the same benchmark executes both serial
+CPU references. Use =--extended= to include 216 particles in addition to
+the 27- and 64-particle jobs.
+
+* What to inspect
+The primary transport outputs are reduced \(D_c/D_0\) and
+\(\eta/\eta_s\). The test uses the quiescent polynomial potential,
+\(\epsilon/k_BT=12\), fixed volume fractions 0.03 and 0.494, and four
+matched seeds across each backend. The finite difference of \(\phi Z\)
+uses state perturbations of 0.006, clipped at 0.494. The viscosity
+adds the solvent and the \(0.4\tau_\sigma\) integral of pair-stress
+correlation. The same fixed-step/time-window plan is used for all
+backends. Sampling and physical-model limits therefore remain common.
+
+The report provides each backend's native wall time and both property
+values for every seed. It compares Metal with serial all-pairs and
+serial cell lists. The paired screen for a material benefit is median
+speedup at least 1.5 and a geometric-mean paired 95% interval above 1
+on the representative workload, together with the numerical screens.
+The initial numerical screens require the entire paired mean-difference
+interval to fit inside 2% of the CPU diffusivity, and
+\(\max(2\times10^{-4},0.05|\eta_\mathrm{CPU}/\eta_s-1|)\) for the
+relative viscosity. These are engineering screening values for this
+bounded comparison. Near equilibrium and dense overload boundaries can
+need more replicas, longer trajectories and independent numerical oracles.
+Report output refusal, including float32 rounding outside the wrapped
+coordinate domain, as an observed failure of that run rather than an
+error value. Neither a successful kernel check nor this point benchmark
+credits an unmeasured coupled-solver speedup.
+
+The development environment used Linux AArch64. It exercised the two CPU
+references and the explicit missing-Metal result. A native Apple timing
+and accuracy receipt is still needed to assess the GPU path.
+
+Scientific direction by Gunwoo Park.

@@ -1,0 +1,21 @@
+Original scientific implementation: Gunwoo Park, 2026 JCP C++ mBLA edition.
+The private MATRIX library retains its original author header. The file_IO
+ancestry points to the author's dynamics_of_networks_and_colloids project;
+that historical relationship does not establish a license grant here.
+
+Gunwoo Park directed the modernization and documentation.
+
+Source copying and execution are authorized internal research work. The
+associated 2026 source README says public release was planned but incomplete,
+and source-history identity was uncertain. Preserve that distinction.
+
+This edition retains the physical equations, source closure variants, pressure
+convention and cake rules. It adds CMake, owned storage/resources, input and
+failure checks, explicit floating-point-contraction policy, immutable current
+reference cases and tests. A passed regression preserves a declared source/
+compiler case; it does not establish general cake conservation or reproduce
+an authenticated historical publication result.
+
+Researcher-established historical Python/C++ non-cake agreement remains
+reported prior evidence. New optional comparisons are separately labelled.
+The public Python model has no cake extension. See docs/VALIDATION.org.

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>mBLA Level 2 — Python cake-resistance search</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../../index.html">wb-templates</a>
+      <a href="../../../documentation/README.html">Documentation</a>
+      <a data-source-link href="PYTHON_CAKE.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#what-python-runs" id="toc-what-python-runs">What Python
+runs</a></li>
+<li><a href="#use-the-kernel" id="toc-use-the-kernel">Use the
+kernel</a></li>
+<li><a href="#verification-and-timing"
+id="toc-verification-and-timing">Verification and timing</a></li>
+<li><a href="#repeat-locally" id="toc-repeat-locally">Repeat
+locally</a></li>
+<li><a href="#implementation-and-input-ownership"
+id="toc-implementation-and-input-ownership">Implementation and input
+ownership</a></li>
+</ul></nav>
+    <main>
+      <h1>mBLA Level 2 — Python cake-resistance search</h1>
+      <section id="what-python-runs" class="level1">
+      <h1>What Python runs</h1>
+      <p><a
+      href="../python/mbla_cake.py">search<sub>resistance</sub></a> runs
+      one resistance search inside the nested fixed-point calculation.
+      The caller supplies the already computed radial profile integrals
+      and case scalars for one axial station. The original CLI continues
+      to use its C++ outer solver and search. The Python module gives an
+      independent way to call and benchmark the same inner model.</p>
+      <p>The implementation evaluates the same initial trial, sign and
+      trend/range tests, decade step changes and return value. It reuses
+      the cylindrical geometry and the trial-independent F2 integral. F1
+      and modified F2 share one exponential per radial node. Each
+      integral accumulates in increasing radial order. The optional
+      compilation disables fast math.</p>
+      </section>
+      <section id="use-the-kernel" class="level1">
+      <h1>Use the kernel</h1>
+      <p>Add this edition's <code class="verbatim">python/</code>
+      directory to Python's import path. The plain backend uses Python
+      3.10+ standard library only. The optional <code
+      class="verbatim">numba</code> backend uses compatible NumPy and
+      Numba installations for the selected Python and platform. Both
+      take explicit arrays and scalars. The kernel accepts no workspace,
+      configuration or file path.</p>
+      <pre class="python"><code>from mbla_cake import CakeSearchState, search_resistance
+
+# A synthetic slice for the interface. Production callers supply these
+# fields from the same station and iteration of their fixed-point solver.
+state = CakeSearchState(
+    wall_distance=(0.0, 0.1, 0.3),
+    viscosity_integral=(0.0, 0.1, 1.0),
+    inverse_diffusivity_integral=(0.0, 0.5, 1.0),
+    uz_ratio=1.0,
+    permeability=1e-9,
+    net_driving_pressure=100.0,
+    reference_vw=1e-7,
+    epsilon_d=0.01,
+    area_factor=1.0,
+    inlet_flux_factor=0.02,
+    bulk_fraction=0.001,
+    freeze_fraction=0.494,
+    resistance_tolerance=1e-5,
+)
+result = search_resistance(state, backend=&quot;numba&quot;)  # or &quot;python&quot;
+print(result.resistance, result.steps, result.termination)
+</code></pre>
+      <p>The radial arrays use the same <code
+      class="verbatim">y/R</code> abscissa, normalized inverse viscosity
+      integral and cumulative inverse diffusivity integral as the C++
+      search. The pressure input is <code
+      class="verbatim">P − Pper − Π(phi_freeze)</code> in Pa. The
+      reference wall velocity is in m/s. The returned resistance is
+      <code class="verbatim">Rcake/Rmem</code> before the outer solver's
+      under-relaxation. <code class="verbatim">trace=True</code> returns
+      the trial resistance, step and normalized residual for each
+      attempt. A trend/range warning returns the previous trial with a
+      <code class="verbatim">warning</code> status. Invalid
+      caller-supplied state and nonfinite or exhausted searches raise
+      errors.</p>
+      </section>
+      <section id="verification-and-timing" class="level1">
+      <h1>Verification and timing</h1>
+      <p>The benchmark takes identical saved states from ordinary C++
+      cases and compares both Python paths with the C++ trial
+      resistance, step, residual and termination. The small fixtures
+      supply 42 searches and 9,712 trials. Each chosen search produced
+      the same trial values and result, with zero observed residual
+      difference. A constructed case exercises the warning path in
+      Python. An invalid radial grid is refused. A 400-node slice comes
+      from a short diagnostic run and does not imply fixed-point
+      convergence.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Captured workload</th>
+      <th>Searches</th>
+      <th>Trials</th>
+      <th>C++ (ms)</th>
+      <th>Python (ms)</th>
+      <th>Python/Numba (ms)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Mild cake, 120 radial nodes</td>
+      <td>18</td>
+      <td>1151</td>
+      <td>0.69</td>
+      <td>9.35</td>
+      <td>0.67</td>
+      </tr>
+      <tr>
+      <td>Demanding cake, 120 radial nodes</td>
+      <td>18</td>
+      <td>8154</td>
+      <td>4.92</td>
+      <td>63.75</td>
+      <td>2.56</td>
+      </tr>
+      <tr>
+      <td>Mild cake, 400 radial nodes</td>
+      <td>6</td>
+      <td>407</td>
+      <td>0.78</td>
+      <td>11.81</td>
+      <td>0.76</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>The times are medians of three observed batches per workload on
+      Linux AArch64, GCC 14.2.0, Python 3.13.5, NumPy 2.2.4 and Numba
+      0.61.2. The C++ timer surrounds its inner loop. The Python
+      measurement includes validation and preparation per call. The
+      separate first compiled call took about 0.26 s. Compiled Python
+      ran the demanding search batch about 1.9× as fast as this C++
+      implementation. The other short batches were similar in time.
+      These measurements cover the inner kernel; a full Python solver or
+      integration with the outer loop would need its own regression and
+      timing.</p>
+      </section>
+      <section id="repeat-locally" class="level1">
+      <h1>Repeat locally</h1>
+      <p>Build the strict-FP C++ target through the README and run the
+      optional benchmark from this edition's source. It instruments a
+      disposable C++ copy, compares its printed result to the ordinary
+      executable, and saves captured scalar/radial states, trial logs
+      and times into the selected directory. Omit <code
+      class="verbatim">--numba</code> for the standard-library backend
+      only.</p>
+      <pre class="bash" data-org-language="sh"><code>python3 tests/compare_python_cake.py --numba \
+  --exe /path/to/strict-fp/build/mbla --work /new/path/to/cake-benchmark
+</code></pre>
+      <p>Original numerical method and project direction: Gunwoo
+      Park.</p>
+      </section>
+      <section id="implementation-and-input-ownership" class="level1">
+      <h1>Implementation and input ownership</h1>
+      <p><code class="verbatim">CakeSearchState</code> holds the
+      supplied radial fields and physical scales. <code
+      class="verbatim">search_resistance</code> checks shapes, ordered
+      y/R, finite values and scalar ranges. <code
+      class="verbatim">_compiled_backend</code> lazily prepares Numba
+      without fast-math. <code class="verbatim">_search</code>
+      implements trial order, quadrature and termination. <code
+      class="verbatim">CakeSearchResult</code> records the resistance
+      before under-relaxation, the termination condition and an ordered
+      trial/residual trace on request.</p>
+      <p>The latest C++ verification inputs in <code
+      class="verbatim">examples/</code> retain their frozen bytes. <a
+      href="SCIENTIFIC_GUIDE.html">Input/output definitions</a> explains
+      .inp configuration, units, domains and sidecars. The Makefile
+      selects distinct build and install directories. The Python inner
+      routine receives its state from the caller.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

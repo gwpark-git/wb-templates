@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/torrewk/Python-Jax-Fast-Stokesian-Dynamics",
+  "commit": "5234c959c0fdb0ba7ba32d6015d0478014a512c7",
+  "license": "Apache-2.0",
+  "scope": "Native C++ invariant-tensor port of selected deterministic open-boundary formulas; dense direct saddle solve, no JAX runtime. Table first1000x22 used values preserved; unused zero padding excluded.",
+  "files": {
+    "jfsd/mobility.py": "8ec173cc8af803e7389844f3f2be10bf5b06e1167c8d914ad15e535b5c080cb5",
+    "jfsd/resistance.py": "cfe73258cdef353bff253be2bb269972062b920efbcc7bb06b8ed7e0ab26a442",
+    "jfsd/utils.py": "00a9baf72107fd791b3fca6354aecc09c8d25c5a0f4edce7442bfd30eb2c6231",
+    "jfsd/solver.py": "d2cc2a78887aef44ce598c8c72f6c33c0a591a21c9a1aceb4415a49ad5ae6a04",
+    "files/ResTableDist.npy": "518fa5ea58c47314062f149af1a277ee8512422c2c74de69bcef0f7c6e4df039",
+    "files/ResTableVals.npy": "4e59434ccbec6876974990c2bd2b1a3a70dc09435fcb6635ca38b0a5feb8cc90",
+    "LICENSE": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+  },
+  "generated_table_sha256": "96b759ddc9ae3dfac06c1a48bec78227ad9680d992b56fa33d22e16f63a42f66"
+}

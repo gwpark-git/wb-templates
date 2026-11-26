@@ -1,0 +1,18 @@
+# Local build/runtime artifacts; source tests and frozen fixtures remain distributable.
+/build/
+/runs/
+/dist/
+/.venv/
+/venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*.o
+*.d
+*.so
+*.dylib
+*.pyd
+*.egg-info/
+.DS_Store
+/DATA_BUDGET.json
+*.write.lock

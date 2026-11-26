@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Using wb-templates</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../../index.html">wb-templates</a>
+      <a href="../../README.html">Documentation</a>
+      <a data-source-link href="_guide.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#using-wb-templates" id="toc-using-wb-templates">Using
+wb-templates</a></li>
+</ul></nav>
+    <main>
+      <section id="using-wb-templates" class="level2">
+      <h2>Using wb-templates</h2>
+      <p>wb-templates is the reusable scientific-computation collection
+      of Agentic Workbench (wb). Its templates include assumptions,
+      small inputs and bounded verification evidence. Copy the
+      template’s source folder with its license and guide, then select
+      an example close to your own calculation.</p>
+      <ul>
+      <li><strong>Scientific Modernization</strong> provides portable
+      baselines, operation-level checks and worked scientific-interface
+      comparisons. Read each solver’s declared validation domain.</li>
+      <li><strong>Plot styles and CSV I/O</strong> provide reusable
+      presentation settings and explicit numeric column selection.</li>
+      <li><strong>Documentation and review</strong> turn authored
+      evidence into detailed and presentation views. Multiple ordered
+      Markdown chapters feed this continuous page. A Reveal.js deck
+      links back to exact sections and the same data.</li>
+      </ul>
+      <section id="replace-the-example-with-your-own-work"
+      class="level3">
+      <h3>Replace the example with your own work</h3>
+      <p>Copy this kit. Add or replace Markdown files with a leading
+      <code>_</code> and list them in the intended order in
+      <code>report.qmd</code>. Use unique section IDs. Keep the
+      equations, validation criteria and source comparisons in the
+      report. In <code>slides.qmd</code>, keep selected figures and
+      checks and link to the report sections. Update the edition and
+      publication identity together when reusing the layout.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

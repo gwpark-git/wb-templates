@@ -1,0 +1,108 @@
+#+title: mBLA Level 3 — Python, Numba and PyTorch property providers
+#+language: en
+#+date: 2026-11-26
+
+* The connection point
+The property provider supplies reduced collective diffusivity (=D_c/D_0=)
+and relative shear viscosity (=eta/eta_s=). The current C++ case-driver
+interface takes one volume fraction at fixed material and reference conditions.
+Its [[file:../examples/unity_provider.cpp][unity-provider example]] exercises the paired =LIVE= selectors.
+The existing Python/Numba implementation covers the inner cake-resistance
+search. A full Python outer solver remains a planned Level 3 development.
+Keep the strict-FP Level 2 executable as the regression reference while porting
+the solver in Python. Compile measured bottlenecks with Numba.
+
+* Worked example: PyTorch inference to a property table
+[[file:../examples/transport_table.py][transport_table.py]] defines a synthetic torch.nn.Module
+and the matching analytical oracle. In this example the inputs have shape
+=N × 1= and use volume fraction in =[0, 0.494]= at one fixed material state.
+The output has shape =N × 2=, with collective diffusivity first and viscosity
+second. Both columns are positive and dimensionless. The formulas are
+\(D_c/D_0=1+1.5\phi\) and \(\eta/\eta_s=1+2.5\phi+4\phi^2\).
+These are synthetic values chosen to illustrate the interface. For licensed
+physical observations, record how both quantities were estimated, the material
+conditions and the data, preprocessing and model versions.
+
+From =modern-lv3/= with Python 3.11 or later, generate the reference CSV using
+the standard library. The optional second command requires a compatible
+PyTorch installation in the selected environment.
+
+#+begin_src sh
+python3 examples/transport_table.py --backend python > /tmp/mbla-demo-reference.csv
+python3 examples/transport_table.py --backend torch > /tmp/mbla-demo-torch.csv
+#+end_src
+
+The file has columns =phi,D_c_over_D0,eta_over_eta_s=, six rows of values in
+scientific notation and no simulation inputs or weights. The first row is
+unity for both properties. At \(\phi=0.2\), the values are 1.30 and 1.66.
+Compare both CSVs numerically using the same float64 tolerance. A trained model
+can replace the synthetic module when its input order, normalization, output
+definition and domain match the contract. Evaluate a qualified device and dtype
+explicitly. This example uses CPU and float64. Accelerator setup and transfer
+costs are part of the full timing comparison.
+
+* Worked example: Numba lookup inside a solve
+Keep the torch model in Python and evaluate a batch outside the inner numerical
+loop. Pass contiguous arrays to the numerical kernel. After installing compatible
+NumPy and Numba in the chosen environment, run from =modern-lv3/=:
+
+#+begin_src python
+import sys
+from pathlib import Path
+
+import numpy as np
+from numba import njit
+
+sys.path.insert(0, str(Path("examples").resolve()))
+from transport_table import linear_pair
+
+table_path = Path("/tmp/mbla-demo-reference.csv")  # Or mbla-demo-torch.csv.
+rows = np.loadtxt(table_path, delimiter=",", skiprows=1, ndmin=2)
+nodes, diffusivity, viscosity = (
+    np.ascontiguousarray(column, dtype=np.float64)
+    for column in rows.T
+)
+compiled_lookup = njit(fastmath=False)(linear_pair)
+dc_over_d0, eta_over_etas = compiled_lookup(0.15, nodes, diffusivity, viscosity)
+print(f"{dc_over_d0:.6e} {eta_over_etas:.6e}")
+#+end_src
+
+The interpolated pair is approximately =1.225000e+00 1.475000e+00=. The analytic
+viscosity at the same state is 1.465. This difference is interpolation error on
+the example grid. To exercise the inference source, set =table_path= to
+=/tmp/mbla-demo-torch.csv=. The Numba process reads a CSV from either producer
+using NumPy and Numba. For genuine material data, verify monotonic nodes, finite positive values and the
+physical validity domain before compiling or calling the lookup. Keep training,
+device inference and any tensor conversion out of the per-RK-stage loop.
+
+The lookup refuses extrapolation. The current mBLA radial march can query a
+negative intermediate Runge–Kutta trial even when accepted physical states
+lie in range. Diagnose that boundary separately in an integrated solver test.
+A physical table must retain its measured domain. An extension or trial
+repair needs an explicit numerical policy, comparison with the matched
+Level 2 reference and a sensitivity check. The synthetic unity C++ fixture
+has its own constant law for every finite trial.
+
+* Verification of the synthetic example
+The standard-library and PyTorch 2.7.1 CPU producers generated the same six
+rows. Numba 0.61.2 and NumPy 2.2.4 reproduced the expected midpoint from the
+table. A lookup below or above the qualified interval and a nonfinite query
+were refused. The checks cover the synthetic property interface and transport
+between the producers and lookup. They establish no trained-model accuracy
+or full Python-solver timing.
+
+* Validate before changing the backend or property model
+- Port one no-cake step and verify pressure, radial march, wall update and
+  observable timing. Keep double precision, the same grid and reduction order.
+- Use the existing [[file:../../modern-lv2/docs/PYTHON_CAKE.org][cake kernel verification]] for the inner search. Add
+  active-cake branch/history checks and full axial and outlet profiles before
+  claiming parity for the outer solve.
+- Benchmark cold and warm end-to-end Python/Numba cases including compilation,
+  Python dispatch, property inference, table preparation and repeated solves.
+  The existing Numba measurements cover the inner search only.
+- Compare each physical surrogate with a qualified interpolator on held-out
+  material states. Split related simulation data by lineage. Report property
+  error and downstream mean permeate flux, wall concentration and cake onset.
+  Keep preparation cost separate from run time with a ready table.
+
+[[file:../../docs/LEVEL_3_DESIGN.org][Full Level 3 design and acceptance sequence]]

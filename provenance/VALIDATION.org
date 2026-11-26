@@ -1,0 +1,34 @@
+#+title: Current public template checks and reproduction
+#+language: en
+#+date: 2026-11-24
+
+* Current selected checks
+The neutral wb-style example creates 81 deterministic scalar CSV rows and two
+series, with PNG/PDF and rendering metadata. Its tests check state restoration,
+artist values, finite CSV input/roundtrip, actual nonuniform marker coordinates,
+invalid input and no overwrite. The independent plot-styles tests cover common
+color/monochrome behavior with authentic batlow. These are appearance/data
+handling checks, not solver verification or paper reproduction.
+
+* Scientific and integration evidence
+- [[file:../wb-bd-mc/docs/VALIDATION.md][BD–MC verification]] gives the retained regressions and supported checks.
+- [[file:../examples/bdmc-eos/README.md][Equilibrium equation of state example]] gives the pressure estimators, sampled conditions and particle-number coverage.
+- [[file:../wb-mbla/docs/MODERNIZATION.md][mBLA modernization]] gives the case, kernel and provider checks. The [[file:../wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.md][profile guide]] explains the stored regression and the separate site preview.
+- [[file:../wb-python/docs/VALIDATION.org][wb-python verification]] gives supported runtime editions and observed operations.
+
+* Reproduce the plotting and CSV checks
+#+begin_example
+python3 -m pip install ./wb-style ./plot-styles ./scientific-io
+python3 -B -m unittest discover -s wb-style/tests -v
+python3 -B -m unittest discover -s plot-styles/tests -v
+python3 -B -m unittest discover -s scientific-io/tests -v
+python3 -B wb-style/examples/plot_example.py --output /tmp/new-wb-style-demo
+python3 -B examples/plot_csv.py --output /tmp/new-wb-csv-example
+python3 -B tools/verify_manifest.py
+#+end_example
+
+* Interpretation of results
+The plotting and CSV checks describe rendering, state restoration, exact
+numeric input and controlled output creation. Scientific solver tests have
+their own applicability and independent reference checks. The manifest
+records the identity and membership of the distributed bytes.

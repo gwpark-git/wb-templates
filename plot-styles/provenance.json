@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "asset": "wb-plot-styles",
+  "version": "0.2.0",
+  "date": "2026-11-18",
+  "researcher": "Gunwoo Park",
+  "new_implementation": "Later reusable adaptation, examples, tests and documentation under Gunwoo Park's direction",
+  "dependencies": {
+    "python": ">=3.10",
+    "numpy": ">=1.24",
+    "matplotlib": ">=3.6",
+    "cmcrameri": {
+      "requirement": ">=1.10",
+      "checked_wheel_version": "1.10",
+      "wheel_sha256": "0ccc9970fe35d74543bb8aeca5a5a97d8a09de71d2237d1bb714c9968cc2018d",
+      "batlow_data_sha256": "918dd393177e126685437f234f4c1f7c8a446437c1c68820f3bc1a8423e91bd1",
+      "license": "MIT; Fabio Crameri colormaps, Callum Rollo packaging",
+      "metadata_requires_dist": [
+        "Requires-Dist: matplotlib",
+        "Requires-Dist: numpy",
+        "Requires-Dist: packaging"
+      ],
+      "version_note": "wheel metadata/_version.py report1.10; upstream __init__.__version__ is stale1.8; not imported",
+      "runtime_use": "read package batlow data without importing global colormap-registration entrypoint"
+    }
+  },
+  "rights": {
+    "project_owned_plotting_and_adaptations": "MIT, same grant as wb-templates",
+    "third_party": "Matplotlib gallery and separately obtained dependencies retain their terms"
+  },
+  "scientific_transformations": "none in style API; examples explicitly synthetic",
+  "pixel_equivalence": "not claimed",
+  "public_identity": {
+    "canonical": [
+      "personal"
+    ],
+    "color_modes": [
+      "color",
+      "monochrome"
+    ],
+    "scope": "The personal preset supports color and monochrome on the same geometry."
+  },
+  "default_decisions": {
+    "personal": "Common existing personal geometry, text, line and tick settings; researcher-directed unified style.",
+    "color": "Authentic batlow .2/.7 cycle.",
+    "monochrome": "Black lines; solid/dashed/dashdot/dotted cycle distinguishes multiple curves. Explicit caller colors and styles remain possible.",
+    "dpi300": "Retained explicit raster-export fallback, not an original recovered dpi."
+  },
+  "style_origin": "Researcher-authored Python plotting/helper scripts.",
+  "paper_reference": "10.1063/5.0336005; original-paper style attribution, not synthetic dataset provenance",
+  "color_reference": {
+    "creator": "Fabio Crameri",
+    "title": "Scientific colour maps",
+    "version": "8.0",
+    "doi": "10.5281/zenodo.8035877",
+    "packaging_author": "Callum Rollo",
+    "package": "cmcrameri",
+    "checked_version": "1.10",
+    "license": "MIT; actual notice in THIRD_PARTY_NOTICES/cmcrameri-1.10-LICENSE.txt"
+  },
+  "linestyle_reference": {
+    "official_docs": "https://matplotlib.org/devdocs/gallery/lines_bars_and_markers/linestyles.html",
+    "verified_source": "https://github.com/matplotlib/matplotlib/blob/v3.10.7/galleries/examples/lines_bars_and_markers/linestyles.py",
+    "source_sha256": "bb3118494b4d7eedb8c3d17aea4261ac5f2d7708d7eb847c57c57c62466460d6",
+    "license_notice": "THIRD_PARTY_NOTICES/Matplotlib-3.10.7-LICENSE.txt",
+    "local_adaptation": "Selected dash tuples as JSON stroke/gap arrays, with the package's existing local variants and zero offset."
+  }
+}

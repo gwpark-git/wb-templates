@@ -1,0 +1,186 @@
+{
+  "commit": "5234c959c0fdb0ba7ba32d6015d0478014a512c7",
+  "normalization": "a=1,6*pi*eta*a=1; velocities are disturbances; stresslet5 basisSxx,Sxy,Sxz,Syz,Syy",
+  "cases": {
+    "axial_pair": {
+      "positions": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.1,
+          0.0,
+          0.0
+        ]
+      ],
+      "force": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          -1.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "torque": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "shear_rate": 0.0,
+      "disturbance_translation_rotation": [
+        [
+          0.1349660045323884,
+          -0.0,
+          -0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          -0.13496600453238836,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "stresslet5": [
+        [
+          -0.5126561534102703,
+          0.0,
+          0.0,
+          0.0,
+          0.25632807670513513
+        ],
+        [
+          -0.5126561534102703,
+          0.0,
+          0.0,
+          0.0,
+          0.25632807670513513
+        ]
+      ],
+      "residual": 9.107058564505387e-17,
+      "source": "Unmodified pinned JFSD tensor operators, NumPy dense direct saddle solve; shared upstream scalars/table, not independent physical validation"
+    },
+    "symmetric_sheared_triplet_upstream": {
+      "positions": [
+        [
+          0.0,
+          -2.1,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.1,
+          0.0
+        ]
+      ],
+      "force": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "torque": [
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "shear_rate": 1.0,
+      "disturbance_translation_rotation": [
+        [
+          0.09801097606119451,
+          -0.0,
+          -0.0,
+          0.0,
+          0.0,
+          0.0909844306784361
+        ],
+        [
+          -0.0009261566479391529,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.03797716983885102
+        ],
+        [
+          -0.08995189257529729,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.1488526984174592
+        ]
+      ],
+      "stresslet5": [
+        [
+          0.0,
+          0.5228281775797556,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.5490257670568038,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.5578102229190361,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "residual": 3.4307734372451144e-16,
+      "source": "Unmodified pinned JFSD tensor operators, NumPy dense direct saddle solve; shared upstream scalars/table, not independent physical validation"
+    }
+  }
+}

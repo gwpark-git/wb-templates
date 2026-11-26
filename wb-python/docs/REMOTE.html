@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Restricted wb-python stdio endpoint — public wire and
+deployment boundary</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="REMOTE.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#public-contract-and-compatibility"
+id="toc-public-contract-and-compatibility">Public contract and
+compatibility</a></li>
+<li><a href="#implemented-scope" id="toc-implemented-scope">Implemented
+scope</a></li>
+<li><a href="#wire-version-and-identities"
+id="toc-wire-version-and-identities">Wire version and
+identities</a></li>
+<li><a href="#closed-operations-and-admission"
+id="toc-closed-operations-and-admission">Closed operations and
+admission</a></li>
+<li><a href="#trusted-operator-policy"
+id="toc-trusted-operator-policy">Trusted operator policy</a></li>
+<li><a href="#required-external-deployment-and-unavailable-evidence"
+id="toc-required-external-deployment-and-unavailable-evidence">Required
+external deployment and unavailable evidence</a></li>
+</ul></nav>
+    <main>
+      <h1>Restricted wb-python stdio endpoint — public wire and
+deployment boundary</h1>
+      <p><a href="../README.html#ai-assistance">AI-generated
+      text</a></p>
+      <section id="public-contract-and-compatibility" class="level1">
+      <h1>Public contract and compatibility</h1>
+      <p>The restricted interface is wb public wire version 1. The
+      endpoint projects selected native data to the versioned contract
+      and applies the configured policy independently of any Client-side
+      checks. The independent Client's conformance contract owns the
+      complete response shapes. This guide describes the endpoint's
+      operation set, identities and deployment prerequisites.</p>
+      </section>
+      <section id="implemented-scope" class="level1">
+      <h1>Implemented scope</h1>
+      <p><code
+      class="verbatim">wb-python-endpoint --policy "$WB_POLICY"</code>
+      handles one bounded JSON document from stdin and writes one JSON
+      response to stdout, then exits. The input document is terminated
+      by EOF. This is a restricted entrypoint, not a listener, SSH
+      server, authentication system or remote deployment. The separate
+      optional wb-client distribution provides a Host API and transport.
+      The deployment operator supplies the existing <code
+      class="verbatim">WB_POLICY</code> path. Existing Workbench and
+      native authorities continue to govern admitted operations.</p>
+      </section>
+      <section id="wire-version-and-identities" class="level1">
+      <h1>Wire version and identities</h1>
+      <p>Request schema is <code
+      class="verbatim">wb.python.remote.v1</code> with exactly these
+      fields:</p>
+      <pre class="json" data-eval="never"><code>{&quot;schema&quot;:&quot;wb.python.remote.v1&quot;,&quot;id&quot;:&quot;client-correlation-1&quot;,&quot;operation&quot;:&quot;profile.list&quot;,&quot;arguments&quot;:{}}
+</code></pre>
+      <p>Response has <code class="verbatim">schema,id</code> and
+      exactly one of <code class="verbatim">result,error</code>. Error
+      contains <code
+      class="verbatim">code,message,acceptance_unknown</code> and, when
+      known, selected native-reference IDs. Post-acknowledgement output
+      failures preserve the known native IDs and stable
+      request<sub>handle</sub>. A receipt durability failure preserves
+      known IDs without claiming a durable handle. <code
+      class="verbatim">native_acknowledged:true</code> distinguishes a
+      known native acknowledgement from an uncertain side effect;
+      neither error is a retry instruction. Malformed envelopes may have
+      null response id. A valid envelope with unsupported
+      version/operation retains its bounded correlation id. Duplicate
+      JSON fields, unknown fields, nonfinite JSON, unsupported
+      operations and excessive bytes refuse. The input limit is 65,536
+      bytes and the output limit is 2,097,152 bytes. The endpoint makes
+      one attempt.</p>
+      <p>The wire <code class="verbatim">id</code> correlates one client
+      call. A published <code class="verbatim">request_handle</code> is
+      the SHA256 content address of an immutable native queue-reference
+      receipt in this deployment principal's namespace. It is an
+      <strong>application handle</strong>, not a native
+      request/Turn/queue ID, execution status or authority. Reconnect
+      uses the same original handle even after the daemon auto-consumes
+      the queue. Native <code
+      class="verbatim">queued_submission_id,client_user_message_id,thread_id,session_id,turn_id</code>
+      remain distinct fields under <code class="verbatim">native</code>.
+      New recovered Turn/item receipts append; the original published
+      handle is not rewritten. Native history remains state authority;
+      there is no mirrored request-state manager/database.</p>
+      </section>
+      <section id="closed-operations-and-admission" class="level1">
+      <h1>Closed operations and admission</h1>
+      <p>Every operation must occur in the trusted policy's explicit
+      operations subset. Every selected Profile/Thread and every
+      retained request read is scope-checked.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Operation</th>
+      <th>Closed arguments</th>
+      <th>Authority/admission and result</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>profile.list</td>
+      <td>none</td>
+      <td>Existing registry intersected with policy-selected names; no
+      body/owner paths.</td>
+      </tr>
+      <tr>
+      <td>profile.inspect</td>
+      <td>profile; optional thread<sub>id</sub></td>
+      <td>Only selected registered Profile; optional scoped Thread uses
+      authoritative recovery, returning state/hash only.</td>
+      </tr>
+      <tr>
+      <td>session.list</td>
+      <td>none</td>
+      <td>Only policy-selected existing Threads; authoritative attach
+      validation, no global history discovery.</td>
+      </tr>
+      <tr>
+      <td>session.attach</td>
+      <td>profile, thread<sub>id</sub></td>
+      <td>Exact selected binding/native ID/workspace; no implicit
+      resume.</td>
+      </tr>
+      <tr>
+      <td>session.resume</td>
+      <td>profile, thread<sub>id</sub></td>
+      <td>Explicit separately admitted same-ID native resume; existing
+      busy/self/approval guards remain.</td>
+      </tr>
+      <tr>
+      <td>request.submit</td>
+      <td>profile, thread<sub>id</sub>, request; optional resume</td>
+      <td>request is the existing closed explicit message/context
+      mapping. Optional resume:true also requires session.resume
+      admission. Returns acknowledged IDs/handle promptly, without
+      mandatory start.</td>
+      </tr>
+      <tr>
+      <td>request.start</td>
+      <td>request<sub>handle</sub></td>
+      <td>Optional separately admitted operation; reconciles
+      already-started input read-only, otherwise preserves existing
+      exact queued/busy/self guards.</td>
+      </tr>
+      <tr>
+      <td>request.status</td>
+      <td>request<sub>handle</sub></td>
+      <td>Own accepted reference only; native snapshot and exact
+      clientId correlation.</td>
+      </tr>
+      <tr>
+      <td>request.events</td>
+      <td>request<sub>handle</sub></td>
+      <td>Own snapshot/observed metadata; no replay or progress
+      percentages.</td>
+      </tr>
+      <tr>
+      <td>request.result</td>
+      <td>request<sub>handle</sub></td>
+      <td>Own selected native agent messages/inert code and registered
+      artifact descriptors; no reasoning/tool bodies.</td>
+      </tr>
+      <tr>
+      <td>request.artifact</td>
+      <td>request<sub>handle</sub>, artifact<sub>id</sub></td>
+      <td>Exact operator-registered native request/item descriptor and
+      bounded verified owned bytes, base64 encoded; no caller path.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Native queue/add can start input automatically before the next
+      call. Return the acknowledgement first, then poll status/result.
+      No immediate start or resubmission is required. An idle native
+      Thread may unload when a stateless connection exits. For a
+      followup, choose <code class="verbatim">resume:true</code>
+      explicitly on request.submit and authorize session.resume in
+      policy; the endpoint resumes the same ID within that call's
+      connection. A previous process's attach/resume does not promise a
+      still-loaded Thread. Read-only result/history access does not
+      automatically resume it.</p>
+      <p>Session creation is deliberately unavailable through this
+      endpoint. Use the existing installed source-free AgentProfile
+      bootstrap under existing authorization, retain its actual
+      runtime/binding/lifecycle evidence, then have the operator admit
+      that exact child Thread/Profile in the trusted policy. No new
+      global registry is created to turn this partial feature into
+      implicit permission.</p>
+      </section>
+      <section id="trusted-operator-policy" class="level1">
+      <h1>Trusted operator policy</h1>
+      <p>Only deployment supplies the policy path/principal; neither
+      belongs in a wire request. Policy schema is <code
+      class="verbatim">wb.python.endpoint-policy.v1</code> with required
+      fields: <code
+      class="verbatim">principal,operations,profiles,threads,workspace,profile_helper,native_socket,
+      caller_thread,receipt_root</code>. Unknown fields refuse. <code
+      class="verbatim">profile_helper</code> contains only <code
+      class="verbatim">path,sha256</code>; <code
+      class="verbatim">threads</code> maps at most 32 native UUIDs to
+      selected Profile names. All paths are explicit trusted absolute
+      paths. Optional <code class="verbatim">artifacts</code> contains
+      <code class="verbatim">root,registrations</code>; registrations
+      use the existing ArtifactRegistration fields. No examples contain
+      real private configuration or credentials.</p>
+      <p>The policy file must be regular/single-link, reached without
+      symlinks, private and owned by the endpoint account. The existing
+      private receipt root holds a derived <code
+      class="verbatim">principal-SHA256</code> subdirectory. Payloads
+      cannot choose another namespace, inject a RequestReference,
+      register artifacts or enlarge Profile/Thread scope. Every handle
+      read verifies its content hash, namespace and current
+      Profile/Thread/ workspace subset before a native connection/read.
+      A narrowed later policy refuses previously issued handles outside
+      that scope.</p>
+      <p>Principal labels and file mode checks are not authentication
+      against a malicious same-user owner. The deployment must bind
+      actual authenticated identity to the fixed policy/command. The
+      subset narrows existing permission; it does not grant a native
+      approval or replace the existing wb policy/lifecycle/request
+      ledger.</p>
+      </section>
+      <section
+      id="required-external-deployment-and-unavailable-evidence"
+      class="level1">
+      <h1>Required external deployment and unavailable evidence</h1>
+      <p>An approved existing SSH mechanism may launch the fixed
+      endpoint with stdio. The account/forced-command configuration must
+      prevent selecting another command, policy or arbitrary shell, deny
+      agent/port/X11 forwarding and reverse Host tools, and bound
+      connection/stdin lifetime/resources. Merely authenticating an
+      account that still has shell rights does not establish these
+      restrictions. Model context transmission and Host/Sandbox process
+      isolation remain separate boundaries.</p>
+      <p>Verification of a deployment calls for the actual Host process,
+      deployed authentication and fixed command and policy mapping. See
+      <a href="VALIDATION.html">validation scope</a> for the checked
+      scenarios. For Host use, independently review the exact Client
+      artifact and retain it outside locations writable from the
+      Sandbox.</p>
+      <p>Only explicitly supplied authorized message/context text is
+      sent to native input. No files, environment, variables,
+      interpreter/kernel/notebook state or history are implicitly
+      attached. Returned code/base64 artifacts remain inert until a
+      separate authorized execution. Unknown acceptance retains known
+      native correlation IDs when available and requires reconciliation,
+      not automatic replay.</p>
+      <p>Return to the <a href="READER_GUIDE.html#wbpy-host">Sandbox
+      and Host overview</a> for entry and recovery routes.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

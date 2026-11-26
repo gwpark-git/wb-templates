@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Self and collective diffusion in equilibrium BD–MC</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="DIFFUSION.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#primary-reference-for-colloidal-collective-diffusion"
+id="toc-primary-reference-for-colloidal-collective-diffusion">Primary
+reference for colloidal collective diffusion</a></li>
+<li><a
+href="#dynamic-structure-factor-and-collective-diffusion-and-relation-to-mbla"
+id="toc-dynamic-structure-factor-and-collective-diffusion-and-relation-to-mbla">Dynamic
+structure factor and collective diffusion and relation to mBLA</a></li>
+<li><a href="#choose-the-quantity-before-measuring-it"
+id="toc-choose-the-quantity-before-measuring-it">Choose the quantity
+before measuring it</a></li>
+<li><a href="#tagged-particle-msd"
+id="toc-tagged-particle-msd">Tagged-particle MSD</a></li>
+<li><a href="#coherent-density-relaxation"
+id="toc-coherent-density-relaxation">Coherent density
+relaxation</a></li>
+<li><a href="#reporting-and-verification"
+id="toc-reporting-and-verification">Reporting and verification</a></li>
+<li><a href="#provenance" id="toc-provenance">Provenance</a></li>
+</ul></nav>
+    <main>
+      <h1>Self and collective diffusion in equilibrium BD–MC</h1>
+      <p>The estimators below use tagged positions and coherent density
+      sampled on a declared observation clock. The reference model is
+      equilibrium free-draining Brownian dynamics. Scientific validation
+      of the full transport-analysis workflow remains pending.</p>
+      <section id="primary-reference-for-colloidal-collective-diffusion"
+      class="level1">
+      <h1>Primary reference for colloidal collective diffusion</h1>
+      <p>A. J. Banchio, M. Heinen, P. Holmqvist and G. Nägele, “Short-
+      and long-time diffusion and dynamic scaling in suspensions of
+      charged colloidal particles,” <em>J. Chem. Phys.</em>
+      <strong>148</strong>, 134902 (2018). This is the scientific
+      reference for relating colloidal structure, density relaxation,
+      and short- and long-time diffusion. The benchmark here uses a
+      neutral finite-range stiff cosine interaction without HI. Its
+      values are not a reproduction of the reference's charge-stabilized
+      model.</p>
+      <p>The exact citation is listed as reference 69 in Nägele et al.,
+      <em>Theory of Colloidal Suspension Structure, Dynamics, and
+      Rheology</em> (2021). The notation below follows the directly
+      reviewed 2004 notes.</p>
+      </section>
+      <section
+      id="dynamic-structure-factor-and-collective-diffusion-and-relation-to-mbla"
+      class="level1">
+      <h1>Dynamic structure factor and collective diffusion and relation
+      to mBLA</h1>
+      <p>Use
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>s</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_s(q,t)</annotation></semantics></math>
+      for the self-dynamic structure factor and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_c(q,t)</annotation></semantics></math>
+      for the coherent dynamic structure factor, also called the
+      intermediate scattering function
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">F(q,t)</annotation></semantics></math>.
+      Set
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_c(q)=S_c(q,0)</annotation></semantics></math>.
+      Use superscripts
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>s</mi><annotation encoding="application/x-tex">s</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>l</mi><annotation encoding="application/x-tex">l</annotation></semantics></math>
+      for short and long time, respectively. The convention follows
+      Nägele, <em>The Physics of Colloidal Soft Matter</em> (2004),
+      §8.2, especially Eqs. (8.53)–(8.55) and (8.63)–(8.76).</p>
+      <p>The bulk long-time collective coefficient
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>c</mi><mi>l</mi></msubsup><annotation encoding="application/x-tex">D_c^l</annotation></semantics></math>
+      is the hydrodynamic limit of the collective diffusion kernel
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_c(q,z)</annotation></semantics></math>,
+      at small
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>
+      with
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>q</mi><mn>2</mn></msup><mi>/</mi><mi>z</mi></mrow><annotation encoding="application/x-tex">q^2/z</annotation></semantics></math>
+      of order one. Equation (8.66) gives
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∼</mo><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><msup><mi>q</mi><mn>2</mn></msup><msubsup><mi>D</mi><mi>c</mi><mi>l</mi></msubsup><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_c(q,t)\sim S_c(q)\exp(-q^2D_c^l t)</annotation></semantics></math>
+      in that limit. The finite-window measurement in this template is
+      denoted
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mrow><mi>c</mi><mo>,</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">p</mi></mrow></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>;</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>t</mi><mi>a</mi></msub><mo>,</mo><msub><mi>t</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_{c,\mathrm{app}}(q;[t_a,t_b])</annotation></semantics></math>.
+      This label describes the estimator used here. It reserves
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>c</mi><mi>l</mi></msubsup><annotation encoding="application/x-tex">D_c^l</annotation></semantics></math>
+      for a converged bulk limit.</p>
+      </section>
+      <section id="choose-the-quantity-before-measuring-it"
+      class="level1">
+      <h1>Choose the quantity before measuring it</h1>
+      <table>
+      <thead>
+      <tr>
+      <th>Quantity</th>
+      <th>Observable</th>
+      <th>Limit and typical repulsive-dispersion trend</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Long-time tagged self diffusivity
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>D</mi><mi>s</mi><mi>l</mi></msubsup><annotation encoding="application/x-tex">D_s^l</annotation></semantics></math></td>
+      <td>Single-particle displacement, averaged over particles and time
+      origins</td>
+      <td>Take the late slope of unwrapped MSD. It generally decreases
+      with concentration in a repulsive fluid as crowding restricts
+      tagged motion.</td>
+      </tr>
+      <tr>
+      <td>Collective diffusivity
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mrow><mi>c</mi><mo>,</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">p</mi></mrow></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>;</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>t</mi><mi>a</mi></msub><mo>,</mo><msub><mi>t</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_{c,\mathrm{app}}(q;[t_a,t_b])</annotation></semantics></math></td>
+      <td>Coherent equilibrium density relaxation at nonzero wave vector
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math></td>
+      <td>At small
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>,
+      and at times where the diffusive mode dominates, establish
+      convergence toward the long-wavelength collective diffusivity. The
+      osmotic restoring force in this repulsive system generally
+      strengthens with concentration in the free-draining
+      comparison.</td>
+      </tr>
+      <tr>
+      <td>Short-time collective diffusivity
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>D</mi><mi>c</mi><mi>s</mi></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_c^s(q)</annotation></semantics></math></td>
+      <td>Initial logarithmic decay of the normalized coherent
+      function</td>
+      <td>For equilibrium colloids the short-time formula is
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>0</mn></msub><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_0H(q)/S_c(q)</annotation></semantics></math>,
+      with the mobility function and structure factor evaluated on the
+      same ensemble.</td>
+      </tr>
+      <tr>
+      <td>EOS or sedimentation closure for collective transport</td>
+      <td>Pressure slope with a separately specified mobility
+      factor</td>
+      <td>In the quiescent free-draining approximation the concentration
+      derivative supplies the thermodynamic factor. Multiplying it by
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi></mrow></msub><annotation encoding="application/x-tex">K_\mathrm{sed}</annotation></semantics></math>
+      adds a mobility model. That product and a direct time-decay
+      measurement answer different verification questions.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>The self and collective trends need not have the same sign.
+      Positive repulsion suppresses long-wavelength density fluctuations
+      and can raise the osmotic restoring term, even when tracer motion
+      slows down. The mobility factor, many-body relaxation, phase, wave
+      number and shear can change the collective trend. In particular,
+      the sedimentation correction can substantially reduce or reverse a
+      rise of the free-draining thermodynamic factor. These statements
+      concern an equilibrium or local-equilibrium fluid with declared
+      interactions and units.</p>
+      <p>mBLA consumes a collective constitutive coefficient. Under
+      shear its particle-transport equation calls for the relevant
+      direction in the diffusion tensor. The isotropic quiescent
+      benchmark does not establish a finite-shear
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mrow><mi>y</mi><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">D_{yy}</annotation></semantics></math>.</p>
+      </section>
+      <section id="tagged-particle-msd" class="level1">
+      <h1>Tagged-particle MSD</h1>
+      <p>Use unwrapped coordinates
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>𝐫</mi><mi>j</mi><mi>u</mi></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathbf r_j^u(t)</annotation></semantics></math>
+      saved by the integrator. Wrapped positions alias displacements
+      across periodic boundaries. Track the same particle ID through
+      every observation. With no background flow in this study, average
+      <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">D</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munder><mo>∑</mo><mi>j</mi></munder><msub><mrow><mo stretchy="true" form="prefix">⟨</mo><msup><mrow><mo stretchy="true" form="prefix">|</mo><msubsup><mi>𝐫</mi><mi>j</mi><mi>u</mi></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mn>0</mn></msub><mo>+</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><msubsup><mi>𝐫</mi><mi>j</mi><mi>u</mi></msubsup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo stretchy="true" form="postfix">⟩</mo></mrow><msub><mi>t</mi><mn>0</mn></msub></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+      \mathrm{MSD}(t)= \frac{1}{N}\sum_j
+        \left\langle|\mathbf r_j^u(t_0+t)-\mathbf r_j^u(t_0)|^2\right\rangle_{t_0}.
+      </annotation></semantics></math> In three dimensions define
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>W</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mi mathvariant="normal">M</mi><mi mathvariant="normal">S</mi><mi mathvariant="normal">D</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>6</mn></mrow><annotation encoding="application/x-tex">W(t)=\mathrm{MSD}(t)/6</annotation></semantics></math>,
+      so
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>D</mi><mi>s</mi><mi>l</mi></msubsup><mo>=</mo><msub><mo>lim</mo><mrow><mi>t</mi><mo>→</mo><mi>∞</mi></mrow></msub><mi>d</mi><mi>W</mi><mi>/</mi><mi>d</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">D_s^l=\lim_{t\to\infty}dW/dt</annotation></semantics></math>.
+      At finite times, estimate the slope on declared lag windows and
+      compare them before labeling a plateau. A tagged-particle MSD is a
+      sum of individual squared displacements. A squared sum of
+      displacements would instead give a collective center response and
+      a different normalization. A hydrodynamic pair-center mobility is
+      neither of these bulk dynamic coefficients.</p>
+      <p><a href="../python/bdmc/postprocessing.py">Existing MSD
+      implementation</a></p>
+      </section>
+      <section id="coherent-density-relaxation" class="level1">
+      <h1>Coherent density relaxation</h1>
+      <p>In a periodic cube of side
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>,
+      use
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐪</mi><mo>=</mo><mn>2</mn><mi>π</mi><mi>𝐧</mi><mi>/</mi><mi>L</mi></mrow><annotation encoding="application/x-tex">\mathbf q=2\pi\mathbf n/L</annotation></semantics></math>
+      with integer
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐧</mi><mo>≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathbf n\ne0</annotation></semantics></math>.
+      Track the complex amplitude
+      <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ρ</mi><mi>𝐪</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msup><mi>e</mi><mrow><mi>i</mi><mi>𝐪</mi><mo>⋅</mo><msub><mi>𝐫</mi><mi>j</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></msup><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>N</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="false" form="prefix">⟨</mo><msub><mi>ρ</mi><mi>𝐪</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mn>0</mn></msub><mo>+</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><msub><mi>ρ</mi><mi>𝐪</mi></msub><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>t</mi><mn>0</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>*</mo></msup><mo stretchy="false" form="postfix">⟩</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+       \rho_\mathbf q(t)=\sum_{j=1}^N e^{i\mathbf q\cdot\mathbf r_j(t)},\qquad
+       S_c(q,t)=N^{-1}\langle \rho_\mathbf q(t_0+t)\rho_\mathbf q(t_0)^*\rangle .
+      </annotation></semantics></math> Reciprocal-lattice modes can be
+      computed with wrapped coordinates. This coherent product contains
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>≠</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i\ne j</annotation></semantics></math>
+      as well as
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i=j</annotation></semantics></math>
+      terms.
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S_c(q)=S_c(q,0)</annotation></semantics></math>.
+      In homogeneous equilibrium the ensemble mean of
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ρ</mi><mi>𝐪</mi></msub><annotation encoding="application/x-tex">\rho_\mathbf q</annotation></semantics></math>
+      is zero for
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐪</mi><mo>≠</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathbf q\ne0</annotation></semantics></math>.
+      Check stationarity and seed variation; do not silently subtract a
+      noisy trajectory mean or choose an offset to enforce a desired
+      tail.</p>
+      <p>Let
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f_c(q,t)=S_c(q,t)/S_c(q)</annotation></semantics></math>.
+      The normalized logarithmic width is
+      <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>−</mi><msup><mi>q</mi><mrow><mi>−</mi><mn>2</mn></mrow></msup><mo>ln</mo><msub><mi>f</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>D</mi><mrow><mi>c</mi><mo>,</mo><mrow><mi mathvariant="normal">a</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">p</mi></mrow></mrow></msub><mo>=</mo><msub><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">l</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">p</mi><mi mathvariant="normal">e</mi></mrow><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>t</mi><mi>a</mi></msub><mo>,</mo><msub><mi>t</mi><mi>b</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></msub><msub><mi>W</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+       W_c(q,t)=-q^{-2}\ln f_c(q,t),\qquad D_{c,\mathrm{app}}=\mathrm{slope}_{[t_a,t_b]} W_c(q,t).
+      </annotation></semantics></math> The width slope estimates a
+      finite-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+      diffusion coefficient over the declared window. Compare earlier
+      and later windows, check that the fitted signal is positive and
+      above the noise floor, and repeat across sizes and wavevector
+      shells. A finite-box
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝐪</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\mathbf q=0</annotation></semantics></math>
+      is a constant conserved mode. The collective hydrodynamic limit
+      comes from nonzero modes with long wavelength, not from fitting
+      that conserved mode. Agreement among
+      finite-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+      rates alone does not establish a bulk long-time value.</p>
+      <p>For free-draining overdamped BD,
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">H(q)=1</annotation></semantics></math>
+      is the short-time mobility identity and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><msub><mi>S</mi><mi>c</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>q</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">1/S_c(q)</annotation></semantics></math>
+      is a useful initial-rate check. A late time fit has its own
+      validation. The inherited mBLA thermodynamic estimate
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo>=</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>ϕ</mi><mi>Z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mi>d</mi><mi>ϕ</mi></mrow><annotation encoding="application/x-tex">B=d(\phi Z)/d\phi</annotation></semantics></math>
+      and the closure
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mrow><mi mathvariant="normal">s</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi></mrow></msub><mi>B</mi></mrow><annotation encoding="application/x-tex">K_\mathrm{sed}B</annotation></semantics></math>
+      retain their stated scope. Direct HI would require a consistent
+      periodic mobility and zero-mean-flow convention and its own
+      finite-size extrapolation.</p>
+      </section>
+      <section id="reporting-and-verification" class="level1">
+      <h1>Reporting and verification</h1>
+      <p>Retain reduced units
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>0</mn></msub><annotation encoding="application/x-tex">D_0</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>τ</mi><mi>σ</mi></msub><mo>=</mo><msup><mi>σ</mi><mn>2</mn></msup><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\tau_\sigma=\sigma^2/D_0</annotation></semantics></math>,
+      the configuration sampling cadence, equilibration length, density
+      shell labels, fit windows, the effective
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>q</mi><mi>σ</mi></mrow><annotation encoding="application/x-tex">q\sigma</annotation></semantics></math>,
+      and separate seed curves or fits. Always report whether the data
+      support only finite-time and
+      finite-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+      rates or an extrapolated long-time bulk coefficient. Use an
+      independently computed direct time-domain correlation at selected
+      lags to check FFT orientation, normalization and end effects. An
+      ideal exponential with a known rate checks the log-slope fitting
+      convention. The positive signal must supply enough samples in the
+      fitting window. Preserve underresolved fits as missing.</p>
+      <p>For a density ladder, keep the particle model, temperature and
+      boundary conditions fixed. For a finite-size comparison within a
+      concentration, double
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>L</mi><mn>3</mn></msup><annotation encoding="application/x-tex">L^3</annotation></semantics></math>
+      together, then document what changed in
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mo>min</mo></msub><annotation encoding="application/x-tex">q_\min</annotation></semantics></math>
+      and in the measured rates. Compare late windows at the final sizes
+      and report sampling uncertainty for the differences. Comparing the
+      fundamental mode of one cube with the second axial harmonic of an
+      eightfold larger cube holds
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>q</mi><annotation encoding="application/x-tex">q</annotation></semantics></math>
+      fixed while changing the number of particles. This checks the box
+      effect separately from lowering
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>q</mi><mo>min</mo></msub><annotation encoding="application/x-tex">q_\min</annotation></semantics></math>.
+      The finite free-space HI pair examples illustrate distinct
+      mobility observables and their comparison limits.</p>
+      <p><a href="HI_EQUILIBRIUM.html">Pair HI and open-cube
+      contrasts</a> <a
+      href="EQUILIBRIUM_EOS.html#transport-observables">EOS and stress
+      estimators</a> <a
+      href="https://doi.org/10.1016/0370-1573(95)00078-X">Nägele,
+      Physics Reports 272, 215–372 (1996)</a></p>
+      </section>
+      <section id="provenance" class="level1">
+      <h1>Provenance</h1>
+      <p>Scientific direction by Gunwoo Park.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Profile explorer</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../../index.html">wb-templates</a>
+      <a href="../../../documentation/README.html">Documentation</a>
+      <a data-source-link href="PROFILE_EXPLORER.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#profile-explorer" id="toc-profile-explorer">Profile
+explorer</a>
+<ul>
+<li><a href="#data-format" id="toc-data-format">Data format</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section id="profile-explorer" class="level1">
+      <h1>Profile explorer</h1>
+      <p>Open <code>tools/profile-explorer.html</code> directly in a
+      browser. The template contains a synthetic example. Select
+      <strong>Open profile data</strong> to view a local JSON file. The
+      page reads selected values in memory and renders them in
+      Canvas.</p>
+      <ul>
+      <li>Show or hide each grid with its checkbox.</li>
+      <li>Select an axial node with the slider, an axial chart, or one
+      of the jump buttons. The table shows wall volume fraction, minimum
+      radial volume fraction, and particle-flux deviation at that
+      node.</li>
+      <li>Select <strong>Near wall</strong> for the first 8% of the
+      radius. With only the fine grids visible, the axial particle-flux
+      chart automatically uses their smaller variation to set its
+      scale.</li>
+      </ul>
+      <section id="data-format" class="level2">
+      <h2>Data format</h2>
+      <p>Set <code>schema</code> to
+      <code>wb.mbla.profile-explorer.v1</code>. Use the common ordered
+      axial positions <code>z_over_L</code> starting at zero, with the
+      domain length <code>length_mm</code> in millimetres. For each
+      series, provide its wall volume fraction, axial particle flux in
+      consistent units, radial coordinates as distance from the wall
+      divided by the radius, and one radial concentration array per
+      axial node. Each series may have its own radial grid. Peak indices
+      are zero-based and should come from the diagnostics stated with
+      the data.</p>
+      <pre class="json"><code>{
+  &quot;schema&quot;: &quot;wb.mbla.profile-explorer.v1&quot;,
+  &quot;title&quot;: &quot;My comparison&quot;,
+  &quot;subtitle&quot;: &quot;Synthetic input example&quot;,
+  &quot;length_mm&quot;: 50,
+  &quot;z_over_L&quot;: [0, 1],
+  &quot;peaks&quot;: {&quot;maxFluxDrift&quot;: 1, &quot;maxProfileDifference&quot;: 1},
+  &quot;series&quot;: [{
+    &quot;label&quot;: &quot;Grid A&quot;,
+    &quot;wall&quot;: [0.01, 0.2],
+    &quot;particleFlux&quot;: [1, 1.02],
+    &quot;radialPosition&quot;: [0, 1],
+    &quot;radialProfiles&quot;: [[0.01, 0.01], [0.2, 0.01]]
+  }]
+}</code></pre>
+      <p>The reader accepts up to four matched-axial-grid series, 400
+      axial nodes, 4,000 radial nodes per series, and a 32 MiB JSON
+      file. Inlet flux must be positive. The signed flux deviation is
+      <code>100 * (Phi(z) / Phi(0) - 1)</code> for each series. Negative
+      concentration values remain visible as diagnostics. The standard
+      Level 1 output table supplies wall concentration and particle
+      flux. Full radial profiles require a compatible saved field
+      export.</p>
+      <p>The page has no server, CDN, solver or package dependencies.
+      Keep any research run data separate from the reusable template. A
+      browser plot inspects the supplied cases under their own
+      scientific scope.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

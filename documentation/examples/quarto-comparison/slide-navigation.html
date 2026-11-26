@@ -1,0 +1,30 @@
+<style>
+  .edit-source-link {
+    position: fixed;
+    z-index: 10;
+    top: .7rem;
+    right: .7rem;
+    padding: .4rem .7rem;
+    background: #fff;
+    border: 1px solid #41576d;
+    border-radius: 4px;
+    color: #17202a;
+    font: 15px/1.5 system-ui, sans-serif;
+  }
+  .reveal #title-slide .cover-note { font-size: .44em; }
+  .reveal #title-slide .cover-disclosure { font-size: .83em; }
+  .reveal #author-and-project-information { font-size: .78em; }
+  .print-pdf .edit-source-link { display: none; }
+  @media print {
+    .edit-source-link, .reveal .footer { display: none !important; }
+    .reveal .pdf-page::after {
+      content: "wb-templates 0.5.0, 2026-11-26";
+      position: absolute;
+      bottom: 1.1rem;
+      right: 2.5rem;
+      font: 14px system-ui, sans-serif;
+      color: #41576d;
+    }
+  }
+</style>
+<a class="edit-source-link" href="#/edit-the-source">Edit</a>

@@ -1,0 +1,44 @@
+---
+title: "wb-templates"
+subtitle: "Scientific computing templates and documentation"
+author-meta: "Gunwoo Park"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    code-copy: true
+    embed-resources: true
+    html-math-method: mathml
+---
+
+[AI-generated text](#ai-assistance)
+
+::: {.small}
+Public catalog version: 0.5.0  
+Documentation edition: 2026-11-26
+:::
+
+[Open mBLA interactive validation](../../wb-mbla/modern-lv2/tools/profile-explorer.html) /
+[Functional reference](#functional-reference) / [Edit](#edit-source)
+
+{{< include _guide.md >}}
+
+{{< include _reference.md >}}
+
+## Edit this guide {#edit-source}
+
+Edit [the main guide](_guide.md){data-source-link="true"} for project and usage documentation
+or [the functional reference](_reference.md){data-source-link="true"} for implementation routes.
+Run the following from `documentation/collection-guide`.
+
+```sh
+quarto render --no-execute
+```
+
+The command creates `site/report.html`. In an editable collection copy,
+place that generated file beside `report.qmd` before opening it so its
+relative links resolve. The public HTML build does this automatically.
+The [documentation index](../README.md) links the editable examples.
+
+{{< include ../examples/quarto-comparison/_publication-info.md >}}

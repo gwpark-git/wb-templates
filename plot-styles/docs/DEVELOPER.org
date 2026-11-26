@@ -1,0 +1,95 @@
+#+title: wb plot-styles — common style and color-mode contract
+#+date: 2026-11-18
+#+language: en
+
+* Responsibility and API
+This child owns appearance. Data parsing, physical interpretation, analysis and
+natural-language interpretation remain with separate owners. Standard Matplotlib
+owns plotting. This package needs no agent, notebook or plotting companion.
+
+- =PRESETS= is =(personal,)=. =COLOR_MODES= is =(color, monochrome)=.
+- =plot_defaults(name="personal")= returns a fresh dictionary with figsize, dpi,
+  linewidth, markersize, labelsize, tick_labelsize and bbox_inches.
+- =style_context(name="personal", overrides=None, *, color_mode="color")=
+  yields name, canonical_name, color_mode, version, defaults, font, text_engine
+  and notes. It restores rcParams after normal/error exit and nesting.
+- =dash_pattern(pattern, preset="personal")= retains source-derived custom dash
+  tuples independently of mode; =batlow_colors(positions)= returns installed
+  cmcrameri RGBA values without global colormap registration.
+- =helpers.HandlerXoffset= and =helpers.draw_matrix_legend= retain the two legend
+  mechanisms. Three layout/legend examples remain explicitly synthetic.
+
+* Common baseline and modes
+The existing personal baseline is preserved: 6×6 inches, line 2.5 pt, marker
+8 pt, label/tick text 15 pt; inward major ticks 6/1.2 pt, minor 3/.8 pt, spines
+1.5 pt. DejaVu Sans and Mathtext are portable choices. 300 dpi is an explicit
+export fallback. The researcher clarified a shared style with black-and-white
+or color presentation; year/author labels no longer select different geometry.
+
+Color uses authentic batlow .2/.7. Monochrome cycles black lines with solid,
+dashed, dash-dot and dotted styles to distinguish curves without color.
+Explicit artist arguments and validated appearance overrides take precedence.
+Markers/fills are caller choices; no forced scatter fill is inferred. Line2D
+and PathCollection keep distinct normal Matplotlib semantics.
+
+Friendly overrides are the seven defaults; direct overrides use the finite
+numeric/color rc allowlists, tick direction and legend.frameon. Invalid values,
+unknown modes and nonappearance keys fail before state mutation. Backend, TeX
+execution, physical quantities, scales, limits or transforms are not overrides.
+
+* Attribution
+The original paper style was authored by Gunwoo Park. The adapter, synthetic
+examples and explanatory documentation were prepared under Gunwoo Park’s direction.
+See REFERENCES.md for Matplotlib, color and paper citations.
+
+* Verification and boundaries
+Tests check actual line/errorbar/scatter behavior, common geometry, raw data,
+nested/error restoration, explicit overrides, invalid modes/old selectors and
+legend artist geometry. No pixel identity, scientific validity or host-data isolation claim
+follows. [[file:../LICENSE][MIT]] covers project-owned style and adaptations. The Matplotlib and cmcrameri notices record upstream terms.
+
+* Implementation and example units
+| Source | Unit | Contract |
+|--------+------+----------|
+| wb_plot_styles/__init__.py | resolve_style, _preset | Accept only the personal preset; load a fresh resource mapping. Unknown selectors fail before mutation. |
+| wb_plot_styles/__init__.py | plot_defaults | Return a mutable copy of the seven generic appearance defaults. |
+| wb_plot_styles/__init__.py | dash_pattern | Resolve an exact JSON key and return a zero-offset Matplotlib dash tuple. Unknown keys raise ValueError. |
+| wb_plot_styles/__init__.py | batlow_colors | Accept finite scalar or array positions in [0,1]; return RGBA from installed cmcrameri's batlow table without colormap registration. |
+| wb_plot_styles/__init__.py | _positive, _overrides | Reject bool, non-finite and nonpositive numeric sizes; translate friendly names and validate explicit rc overrides. Mirror matching rc values into generic defaults. |
+| wb_plot_styles/__init__.py | style_context | Reset the selected baseline inside a context, choose the font, apply modes and overrides, and yield effective settings. Context exit restores caller state. |
+| wb_plot_styles/helpers.py | HandlerXoffset.__init__, get_xdata | Translate both coordinates returned by the base legend handler by one finite signed offset. |
+| wb_plot_styles/helpers.py | draw_matrix_legend | Validate row/column and marker/color shapes before creating artists. A None color yields an empty cell. The returned table, marker, header and optional border coordinates use the supplied axes. |
+| examples/render_examples.py | save, vertical | Save paired PNG/PDF and close the figure; render shared-x sine/cosine panels and return the style record. |
+| examples/render_examples.py | multi_symbol, matrix | Render grouped markers and a factor-by-series inset legend using synthetic series. |
+| examples/render_examples.py | comparisons, main | Render both modes with the same data, require a new output folder, and write the rendering record. |
+| tests/test_styles.py | PresetBehavior, HelperBehavior | Check presets and rejection paths, actual artists, rc restoration, data invariance, helper geometry and no partial table after invalid input. Individual test docstrings identify their oracles. |
+
+* Data and configuration
+=wb_plot_styles/presets.json= is a UTF-8 JSON resource. The runtime reads
+=personal= and expects four field groups:
+
+| Field/group | Type and meaning |
+|-------------+------------------|
+| defaults.figsize | Two positive numbers in inches, width then height. |
+| defaults.dpi | Positive raster dots per inch; 300 is the adapter's explicit fallback. |
+| defaults.linewidth, markersize, labelsize, tick_labelsize | Positive sizes in points. |
+| defaults.bbox_inches | Export bounding-box policy; this preset stores tight. |
+| rc | Matplotlib keys for inward x/y ticks and point sizes/widths; axes.linewidth sets spine thickness in points. |
+| font | Requested font name; fallback is DejaVu Sans. |
+| notes | Ordered strings recording how defaults were selected. |
+| dash_patterns | Exact name to nonempty alternating stroke/gap point lengths; list order is meaningful. The API supplies a zero offset. |
+
+For example, =dashdotdotted= stores =[3,5,1,5,1,5]= and yields
+=(0,(3,5,1,5,1,5))=. Relative to the Matplotlib v3.10.7 gallery, named
+=dotted= is =[1,1]= here, with the gallery's other eleven shared named
+rows retained. =-..=, =-...= and =:= are local lookup aliases. See
+[[file:../REFERENCES.md][dash and palette provenance]].
+
+=pyproject.toml= defines build backend, Python and dependency requirements,
+the installed package, the JSON resource, and license-notice inclusion.
+=provenance.json= records the style identity and source, dependency pins,
+license, attribution, source hashes and versioned decisions. It is descriptive
+and does not configure Matplotlib. The example's =rendering.json= contains
+=synthetic=, a =vertical= context and =presets= in color-mode order. Each
+context exposes the mode, defaults, selected and requested font, text engine,
+version and notes. Generated PNG/PDF files represent the synthetic display.

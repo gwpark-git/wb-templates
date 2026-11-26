@@ -1,0 +1,108 @@
+#+title: mBLA Level 2 — Python cake-resistance search
+#+date: 2026-11-25
+#+language: en
+
+* What Python runs
+[[file:../python/mbla_cake.py][search_resistance]] runs one resistance search
+inside the nested fixed-point calculation. The caller supplies the already
+computed radial profile integrals and case scalars for one axial station.
+The original CLI continues to use its C++ outer solver and search. The Python
+module gives an independent way to call and benchmark the same inner model.
+
+The implementation evaluates the same initial trial, sign and trend/range
+tests, decade step changes and return value. It reuses the cylindrical
+geometry and the trial-independent F2 integral. F1 and modified F2 share one
+exponential per radial node. Each integral accumulates in increasing
+radial order. The optional compilation disables fast math.
+
+* Use the kernel
+Add this edition's =python/= directory to Python's import path. The plain
+backend uses Python 3.10+ standard library only. The optional =numba= backend
+uses compatible NumPy and Numba installations for the selected Python and
+platform. Both take explicit arrays and scalars. The kernel accepts no
+workspace, configuration or file path.
+
+#+begin_src python
+from mbla_cake import CakeSearchState, search_resistance
+
+# A synthetic slice for the interface. Production callers supply these
+# fields from the same station and iteration of their fixed-point solver.
+state = CakeSearchState(
+    wall_distance=(0.0, 0.1, 0.3),
+    viscosity_integral=(0.0, 0.1, 1.0),
+    inverse_diffusivity_integral=(0.0, 0.5, 1.0),
+    uz_ratio=1.0,
+    permeability=1e-9,
+    net_driving_pressure=100.0,
+    reference_vw=1e-7,
+    epsilon_d=0.01,
+    area_factor=1.0,
+    inlet_flux_factor=0.02,
+    bulk_fraction=0.001,
+    freeze_fraction=0.494,
+    resistance_tolerance=1e-5,
+)
+result = search_resistance(state, backend="numba")  # or "python"
+print(result.resistance, result.steps, result.termination)
+#+end_src
+
+The radial arrays use the same =y/R= abscissa, normalized inverse viscosity
+integral and cumulative inverse diffusivity integral as the C++ search.
+The pressure input is =P − Pper − Π(phi_freeze)= in Pa. The reference wall
+velocity is in m/s. The returned resistance is =Rcake/Rmem= before the outer
+solver's under-relaxation. =trace=True= returns the trial resistance, step
+and normalized residual for each attempt. A trend/range warning returns the
+previous trial with a =warning= status. Invalid caller-supplied state and
+nonfinite or exhausted searches raise errors.
+
+* Verification and timing
+The benchmark takes identical saved states from ordinary C++ cases and
+compares both Python paths with the C++ trial resistance, step, residual and
+termination. The small fixtures supply 42 searches and 9,712 trials. Each
+chosen search produced the same trial values and result, with zero observed
+residual difference. A constructed case exercises the warning path in
+Python. An invalid radial grid is refused. A 400-node slice comes from a
+short diagnostic run and does not imply fixed-point convergence.
+
+| Captured workload | Searches | Trials | C++ (ms) | Python (ms) | Python/Numba (ms) |
+|-------------------+----------+--------+----------+-------------+-------------------|
+| Mild cake, 120 radial nodes | 18 | 1151 | 0.69 | 9.35 | 0.67 |
+| Demanding cake, 120 radial nodes | 18 | 8154 | 4.92 | 63.75 | 2.56 |
+| Mild cake, 400 radial nodes | 6 | 407 | 0.78 | 11.81 | 0.76 |
+
+The times are medians of three observed batches per workload on Linux
+AArch64, GCC 14.2.0, Python 3.13.5, NumPy 2.2.4 and Numba 0.61.2. The
+C++ timer surrounds its inner loop. The Python measurement includes
+validation and preparation per call. The separate first compiled call took
+about 0.26 s. Compiled Python ran the demanding search batch about 1.9× as
+fast as this C++ implementation. The other short batches were similar in
+time. These measurements cover the inner kernel; a full Python solver
+or integration with the outer loop would need its own regression and timing.
+
+* Repeat locally
+Build the strict-FP C++ target through the README and run the optional
+benchmark from this edition's source. It instruments a disposable C++
+copy, compares its printed result to the ordinary executable, and saves
+captured scalar/radial states, trial logs and times into the selected
+directory. Omit =--numba= for the standard-library backend only.
+
+#+begin_src sh
+python3 tests/compare_python_cake.py --numba \
+  --exe /path/to/strict-fp/build/mbla --work /new/path/to/cake-benchmark
+#+end_src
+
+Original numerical method and project direction: Gunwoo Park.
+
+* Implementation and input ownership
+=CakeSearchState= holds the supplied radial fields and physical scales.
+=search_resistance= checks shapes, ordered y/R, finite values and scalar
+ranges. =_compiled_backend= lazily prepares Numba without fast-math.
+=_search= implements trial order, quadrature and termination.
+=CakeSearchResult= records the resistance before under-relaxation,
+the termination condition and an ordered trial/residual trace on request.
+
+The latest C++ verification inputs in =examples/= retain their frozen bytes.
+[[file:SCIENTIFIC_GUIDE.org][Input/output definitions]] explains .inp
+configuration, units, domains and sidecars. The Makefile selects distinct
+build and install directories. The Python inner routine receives its state
+from the caller.

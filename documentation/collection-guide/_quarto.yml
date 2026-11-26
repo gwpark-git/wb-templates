@@ -1,0 +1,10 @@
+# Build the collection handbook from its maintained sources.
+project:
+  type: default
+  render:
+    - report.qmd
+  output-dir: site
+
+execute:
+  enabled: false
+lang: en

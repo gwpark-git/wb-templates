@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Validation scope and reference to the original source</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="VALIDATION.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#validation-scope-and-reference-to-the-original-source"
+id="toc-validation-scope-and-reference-to-the-original-source">Validation
+scope and reference to the original source</a>
+<ul>
+<li><a href="#scope" id="toc-scope">Scope</a></li>
+<li><a href="#modernization-status"
+id="toc-modernization-status">Modernization status</a></li>
+<li><a href="#three-verification-steps"
+id="toc-three-verification-steps">Three verification steps</a></li>
+<li><a href="#recorded-bounded-evidence"
+id="toc-recorded-bounded-evidence">Recorded bounded evidence</a></li>
+<li><a href="#unchecked-or-incomplete-scope"
+id="toc-unchecked-or-incomplete-scope">Unchecked or incomplete
+scope</a></li>
+<li><a href="#if-a-check-or-result-looks-wrong"
+id="toc-if-a-check-or-result-looks-wrong">If a check or result looks
+wrong</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section
+      id="validation-scope-and-reference-to-the-original-source"
+      class="level1">
+      <h1>Validation scope and reference to the original source</h1>
+      <p><a href="../README.html">Project attribution</a></p>
+      <section id="scope" class="level2">
+      <h2>Scope</h2>
+      <p><strong>Build checks, unit tests and selected regressions cover
+      the cases named below. Full production simulations and scientific
+      parameter ranges still need validation.</strong></p>
+      <p>Build checks establish that selected configurations can run.
+      Frozen-trajectory comparisons check repeatability against a
+      captured numerical baseline. Independent physical oracles and
+      convergence studies test model and observable assumptions.</p>
+      </section>
+      <section id="modernization-status" class="level2">
+      <h2>Modernization status</h2>
+      <p>The modernization claim covers selected checks of capabilities
+      already in the original BD–MC package. Full workflow equivalence
+      remains open. RPY and SD are additional development with
+      scientific validation pending. Post-processing also awaits
+      end-to-end scientific validation. See <a
+      href="MODERNIZATION_LEVELS.html">modernization levels</a> for the
+      relationship between tested capabilities and each level.</p>
+      </section>
+      <section id="three-verification-steps" class="level2">
+      <h2>Three verification steps</h2>
+      <table>
+      <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Step</th>
+      <th>Evidence for BD–MC</th>
+      <th>Current scope</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Unit verification</td>
+      <td><a href="../modern/tests/test_network.cpp">Network unit
+      tests</a> check labeled topology, proposal and acceptance
+      behavior, and the kinetic clock. The
+      <code>BDMC_NETWORK_LEGACY_ORACLE=ON</code> build also runs
+      selected legacy-law comparisons.</td>
+      <td>Selected modernized operations and their matched legacy
+      laws.</td>
+      </tr>
+      <tr>
+      <td>Regression against a retained baseline</td>
+      <td><a href="../tests/reference_suite.py">The v2 replay
+      harness</a> runs the legacy executable directly against the <a
+      href="../tests/reference/v2/README.html">repaired current-port
+      fixtures</a>, including both signs of simple and step shear.</td>
+      <td>Recorded behavior of the repaired legacy implementation. The
+      full modern active-shear workflow still needs a matching run and
+      event trace.</td>
+      </tr>
+      <tr>
+      <td>Independent physical validation</td>
+      <td><a href="../tests/test_legacy_physics.cpp">Legacy physics
+      checks</a> use independent lattice enumeration and
+      energy/force/virial identities. <a
+      href="../modern/tests/test_reference.cpp">Modern reference
+      checks</a> compare free Brownian variance and Hookean finite-step
+      moments with analytical expectations.</td>
+      <td>The named physical limits and observables. Full
+      transient-network rheology and comparisons with published data
+      remain separate validation tasks.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>The remaining Level 2 workflow check needs exact labeled-event
+      ordering and tolerance-based numerical agreement. Invoke the
+      legacy executable directly for active shear. The Python
+      <code>LegacyRunner</code> accepts quiescent cases only.</p>
+      </section>
+      <section id="recorded-bounded-evidence" class="level2">
+      <h2>Recorded bounded evidence</h2>
+      <p>The <a href="EQUILIBRIUM_EOS.html">equilibrium EOS
+      comparison</a> adds a separate hard-sphere MC unit target, a
+      stored-observation replay and a matched LAMMPS soft-BD comparison
+      against Carnahan–Starling. Pressure agreement has model-, density-
+      and estimator-specific limits. The MC clock covers trials and
+      provides no physical transport measurement.</p>
+      <p>The <a href="EQUILIBRIUM_EOS.html#level-3-acceptance">Level 3
+      equilibrium contract</a> defines the producer–consumer boundary
+      for equilibrium pressure and structure and provides a detached
+      example.</p>
+      <p>The <a
+      href="../tests/python/test_postprocessing.py">post-processing
+      tests</a> exercise explicit estimator definitions. When comparing
+      reconstructed energy or stress against rounded data,
+      <code>rtol=2e-4, atol=2e-6</code> describes the chosen
+      compatibility allowance. Treat printer-error propagation and
+      frozen-output regression as separate comparisons.</p>
+      <p>The <a href="METAL_BENCHMARK.html">Metal transport benchmark</a>
+      defines a paired runtime and numerical comparison. The Linux CPU
+      reference and explicit Metal-unavailable status were exercised.
+      Native Apple throughput and float32 transport accuracy still need
+      device evidence.</p>
+      <p>The <a href="HI_EQUILIBRIUM.html">equilibrium free-space pair
+      benchmark</a> uses the existing RPY/SD mobility and a reversible
+      thermal pair integrator. It compares matched equilibrium
+      observables against a pure-BD unit-mobility reference. It is a
+      two-sphere verification case for mobility and stress
+      relaxation.</p>
+      </section>
+      <section id="unchecked-or-incomplete-scope" class="level2">
+      <h2>Unchecked or incomplete scope</h2>
+      <ul>
+      <li>Exhaustive source, branch, model and parameter coverage; full
+      production rheology, relaxation, diffusion and viscosity
+      convergence; timestep/size/statistical uncertainty across all
+      workloads.</li>
+      <li>Cross-platform bitwise equivalence. Modern
+      <code>std::mt19937_64</code> and legacy GSL/libc initialization
+      are distinct; the same seed does not make their paths identical.
+      Compiler/libm/thread scheduling and update order can affect
+      results.</li>
+      <li>Complete migrated modern transient-network control, complete
+      network/HI coupling, domain-decomposed network execution and a
+      validated learned kinetic controller.</li>
+      <li>CUDA/Apple target build/execution/performance on the
+      unavailable hardware/toolchains; complete periodic HI, thermal SD
+      and total suspension-stress theory through the bounded
+      adapters.</li>
+      </ul>
+      </section>
+      <section id="if-a-check-or-result-looks-wrong" class="level2">
+      <h2>If a check or result looks wrong</h2>
+      <ol type="1">
+      <li>Preserve the smallest reproducer: input, seed(s), source
+      hashes, compiler/library versions, thread counts, exact command
+      and original output. Preserve failed results and the original
+      fixture.</li>
+      <li>Check units, clock/recording phase, geometry/shear sign,
+      sparse schema, weights, particle/chain identities and estimator
+      normalization. Distinguish all-pair RDF from selected distances
+      and random-force diagnostics from conservative stress.</li>
+      <li>Consult <strong><a
+      href="https://github.com/gwpark-git/dynamics_of_networks_and_colloids.git"
+      class="uri">https://github.com/gwpark-git/dynamics_of_networks_and_colloids.git</a></strong>,
+      beginning with the recorded branch/commit and the corresponding
+      force, stochastic-transition or recorder function. Keep an
+      untouched upstream checkout for comparison. Do not assume the
+      latest upstream branch is the same historical or publication
+      edition.</li>
+      <li>Compare the discrepancy with the governing equation or a
+      separately constructed oracle. Original code is a primary
+      reference for provenance and intended implementation, not an
+      automatic guarantee that either implementation is physically
+      correct.</li>
+      <li>Review a proposed correction against that definition; preserve
+      alternate valid observables, retain the failure, rerun the
+      relevant tests and record any deliberate behavioral change. Do not
+      loosen a tolerance, overwrite a reference or discard failed seeds
+      simply to obtain a pass.</li>
+      </ol>
+      <p>Report conclusions at the checked level. A short successful run
+      does not establish a converged scientific result. License terms
+      and the AI disclosure do not replace the user’s scientific
+      validation.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

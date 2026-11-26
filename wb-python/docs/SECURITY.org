@@ -1,0 +1,86 @@
+#+title: wb-python boundaries and non-guarantees
+#+author: Gunwoo Park
+#+language: en
+
+[[file:../README.md::#ai-assistance][AI-generated text]]
+
+* Scope and authorization
+The existing wb Profile/AgentProfile/request/approval/native authorities remain
+owners. Operator-selected Thread/operation subsets only narrow their access.
+This local package is trusted same-user code, not an OS sandbox or multiuser
+authorization server. A private Unix socket does not provide per-capability wb
+authorization. The restricted stdio endpoint additionally checks a deployment-
+selected subset/principal namespace on every operation/read; see [[file:REMOTE.org][REMOTE.org]].
+No Host transport, actual SSH policy enforcement or isolation claim is established.
+
+Native RPC has many unsafe/general capabilities. This adapter exposes only
+selected metadata/queue/history methods and ID-only resume; no raw RPC, shell,
+Python evaluator, filesystem API, model/policy/sandbox override or auto-start
+exists. Native server approval requests are not approved or reinterpreted by
+this client; use the existing native review mechanism. The client may report
+review-required/unknown acceptance and requires reconciliation rather than retry.
+
+* Explicit data boundary
+Only selected message/context text enters native UserInput. No ambient files,
+environment, variables, notebook/kernel state, history, metadata, credential or
+Host path is automatically attached. Even intentionally selected metadata can
+be sensitive. Native agent processes run in the existing Sandbox, whose mounts
+and permissions are separately configured; approved context may be transmitted
+to an external model inference provider. These are different boundaries.
+
+Profile registry metadata is not permission to disclose full private records.
+The local helper validates the selected recovery hash/owner link and may read
+that named packet. Its raw record text is not automatically sent to native input.
+Native results expose selected agent messages; reasoning and raw tool bodies
+are omitted. Returned code remains inert and requires separate authorized review
+and execution. No reverse Host tool or persistent Host-browsing MCP is added.
+
+* Transport and evidence
+The Unix WebSocket implementation verifies the case-sensitive RFC nonce accept,
+client masking, server framing, fragmentation/control/UTF8 and bounded messages.
+It supports no compression, binary frames, network URLs, TCP listener or retry.
+The same local user can still inspect/alter accessible files, memory and sockets;
+hashes/pins/receipt checks are traceability, not signatures or hostile-owner ACLs.
+
+Receipt files retain native IDs/hashes without becoming execution state. A write
+may be accepted when its acknowledgement is lost; this package reports unknown
+acceptance and never resubmits automatically. If evidence persistence fails after
+an acknowledgement, the error includes the known native reference. Reconnect
+uses snapshots/history, not claimed event replay or invented progress. Queue ID
+to Turn ID correlation is retained when acknowledged or when a bounded selected
+history scan finds a unique exact native user-message clientId match. Multiple
+matches or queued/history conflict refuse; missing mapping remains unresolved.
+No exactly-once, cancellation, restart or durability promise
+follows from synthetic tests or a process launch.
+
+Artifacts are optional operator-registered exact Turn/item members under an
+explicit owned output root, with ID scope, no-follow regular single-link reads,
+size and SHA256 checks. Requests cannot supply paths or register artifacts.
+Native text alone does not authorize arbitrary file download or code execution.
+
+* Publication and deployment
+Keep operator configuration, Profiles, native history, receipts and outputs
+within the authorized workspace. Review the exact independent Client copy
+before Host import or execution. Use a Host-owned environment and package copy
+outside Sandbox-writable paths. The [[file:REMOTE.org][restricted endpoint guide]] describes the
+separate deployment boundary. The [[file:../../LICENSE_SCOPE.md][collection license scope]] covers
+the documentation in this collection.
+
+* Optional local consumers (0.2)
+:PROPERTIES:
+:CUSTOM_ID: wbpy-security-local
+:END:
+LocalTransport wraps the same trusted Endpoint policy rather than bypassing it.
+Its lock protects only its owned endpoint exchange/close; it does not make all
+Client/Workbench/native objects thread-safe or change native busy/approval rules.
+Closing a local transport does not cancel, replay or terminate accepted native work.
+
+TemplateCatalog reads only an explicit bounded catalog and admitted metadata.
+Excluded/traversal routes refuse lexically before path probes; symlink routes
+and nonregular/multiple-link payloads refuse. Child paths/import names are never
+followed or executed, and catalog rights/status warnings remain metadata.
+These same-user file checks do not establish hostile-owner OS confinement.
+The separate Client's structured-code parser keeps code/dependencies inert and
+labels validation as agent-reported; exact hashes establish byte identity only.
+
+See [[file:VALIDATION.org][validation scope]] for the checked scenarios.

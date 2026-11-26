@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>mBLA Level 3 — Python, Numba and PyTorch property
+providers</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../../index.html">wb-templates</a>
+      <a href="../../../documentation/README.html">Documentation</a>
+      <a data-source-link href="PYTHON_NUMBA_ML.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#the-connection-point" id="toc-the-connection-point">The
+connection point</a></li>
+<li><a href="#worked-example-pytorch-inference-to-a-property-table"
+id="toc-worked-example-pytorch-inference-to-a-property-table">Worked
+example: PyTorch inference to a property table</a></li>
+<li><a href="#worked-example-numba-lookup-inside-a-solve"
+id="toc-worked-example-numba-lookup-inside-a-solve">Worked example:
+Numba lookup inside a solve</a></li>
+<li><a href="#verification-of-the-synthetic-example"
+id="toc-verification-of-the-synthetic-example">Verification of the
+synthetic example</a></li>
+<li><a href="#validate-before-changing-the-backend-or-property-model"
+id="toc-validate-before-changing-the-backend-or-property-model">Validate
+before changing the backend or property model</a></li>
+</ul></nav>
+    <main>
+      <h1>mBLA Level 3 — Python, Numba and PyTorch property
+providers</h1>
+      <section id="the-connection-point" class="level1">
+      <h1>The connection point</h1>
+      <p>The property provider supplies reduced collective diffusivity
+      (<code class="verbatim">D_c/D_0</code>) and relative shear
+      viscosity (<code class="verbatim">eta/eta_s</code>). The current
+      C++ case-driver interface takes one volume fraction at fixed
+      material and reference conditions. Its <a
+      href="../examples/unity_provider.cpp">unity-provider example</a>
+      exercises the paired <code class="verbatim">LIVE</code> selectors.
+      The existing Python/Numba implementation covers the inner
+      cake-resistance search. A full Python outer solver remains a
+      planned Level 3 development. Keep the strict-FP Level 2 executable
+      as the regression reference while porting the solver in Python.
+      Compile measured bottlenecks with Numba.</p>
+      </section>
+      <section id="worked-example-pytorch-inference-to-a-property-table"
+      class="level1">
+      <h1>Worked example: PyTorch inference to a property table</h1>
+      <p><a
+      href="../examples/transport_table.py">transport<sub>table</sub>.py</a>
+      defines a synthetic torch.nn.Module and the matching analytical
+      oracle. In this example the inputs have shape <code
+      class="verbatim">N × 1</code> and use volume fraction in <code
+      class="verbatim">[0, 0.494]</code> at one fixed material state.
+      The output has shape <code class="verbatim">N × 2</code>, with
+      collective diffusivity first and viscosity second. Both columns
+      are positive and dimensionless. The formulas are
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mi>c</mi></msub><mi>/</mi><msub><mi>D</mi><mn>0</mn></msub><mo>=</mo><mn>1</mn><mo>+</mo><mn>1.5</mn><mi>ϕ</mi></mrow><annotation encoding="application/x-tex">D_c/D_0=1+1.5\phi</annotation></semantics></math>
+      and
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>η</mi><mi>/</mi><msub><mi>η</mi><mi>s</mi></msub><mo>=</mo><mn>1</mn><mo>+</mo><mn>2.5</mn><mi>ϕ</mi><mo>+</mo><mn>4</mn><msup><mi>ϕ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\eta/\eta_s=1+2.5\phi+4\phi^2</annotation></semantics></math>.
+      These are synthetic values chosen to illustrate the interface. For
+      licensed physical observations, record how both quantities were
+      estimated, the material conditions and the data, preprocessing and
+      model versions.</p>
+      <p>From <code class="verbatim">modern-lv3/</code> with Python 3.11
+      or later, generate the reference CSV using the standard library.
+      The optional second command requires a compatible PyTorch
+      installation in the selected environment.</p>
+      <pre class="bash" data-org-language="sh"><code>python3 examples/transport_table.py --backend python &gt; /tmp/mbla-demo-reference.csv
+python3 examples/transport_table.py --backend torch &gt; /tmp/mbla-demo-torch.csv
+</code></pre>
+      <p>The file has columns <code
+      class="verbatim">phi,D_c_over_D0,eta_over_eta_s</code>, six rows
+      of values in scientific notation and no simulation inputs or
+      weights. The first row is unity for both properties. At
+      <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>=</mo><mn>0.2</mn></mrow><annotation encoding="application/x-tex">\phi=0.2</annotation></semantics></math>,
+      the values are 1.30 and 1.66. Compare both CSVs numerically using
+      the same float64 tolerance. A trained model can replace the
+      synthetic module when its input order, normalization, output
+      definition and domain match the contract. Evaluate a qualified
+      device and dtype explicitly. This example uses CPU and float64.
+      Accelerator setup and transfer costs are part of the full timing
+      comparison.</p>
+      </section>
+      <section id="worked-example-numba-lookup-inside-a-solve"
+      class="level1">
+      <h1>Worked example: Numba lookup inside a solve</h1>
+      <p>Keep the torch model in Python and evaluate a batch outside the
+      inner numerical loop. Pass contiguous arrays to the numerical
+      kernel. After installing compatible NumPy and Numba in the chosen
+      environment, run from <code
+      class="verbatim">modern-lv3/</code>:</p>
+      <pre class="python"><code>import sys
+from pathlib import Path
+
+import numpy as np
+from numba import njit
+
+sys.path.insert(0, str(Path(&quot;examples&quot;).resolve()))
+from transport_table import linear_pair
+
+table_path = Path(&quot;/tmp/mbla-demo-reference.csv&quot;)  # Or mbla-demo-torch.csv.
+rows = np.loadtxt(table_path, delimiter=&quot;,&quot;, skiprows=1, ndmin=2)
+nodes, diffusivity, viscosity = (
+    np.ascontiguousarray(column, dtype=np.float64)
+    for column in rows.T
+)
+compiled_lookup = njit(fastmath=False)(linear_pair)
+dc_over_d0, eta_over_etas = compiled_lookup(0.15, nodes, diffusivity, viscosity)
+print(f&quot;{dc_over_d0:.6e} {eta_over_etas:.6e}&quot;)
+</code></pre>
+      <p>The interpolated pair is approximately <code
+      class="verbatim">1.225000e+00 1.475000e+00</code>. The analytic
+      viscosity at the same state is 1.465. This difference is
+      interpolation error on the example grid. To exercise the inference
+      source, set <code class="verbatim">table_path</code> to <code
+      class="verbatim">/tmp/mbla-demo-torch.csv</code>. The Numba
+      process reads a CSV from either producer using NumPy and Numba.
+      For genuine material data, verify monotonic nodes, finite positive
+      values and the physical validity domain before compiling or
+      calling the lookup. Keep training, device inference and any tensor
+      conversion out of the per-RK-stage loop.</p>
+      <p>The lookup refuses extrapolation. The current mBLA radial march
+      can query a negative intermediate Runge–Kutta trial even when
+      accepted physical states lie in range. Diagnose that boundary
+      separately in an integrated solver test. A physical table must
+      retain its measured domain. An extension or trial repair needs an
+      explicit numerical policy, comparison with the matched Level 2
+      reference and a sensitivity check. The synthetic unity C++ fixture
+      has its own constant law for every finite trial.</p>
+      </section>
+      <section id="verification-of-the-synthetic-example"
+      class="level1">
+      <h1>Verification of the synthetic example</h1>
+      <p>The standard-library and PyTorch 2.7.1 CPU producers generated
+      the same six rows. Numba 0.61.2 and NumPy 2.2.4 reproduced the
+      expected midpoint from the table. A lookup below or above the
+      qualified interval and a nonfinite query were refused. The checks
+      cover the synthetic property interface and transport between the
+      producers and lookup. They establish no trained-model accuracy or
+      full Python-solver timing.</p>
+      </section>
+      <section
+      id="validate-before-changing-the-backend-or-property-model"
+      class="level1">
+      <h1>Validate before changing the backend or property model</h1>
+      <ul>
+      <li>Port one no-cake step and verify pressure, radial march, wall
+      update and observable timing. Keep double precision, the same grid
+      and reduction order.</li>
+      <li>Use the existing <a
+      href="../../modern-lv2/docs/PYTHON_CAKE.html">cake kernel
+      verification</a> for the inner search. Add active-cake
+      branch/history checks and full axial and outlet profiles before
+      claiming parity for the outer solve.</li>
+      <li>Benchmark cold and warm end-to-end Python/Numba cases
+      including compilation, Python dispatch, property inference, table
+      preparation and repeated solves. The existing Numba measurements
+      cover the inner search only.</li>
+      <li>Compare each physical surrogate with a qualified interpolator
+      on held-out material states. Split related simulation data by
+      lineage. Report property error and downstream mean permeate flux,
+      wall concentration and cake onset. Keep preparation cost separate
+      from run time with a ready table.</li>
+      </ul>
+      <p><a href="../../docs/LEVEL_3_DESIGN.html">Full Level 3 design and
+      acceptance sequence</a></p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+#+title: wb-style — appearance and neutral-data contract
+#+language: en
+#+date: 2026-11-24
+
+* Source and responsibility
+The original paper style and its Python scripts are researcher-authored by
+Gunwoo Park. The paper citation in CITATION.cff identifies that source.
+No personal archive locations or original dataset schema are required.
+
+* Presentation
+wb_style/style.json owns inward ticks,1.5pt spines and explicit dash tuples.
+Plot defaults are8x6in,3pt lines,8pt hollow markers with1.5pt edges,20pt labels.
+No scientific axis ranges, units or transformations are style defaults. Arial
+falls back to DejaVu Sans; portable mode uses Mathtext, existing TeX is opt-in.
+The context restores caller settings even after exceptions.
+
+* Neutral example and verification
+The exact CSV header is x,series_a,series_b. The default creates81 deterministic
+rows: x on[0,4], exp(-x), and0.7exp(-x/2)+0.1cos(2pi*x). These are synthetic scalar
+illustrations, unrelated to any paper data or model. Explicit CSV input requires
+finite numeric rows with the same three columns. Values and row order are retained.
+Comparison markers select actual array coordinates, including the last point;
+nonuniform-grid tests check this independently. Invalid inputs and existing output
+directories are refused before rendering output. PNG/PDF/metadata stay outside
+maintained source. Tests cover actual artists, state restoration and data boundaries.
+These checks establish appearance/data handling, not solver validity, pixel
+identity or paper-figure reproduction. References/rights remain separate.
+
+* Implementation and example units
+| Source | Unit | Contract |
+|--------+------+----------|
+| wb_style/__init__.py | configuration | Read a fresh editable JSON mapping from the installed resource. |
+| wb_style/__init__.py | dash_pattern | Resolve one name to a zero-offset point-length tuple. An unknown name raises KeyError. |
+| wb_style/__init__.py | font_selection | Resolve the requested font locally and report requested/selected names and fallback. |
+| wb_style/__init__.py | style_context | Use Mathtext by default. Explicit TeX requires latex/mathrsfs and uses the local executable. Restore rcParams on exit. |
+| examples/plot_example.py | synthetic_series, load_series | Produce the deterministic example or validate an explicitly supplied UTF-8 CSV. Preserve finite numeric values and row order. |
+| examples/plot_example.py | marker_indices | Return sorted unique indices with constant index stride and the final point. |
+| examples/plot_example.py | render | Validate data and output boundary before writing. Render paired artifacts and report a CSV hash. Close the figure after success or error. |
+| examples/plot_example.py | main | Parse explicit file, fresh output path and opt-in TeX arguments. Print the rendering record. |
+| tests/test_style.py | StyleBehavior | Check restoration, actual artists, configuration freshness, nonuniform data and CSV roundtrip, invalid inputs, fresh output and TeX refusal. Read method docstrings for each oracle. |
+
+* Configuration and data fields
+=wb_style/style.json= is UTF-8 JSON. =rc_params= holds tick settings and
+axes linewidth in points plus the font family. =original_font= and
+=portable_fallback_font= are font-name strings. =plot_defaults= holds
+=figsize_inches= as width then height, numeric =*_pt= values in points and
+Matplotlib color strings for lines and marker faces. =dash_patterns= maps a
+name to an ordered sequence of alternating on/off lengths in points.
+For example, =dashdotdotted= is =[3,5,1,5,1,5]= with API offset zero.
+
+Compared with the Matplotlib v3.10.7 gallery, this package retains seven of
+the twelve shared names unchanged. Its local lengths for =dotted=,
+=loosely dotted=, =loosely dashed=, =loosely dashdotted= and
+=loosely dashdotdotted= are respectively =[1,1]=, =[1,6]=, =[5,6]=,
+=[3,6,1,6]= and =[3,6,1,6,1,6]=. =-..=, =-...= and =:= are local
+lookup aliases. See [[file:../REFERENCES.md][Matplotlib source and notice]].
+
+=pyproject.toml= defines runtime requirements, packaging and license files.
+=provenance.json= identifies the style, article, synthetic example, source
+license and gallery provenance. =series.csv= contains the ordered three
+columns =x=, =series_a= and =series_b= as finite numbers. Synthetic values
+are unitless. For an external CSV, its caller supplies units separately.
+There are no missing-value sentinels. Output retains 17 significant digits.
+=render.json= records =data_origin=, =rows=, ordered =columns=,
+=series_count=, =row_order_and_values_transformed=, the font/text-engine
+=rendering= object, =scientific_simulation_rerun=, =pixel_equivalence= and the
+=csv_sha256= digest of the exact exported bytes.

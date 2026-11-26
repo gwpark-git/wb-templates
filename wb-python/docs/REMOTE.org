@@ -1,0 +1,126 @@
+#+title: Restricted wb-python stdio endpoint — public wire and deployment boundary
+#+author: Gunwoo Park
+#+language: en
+
+[[file:../README.md::#ai-assistance][AI-generated text]]
+
+* Public contract and compatibility
+The restricted interface is wb public wire version 1. The endpoint projects
+selected native data to the versioned contract and applies the configured
+policy independently of any Client-side checks. The independent Client's
+conformance contract owns the complete response shapes. This guide describes
+the endpoint's operation set, identities and deployment prerequisites.
+
+* Implemented scope
+=wb-python-endpoint --policy "$WB_POLICY"= handles one
+bounded JSON document from stdin and writes one JSON response to stdout, then
+exits. The input document is terminated by EOF. This is a restricted entrypoint,
+not a listener, SSH server, authentication system or remote deployment. The
+separate optional wb-client distribution provides a Host API and transport.
+The deployment operator supplies the existing =WB_POLICY= path. Existing
+Workbench and native authorities continue to govern admitted operations.
+
+* Wire version and identities
+Request schema is =wb.python.remote.v1= with exactly these fields:
+
+#+begin_src json :eval never
+{"schema":"wb.python.remote.v1","id":"client-correlation-1","operation":"profile.list","arguments":{}}
+#+end_src
+
+Response has =schema,id= and exactly one of =result,error=. Error contains
+=code,message,acceptance_unknown= and, when known, selected native-reference IDs.
+Post-acknowledgement output failures preserve the known native IDs and stable
+request_handle. A receipt durability failure preserves known IDs without claiming
+a durable handle. =native_acknowledged:true= distinguishes a known native
+acknowledgement from an uncertain side effect; neither error is a retry instruction.
+Malformed envelopes may have null response id. A valid envelope with unsupported
+version/operation retains its bounded correlation id. Duplicate JSON fields,
+unknown fields, nonfinite JSON, unsupported operations and excessive bytes refuse.
+The input limit is 65,536 bytes and the output limit is 2,097,152 bytes.
+The endpoint makes one attempt.
+
+The wire =id= correlates one client call. A published =request_handle= is the
+SHA256 content address of an immutable native queue-reference receipt in this
+deployment principal's namespace. It is an *application handle*, not a native
+request/Turn/queue ID, execution status or authority. Reconnect uses the same
+original handle even after the daemon auto-consumes the queue. Native
+=queued_submission_id,client_user_message_id,thread_id,session_id,turn_id=
+remain distinct fields under =native=. New recovered Turn/item receipts append;
+the original published handle is not rewritten. Native history remains state
+authority; there is no mirrored request-state manager/database.
+
+* Closed operations and admission
+Every operation must occur in the trusted policy's explicit operations subset.
+Every selected Profile/Thread and every retained request read is scope-checked.
+
+| Operation | Closed arguments | Authority/admission and result |
+|-----------+------------------+--------------------------------|
+| profile.list | none | Existing registry intersected with policy-selected names; no body/owner paths. |
+| profile.inspect | profile; optional thread_id | Only selected registered Profile; optional scoped Thread uses authoritative recovery, returning state/hash only. |
+| session.list | none | Only policy-selected existing Threads; authoritative attach validation, no global history discovery. |
+| session.attach | profile, thread_id | Exact selected binding/native ID/workspace; no implicit resume. |
+| session.resume | profile, thread_id | Explicit separately admitted same-ID native resume; existing busy/self/approval guards remain. |
+| request.submit | profile, thread_id, request; optional resume | request is the existing closed explicit message/context mapping. Optional resume:true also requires session.resume admission. Returns acknowledged IDs/handle promptly, without mandatory start. |
+| request.start | request_handle | Optional separately admitted operation; reconciles already-started input read-only, otherwise preserves existing exact queued/busy/self guards. |
+| request.status | request_handle | Own accepted reference only; native snapshot and exact clientId correlation. |
+| request.events | request_handle | Own snapshot/observed metadata; no replay or progress percentages. |
+| request.result | request_handle | Own selected native agent messages/inert code and registered artifact descriptors; no reasoning/tool bodies. |
+| request.artifact | request_handle, artifact_id | Exact operator-registered native request/item descriptor and bounded verified owned bytes, base64 encoded; no caller path. |
+
+Native queue/add can start input automatically before the next call. Return the
+acknowledgement first, then poll status/result. No immediate start or resubmission
+is required. An idle native Thread may unload when a stateless connection exits.
+For a followup, choose =resume:true= explicitly on request.submit and authorize
+session.resume in policy; the endpoint resumes the same ID within that call's
+connection. A previous process's attach/resume does not promise a still-loaded
+Thread. Read-only result/history access does not automatically resume it.
+
+Session creation is deliberately unavailable through this endpoint. Use the
+existing installed source-free AgentProfile bootstrap under existing
+authorization, retain its actual runtime/binding/lifecycle evidence, then have
+the operator admit that exact child Thread/Profile in the trusted policy. No new
+global registry is created to turn this partial feature into implicit permission.
+
+* Trusted operator policy
+Only deployment supplies the policy path/principal; neither belongs in a wire
+request. Policy schema is =wb.python.endpoint-policy.v1= with required fields:
+=principal,operations,profiles,threads,workspace,profile_helper,native_socket,
+caller_thread,receipt_root=. Unknown fields refuse. =profile_helper= contains
+only =path,sha256=; =threads= maps at most 32 native UUIDs to selected Profile names.
+All paths are explicit trusted absolute paths. Optional =artifacts= contains
+=root,registrations=; registrations use the existing ArtifactRegistration fields.
+No examples contain real private configuration or credentials.
+
+The policy file must be regular/single-link, reached without symlinks, private
+and owned by the endpoint account. The existing private receipt root holds a
+derived =principal-SHA256= subdirectory. Payloads cannot choose another namespace,
+inject a RequestReference, register artifacts or enlarge Profile/Thread scope.
+Every handle read verifies its content hash, namespace and current Profile/Thread/
+workspace subset before a native connection/read. A narrowed later policy refuses
+previously issued handles outside that scope.
+
+Principal labels and file mode checks are not authentication against a malicious
+same-user owner. The deployment must bind actual authenticated identity to the
+fixed policy/command. The subset narrows existing permission; it does not grant a
+native approval or replace the existing wb policy/lifecycle/request ledger.
+
+* Required external deployment and unavailable evidence
+An approved existing SSH mechanism may launch the fixed endpoint with stdio.
+The account/forced-command configuration must prevent selecting another command,
+policy or arbitrary shell, deny agent/port/X11 forwarding and reverse Host tools,
+and bound connection/stdin lifetime/resources. Merely authenticating an account
+that still has shell rights does not establish these restrictions. Model context
+transmission and Host/Sandbox process isolation remain separate boundaries.
+
+Verification of a deployment calls for the actual Host process, deployed
+authentication and fixed command and policy mapping. See [[file:VALIDATION.org][validation scope]]
+for the checked scenarios. For Host use, independently review the exact Client
+artifact and retain it outside locations writable from the Sandbox.
+
+Only explicitly supplied authorized message/context text is sent to native input.
+No files, environment, variables, interpreter/kernel/notebook state or history
+are implicitly attached. Returned code/base64 artifacts remain inert until a
+separate authorized execution. Unknown acceptance retains known native correlation
+IDs when available and requires reconciliation, not automatic replay.
+
+Return to the [[file:./READER_GUIDE.org::#wbpy-host][Sandbox and Host overview]] for entry and recovery routes.

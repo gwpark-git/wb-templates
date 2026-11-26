@@ -1,0 +1,74 @@
+{
+  "CASE1-2000": {
+    "delta_m": 1.602388059751851e-05,
+    "ratio": 0.03204776119503702,
+    "radius_m": 0.0005,
+    "D0_m2_s": 2.1472000000674804e-11,
+    "Lp_m_Pa_s": 6.7e-10,
+    "reference_tmp_pa": 2000.0,
+    "input_sha256": "755100ebf7d4df196a65abeee90ed9b883e52ec8476e0f6cae59d5d6a88337ed"
+  },
+  "CASE1-8000": {
+    "delta_m": 4.005970149379628e-06,
+    "ratio": 0.008011940298759256,
+    "radius_m": 0.0005,
+    "D0_m2_s": 2.1472000000674804e-11,
+    "Lp_m_Pa_s": 6.7e-10,
+    "reference_tmp_pa": 8000.0,
+    "input_sha256": "f025dd016204174f7428a7a2ada3cd697991203e5d2514a11b9d93aadd59d80c"
+  },
+  "CASE1-8200": {
+    "delta_m": 3.908263560370369e-06,
+    "ratio": 0.007816527120740737,
+    "radius_m": 0.0005,
+    "D0_m2_s": 2.1472000000674804e-11,
+    "Lp_m_Pa_s": 6.7e-10,
+    "reference_tmp_pa": 8200.0,
+    "input_sha256": "a328480ff9eea90bb53f8f3999c41330125913af40f23eb1d28730e094edbed0"
+  },
+  "CASE1-9000": {
+    "delta_m": 3.5608623550041136e-06,
+    "ratio": 0.007121724710008227,
+    "radius_m": 0.0005,
+    "D0_m2_s": 2.1472000000674804e-11,
+    "Lp_m_Pa_s": 6.7e-10,
+    "reference_tmp_pa": 9000.0,
+    "input_sha256": "684f7bf7c62bfc9ea1345fd52b97ebd39c0702e1af93a2599bb22c67c329ae8d"
+  },
+  "CASE2-800": {
+    "delta_m": 1.3420000000421753e-07,
+    "ratio": 0.00026840000000843506,
+    "radius_m": 0.0005,
+    "D0_m2_s": 1.0736000000337403e-12,
+    "Lp_m_Pa_s": 1e-08,
+    "reference_tmp_pa": 800.0,
+    "input_sha256": "a87a30ffdcee1d6feb51f4e2cbc806edbbf22cbd6c56e6c2cceef6d1cc623ee9"
+  },
+  "CASE2-955": {
+    "delta_m": 1.1241884817107228e-07,
+    "ratio": 0.00022483769634214457,
+    "radius_m": 0.0005,
+    "D0_m2_s": 1.0736000000337403e-12,
+    "Lp_m_Pa_s": 1e-08,
+    "reference_tmp_pa": 955.0,
+    "input_sha256": "3cc17ef57ea1a45a3291daff8a4e548dc08f9cd03275df2018f2aebfa321ba81"
+  },
+  "CASE2-1000": {
+    "delta_m": 1.0736000000337403e-07,
+    "ratio": 0.00021472000000674805,
+    "radius_m": 0.0005,
+    "D0_m2_s": 1.0736000000337403e-12,
+    "Lp_m_Pa_s": 1e-08,
+    "reference_tmp_pa": 1000.0,
+    "input_sha256": "5fb3cee5ca68dd828ac65bc4878c8f0a176f7268ccb2f6f2ab5f3564996dda0d"
+  },
+  "CASE2-1150": {
+    "delta_m": 9.335652174206438e-08,
+    "ratio": 0.00018671304348412876,
+    "radius_m": 0.0005,
+    "D0_m2_s": 1.0736000000337403e-12,
+    "Lp_m_Pa_s": 1e-08,
+    "reference_tmp_pa": 1150.0,
+    "input_sha256": "2aca62ca1040d472b136311691368feb0d9095011f0473136b9380523062cbd8"
+  }
+}

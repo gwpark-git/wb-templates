@@ -1,0 +1,56 @@
+#cylinder-app {
+  --paper: #fff;
+  --cyan: #376250;
+  --amber: #98641f;
+  --red: #c62828;
+  --selector-fill: #e4eee7;
+}
+#cylinder-app > p { margin-top: 12px; }
+#cylinder-app .overview { margin: 19px 0 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 26px; }
+#cylinder-app dl { display: flex; flex-wrap: wrap; margin: 0; gap: 8px 24px; }
+#cylinder-app dt { font-size: 13px; color: var(--muted); }
+#cylinder-app dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+#cylinder-app label { display: flex; align-items: baseline; gap: 6px; font-size: 13px; }
+#cylinder-app .overview label { min-width: 0; max-width: 100%; }
+#cylinder-app .overview select { min-width: 0; }
+#cylinder-app .card-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px 13px; }
+#cylinder-app .result-list { margin-top: 19px; }
+#cylinder-app .result-list > .table-wrap, #cylinder-app .result-list details { margin-top: 9px; }
+#cylinder-app .result-list th[scope="row"] { font-weight: 500; }
+#cylinder-app .result-list details > summary { cursor: pointer; font-weight: 600; }
+#cylinder-app .result-list details > label { margin: 8px 0; }
+#cylinder-app .workspace, #cylinder-app .site-reference { display: grid; gap: 14px; }
+#cylinder-app .profile-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 14px; }
+#cylinder-app .profile-grid select { max-width: 100%; }
+#cylinder-app .view-switch { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+#cylinder-app .view-switch button[aria-pressed="true"] { background: var(--selector-fill); border-color: var(--cyan); }
+#cylinder-app .site-reference .mbla-profile, #cylinder-app .site-reference .mbla-curve-point { stroke: #222; }
+#cylinder-app .workspace th { white-space: normal; }
+#cylinder-app .card-heading { padding-bottom: 8px; }
+#cylinder-app .mbla-schematic svg, #cylinder-app .mbla-plot svg { display: block; width: 100%; }
+#cylinder-app .mbla-plot text { fill: var(--muted); font-size: 13px; }
+#cylinder-app .mbla-gridline { stroke: #e4e9e5; }
+#cylinder-app .mbla-axis { stroke: #819186; }
+#cylinder-app .mbla-profile { fill: none; stroke-width: 2.2; }
+#cylinder-app .mbla-profile.archive, #cylinder-app .mbla-curve-point.archive { stroke: #222; }
+#cylinder-app .mbla-profile.recomputed, #cylinder-app .mbla-curve-point.recomputed { stroke: #8b8b8b; }
+#cylinder-app .mbla-profile.recomputed { stroke-width: 4; }
+#cylinder-app .mbla-profile.level2, #cylinder-app .mbla-curve-point.level2 { stroke: var(--red); }
+#cylinder-app .mbla-profile.level2 { stroke-dasharray: 5 5; }
+#cylinder-app .mbla-curve-point { fill: white; stroke-width: 1.2; }
+#cylinder-app .mbla-selection { stroke: #996322; stroke-dasharray: 3 5; }
+#cylinder-app .mbla-plot-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 0; margin: 5px 0 12px; }
+#cylinder-app .mbla-plot-legend li { display: flex; gap: 7px; align-items: center; font-size: 12px; }
+#cylinder-app .mbla-plot-legend svg { width: 36px; }
+#cylinder-app .slider { margin-top: 10px; }
+#cylinder-app .slider input { flex: 1; accent-color: var(--cyan); }
+#cylinder-app .coordinate { margin: 5px 0 0; color: var(--ink); }
+#cylinder-app .scope-hint { margin-top: 8px; }
+#cylinder-app .table-wrap { overflow-x: auto; }
+#cylinder-app table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+#cylinder-app th, #cylinder-app td { border-top: 1px solid var(--rule); padding: 5px 7px; text-align: right; white-space: nowrap; }
+#cylinder-app th:first-child { text-align: left; }
+#cylinder-app [data-report-only] p { margin-top: 6px; }
+#cylinder-app figure { margin: 0; }
+#cylinder-app .coordinate { font-variant-numeric: tabular-nums; }
+@media (max-width: 800px) { #cylinder-app .profile-grid { grid-template-columns: minmax(0, 1fr); } }

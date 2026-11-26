@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-4eQaLP3yujWVbtMJaqWGwll5q9C7tiRyeRqFOz6pCtU='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="$author-meta$">
+  <title>$pagetitle$</title>
+  <style>
+:root { color-scheme: light; background: #f3f7fa; color: #182b42; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 1rem/1.65 system-ui, sans-serif; }
+a { color: #075279; text-underline-offset: .15em; }
+:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+header { padding: 1rem clamp(1rem, 5vw, 4rem); background: #102d45; color: #fff; }
+header a { color: #e0f1ff; }
+.masthead { display: flex; flex-wrap: wrap; align-items: center;
+justify-content: space-between; gap: .4rem 1.25rem; }
+.edition { margin-left: auto; display: flex; justify-content: flex-end;
+flex-wrap: wrap; align-items: baseline; gap: .2rem .9rem;
+text-align: right; font-size: .86rem; color: #d8e9f5; }
+header nav { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem 1.25rem; }
+header strong { margin-right: .5rem; }
+.skip { position: absolute; left: .5rem; top: .5rem; transform: translateY(-200%); }
+.skip:focus { transform: none; padding: .5rem; background: #fff; color: #102d45; }
+.layout { display: grid; grid-template-columns: minmax(11rem, 16rem) minmax(0, 77ch);
+gap: clamp(1rem, 4vw, 3.5rem); max-width: 81rem; margin: 0 auto;
+padding: 1.75rem clamp(1rem, 4vw, 3rem) 3rem; }
+.outline { position: sticky; top: 1.25rem; max-height: calc(100vh - 2.5rem);
+overflow: auto; align-self: start; padding: 1rem 1rem .75rem;
+background: #eaf1f6; border: 1px solid #d4e2ea; border-radius: .5rem; font-size: .92rem; }
+.outline p { margin: 0; font-weight: 650; }
+.outline ul { list-style: none; margin: .45rem 0 0; padding: 0; }
+.outline li > ul { margin-top: .15rem; }
+.outline a { display: block; padding: .4rem .45rem; border-radius: .25rem;
+text-decoration: none; line-height: 1.35; }
+.outline > ul > li > a { font-weight: 650; }
+.outline li + li { border-top: 1px solid #d4e2ea; }
+.outline li > ul > li > a { padding-left: .9rem; }
+.outline a:hover, .outline a:focus-visible { background: #dbeaf1; }
+main { min-width: 0; background: #fff; padding: clamp(1rem, 4vw, 2.75rem);
+border: 1px solid #dce7ed; border-radius: .65rem; overflow-wrap: anywhere; }
+main h1, main h2, main h3 { color: #102d45; line-height: 1.22; }
+h1 { margin-top: 0; font-size: clamp(1.9rem, 5vw, 2.8rem); letter-spacing: -.025em; }
+h2 { margin-top: 2.15em; padding-bottom: .35rem; border-bottom: 2px solid #dae9ec; font-size: 1.45rem; }
+section { scroll-margin-top: 1rem; }
+section:target > h2 { border-color: #178080; }
+code { font-family: ui-monospace, monospace; font-size: .92em; }
+:not(pre) > code { background: #edf4f6; padding: .08em .28em; border-radius: .2rem; }
+pre { overflow-x: auto; overflow-wrap: normal; padding: 1rem; margin: 1rem 0;
+background: #edf4f6; border: 1px solid #dce9ed; border-radius: .45rem; line-height: 1.5; }
+pre code { font-size: .85em; }
+.copy-tools { display: flex; flex-wrap: wrap; align-items: center;
+justify-content: flex-end; gap: .25rem .65rem; margin: 1rem 0 .35rem;
+color: #304e62; font-size: .83rem; }
+.copy-tools + pre { margin-top: 0; }
+.copy-tools button { padding: .25rem .55rem; border: 1px solid #a9c4d3;
+border-radius: .3rem; background: #f5fafc; color: #163b51;
+font: inherit; cursor: pointer; }
+.copy-tools button:hover { background: #e6f2f7; }
+.copy-buffer { position: fixed; inset: 0 auto auto 0; width: 1px;
+height: 1px; opacity: 0; pointer-events: none; }
+.edit-source { display: none; margin-bottom: 1em; }
+.edit-source:target { display: block; }
+.edit-source h2 { margin-top: 0; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: .93rem; }
+th, td { text-align: left; padding: .6rem .7rem; border: 1px solid #d8e4e9; vertical-align: top; }
+th { background: #eaf2f5; }
+hr { border: 0; border-top: 1px solid #d8e4e9; }
+@media (max-width: 760px) {
+.layout { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-top: 1rem; }
+.outline { position: static; max-height: 12rem; }
+}
+main img { max-width: 100%; height: auto; }
+@media print {
+.layout { display: block; padding: 0; }
+header, .outline, .skip, .copy-tools, .edit-source:target { display: none; }
+main { padding: 0; border: 0; }
+pre { white-space: pre-wrap; }
+}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#manual-content">Skip to guide</a>
+  <header class="masthead">
+    <nav aria-label="Guide resources">
+      <strong>$title$</strong>
+$if(source-file)$
+      <a href="#edit-source">Edit</a>
+$endif$
+    </nav>
+    <div class="edition">
+      <span>Package $version$</span>
+      <span>Documentation edition $date$</span>
+    </div>
+  </header>
+  <div class="layout">
+    <nav class="outline" aria-label="Contents">
+      <p>Contents</p>
+      $table-of-contents$
+    </nav>
+    <main id="manual-content">
+$if(source-file)$
+      <section id="edit-source" class="edit-source">
+        <h2>Edit the guide</h2>
+        <p>Open <a data-source-link href="$source-file$">$source-file$</a> in a text editor and rebuild the HTML.</p>
+      </section>
+$endif$
+      <h1>$title$</h1>
+      $body$
+    </main>
+  </div>
+  <script>
+    // Keep code copying available when the modern clipboard API is unavailable.
+    function copyThroughSelection(text, button) {
+      const field = document.createElement("textarea");
+      field.className = "copy-buffer";
+      field.value = text;
+      field.readOnly = true;
+      document.body.append(field);
+      field.select();
+      field.setSelectionRange(0, text.length);
+      try {
+        return document.execCommand("copy");
+      } finally {
+        field.remove();
+        button.focus({ preventScroll: true });
+      }
+    }
+
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const block = code.parentElement;
+      const toolbar = document.createElement("div");
+      toolbar.className = "copy-tools";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "Copy code";
+      toolbar.append(status, button);
+      block.before(toolbar);
+      button.addEventListener("click", async () => {
+        status.textContent = "";
+        const text = code.textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          try {
+            if (!copyThroughSelection(text, button)) throw new Error("Copy unavailable");
+          } catch {
+            status.textContent = "Copy unavailable. Select and copy the code manually.";
+            return;
+          }
+        }
+        status.textContent = "Copied";
+      });
+    }
+  </script>
+</body>
+</html>

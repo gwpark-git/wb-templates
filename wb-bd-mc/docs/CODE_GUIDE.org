@@ -1,0 +1,299 @@
+#+title: BD–MC template — why the components are separated and how to extend them
+#+date: 2026-11-13
+#+language: en
+
+* Start with the physical question
+This is a worked modernization of Gunwoo Park's existing research software,
+directed by the researcher. It is a template for making assumptions, interfaces
+and checks explicit; it is not a recommendation to use this simulator for every
+problem. The researcher supplies physical direction and acceptance criteria.
+Agents can implement and inspect that direction but cannot establish a new
+scientific model by combining plausible answers from unrelated perspectives.
+
+Read [[file:../README.md][the package entry]] and [[file:VALIDATION.md][validation limits]] before using results.
+Read [[file:MODERNIZATION_LEVELS.org][modernization levels]] for the scientific interfaces and their verification scope.
+Org is ordinary plain text. Its =*= and =**= mark headings and =file:=
+links point to local sources.
+
+* What changed architecturally
+The original program already separated several force/potential laws. The
+modernization did not invent all modularity or replace the researcher's prior
+validation. Its additional work makes ownership, numerical contracts and
+exchange formats visible enough to replace one responsibility at a time.
+
+| Earlier working difficulty | Current boundary | What the boundary enables |
+|----------------------------+------------------+---------------------------|
+| Execution, parameter conventions and text recording are coupled in a complete legacy run | A preserved legacy executable/adapter plus small typed reference engines | Compare bounded models without claiming a complete controller rewrite |
+| A position table alone omits identity, winding, topology and random state | Owned particle state, explicit observations and a separate checkpoint schema | Analyze copied arrays while distinguishing observation from exact continuation |
+| Neighbor storage can be mistaken for physical bonds | Spatial candidates, simple dynamic edges and labeled physical chains have separate types | Optimize search without changing particle/chain identity |
+| A simulation output is not yet a learning task | Dataset schema, scientific target, lineage groups, train-only preprocessing and saved numeric inference | Change estimators without silently changing the simulation or evaluation question |
+| A passing generated reference can retain a model error | Equation/invariant oracles, deliberate frozen fixtures and bounded regression are separate evidence | State what a check detects and what it leaves unresolved |
+
+The default core step reads:
+#+begin_example
+immutable model specification + owned current state
+    -> optional topology edits at old-state time
+    -> sum all force terms on that state
+    -> one simultaneous Euler position step with an explicit noise policy
+    -> observation of the complete current state
+    -> copied NumPy arrays / recorded dataset / analysis
+#+end_example
+
+Changing output stride must not insert random draws or change the integration
+clock. Changing a force, kinetic law or noise distribution is a physical change
+requiring its own comparison. Moving a folder or adding an explanation is not.
+
+* Component map and checked contracts
+The table maps each component to its implementation and targeted checks.
+
+| Responsibility | Source | Existing check to read |
+|----------------+--------+------------------------|
+| Typed specification, particle state, forces, noise and default orchestration | [[file:../modern/include/bdmc/core.hpp][core.hpp]], [[file:../modern/src/core.cpp][core.cpp]] | [[file:../modern/tests/test_core.cpp][Native core equations/invariants]] |
+| Default-core restart including Gaussian spare | [[file:../modern/src/core.cpp][checkpoint/restore]], [[file:../python/bdmc/io.py][numeric file exchange]] | [[file:../modern/tests/test_checkpoint.cpp][Native continuation/corruption]], [[file:../tests/python/test_checkpoint_io.py][file/CLI continuation]] |
+| Stable neighbor candidates and sparse occupied cells | [[file:../modern/include/bdmc/spatial.hpp][spatial.hpp]], [[file:../modern/src/spatial.cpp][spatial.cpp]] | [[file:../modern/tests/test_spatial.cpp][Cell/brute-force equivalence and boundary cases]] |
+| Exact labeled chains and explicit serial proposal primitives | [[file:../modern/include/bdmc/network.hpp][network.hpp]], [[file:../modern/src/network.cpp][network.cpp]] | [[file:../modern/tests/test_network.cpp][Topology, proposal measure, clock and connector tests]] |
+| Repulsive particles and unbounded kinetic dumbbells | [[file:../modern/include/bdmc/reference.hpp][reference.hpp]], [[file:../modern/src/reference.cpp][reference.cpp]] | [[file:../modern/tests/test_reference.cpp][Independent reference responses]], [[file:../tests/python/test_reference_theory.py][analytical discrete/continuous comparisons]] |
+| CPU/optional bulk execution arithmetic | [[file:../modern/include/bdmc/execution.hpp][execution.hpp]], [[file:../modern/src/execution.cpp][execution.cpp]] | [[file:../modern/tests/test_execution.cpp][Force/energy/virial and backend parity]], [[file:../modern/tests/test_accelerators.cpp][target-specific checks]] |
+| Python ownership, shape and current-state metadata | [[file:../modern/src/bindings.cpp][core bindings]], [[file:../modern/src/reference_bindings.cpp][reference bindings]] | [[file:../modern/tests/test_binding.py][Ownership, phase, shape and noise-law checks]] |
+| Compact independent-process observations | [[file:../python/bdmc/ensemble.py][ensemble.py]], [[file:../python/bdmc/ensemble_data.py][dataset adapter]] | [[file:../tests/python/test_ensemble.py][Worker parity/failure/deadline]], [[file:../tests/python/test_ensemble_data.py][group/exclusion checks]] |
+| MPI distribution of complete jobs | [[file:../python/bdmc/mpi.py][MPI interface]], [[file:../modern/src/mpi_ensemble.cpp][native job runner]] | [[file:../tests/python/test_mpi.py][Identity, bounded execution and failure checks]] |
+| Learning data, estimators, artifacts and paired budgets | [[file:../python/bdmc/ml/data.py][data]], [[file:../python/bdmc/ml/methods.py][methods]], [[file:../python/bdmc/ml/platform.py][platform]], [[file:../python/bdmc/ml/efficiency.py][efficiency]] | [[file:../tests/python/test_ml.py][Independent fits/grouping/artifacts]], [[file:../tests/python/test_efficiency.py][sealed evaluation/paired budgets]] |
+| Physical spatial/time estimators and conservative reconstruction | [[file:../modern/src/structure.cpp][native structure]], [[file:../python/bdmc/analysis.py][analysis]], [[file:../python/bdmc/postprocessing.py][postprocessing]] | [[file:../tests/python/test_analysis.py][Count/normalization checks]], [[file:../tests/python/test_postprocessing.py][explicit physical estimator oracles]] |
+| Shared bounded disk writes | [[file:../python/bdmc/storage.py][storage.py]] | [[file:../tests/python/test_storage.py][growth, nested writes and concurrent-writer tests]] |
+| Standalone hard-sphere equilibrium sampling and offline EOS reduction | [[file:../modern/equilibrium/hs_mc.h][C11 state/observation boundary]], [[file:../modern/equilibrium/sample.cpp][CSV producer]], [[file:../python/bdmc/equilibrium.py][pressure estimators]] | [[file:EQUILIBRIUM_EOS.org::#level-3-acceptance][Level 3 scientific exchange and checks]] |
+
+* State and force contracts
+=SimulationSpec= is copied into the owning =Simulation=. A later mutation of a
+Python specification object does not modify that running simulation. The core
+supports Brownian particles and permanent dumbbells. Its =ParticleState= keeps
+stable uint64 particle IDs, wrapped coordinates, unwrapped coordinates, an
+absolute integer step and =time=step*dt=. Flat native position storage becomes
+=(particle,coordinate)= or =(frame,particle,coordinate)= in Python.
+
+The core drift is =mobility*F*dt= with =F=-gradient(U)= for conservative terms.
+Coordinate noise variance is =2*diffusivity*dt=. Its legacy-compatible default
+is standardized uniform noise; selecting Gaussian noise preserves that second
+moment but changes the finite-step distribution. The modern engine does not
+reproduce the old GSL path merely because the same seed number is supplied.
+
+Force terms read immutable current state/topology and add into a zeroed shared
+force/energy buffer. The integrator reads the complete old-state force for all
+particles before advancing positions. Updating one bead and recomputing the
+partner force halfway through would implement a different scheme. A constant
+periodic drive contributes force but has no globally single-valued periodic
+potential; energy remains the conservative sum.
+
+The named state/force/noise/integrator types clarify responsibilities. They do
+not imply that every type is runtime-replaceable: the default =Simulation=
+exposes native force/topology callbacks, while replacing its concrete mobility
+or integrator requires an explicit wiring change. Python does not expose those
+native callbacks as a general user-defined controller API.
+
+* Three different meanings of topology
+1. =SpatialSearch= returns temporary geometric candidate pairs. Cell slots and
+   coordinate row indices are not physical labels. Sparse occupied-cell storage
+   avoids allocating an empty grid proportional to box volume. The separate
+   brute-force route supplies a transparent comparison. Pair acceptance still
+   uses the declared periodic geometry and inclusive cutoff.
+2. =DynamicTopology= in =core.hpp= is a canonical simple graph: no self-bonds or
+   duplicate edges. A batch is validated on a candidate before commit. It is a
+   storage seam for reference composition, not a transient-chain model.
+3. =NetworkTopology= in =network.hpp= owns exact physical chain endpoint rows.
+   A loop retains two labeled ends; several bridges can share a particle pair.
+   Adjacency counts are derived views: self weight is twice the loop count,
+   other weight is bridge multiplicity. A simple graph cannot encode that state.
+
+The exact network primitives classify actions, evaluate the retained supported
+kinetic laws, enumerate a finite serial proposal measure and apply an explicit
+chosen end with an explicit acceptance roll. Rejected/cancelled proposal mass
+remains part of the measure. Resampling until something changes would implement
+a different process. =steps_per_block= participates in
+=delta_t0=(dt/tauR)*steps_per_block/(C*Rt)=; it is not just a plotting cadence.
+
+This implementation rebuilds aggregate adjacency after a transaction and scans
+the labeled ends for compatible choices. Incremental incidence bookkeeping is
+unfinished. An optimization must preserve exact labels, both loop ends,
+probability mass and the kinetic clock, preferably against the same event tape.
+The full modern shear-aware network BD–MC controller is also unfinished; the
+existence of these primitives does not complete it or couple it to HI.
+
+* Reference models and execution boundaries
+The periodic permanent-bead-pair core differs from =DumbbellSimulation= in
+=reference.hpp=. The latter evolves unbounded connectors directly. Each bead's
+mobility/diffusion contributes, so connector drift is =-2*mobility*F_spring*dt=
+and coordinate noise variance is =4*diffusion*dt=. Its Hookean/FENE and imposed
+flow protocols have explicit conventions. FENE requires =|q|<q0=; Euler is not
+domain-safe. A failed reference-engine step preserves that step's state and RNG,
+including the Gaussian spare; earlier successful steps in a batch remain done.
+Do not generalize this transaction guarantee to arbitrary default-core callbacks.
+
+Bulk =ExecutionKernels= separate arithmetic from host-owned state and RNG.
+Serial, OpenMP and optional accelerator routes receive ordered noise inputs;
+backend availability is explicit and an unavailable selection fails. Metal uses
+float32 arithmetic despite float64 host output storage. Source presence is not
+target-device validation or a complete GPU network implementation. The
+reference repulsive nonserial kernels currently require an explicit all-pairs
+=brute_force= selection; an accelerated backend is not automatically the sparse
+cell-list algorithm.
+
+Local process ensembles and MPI distribute complete independent jobs. They do
+not decompose one interacting network across domains. Job seed/specification
+and identity must survive scheduling/rank changes. Failures and timeouts retain
+their job identities; neither runner silently chooses a replacement seed.
+
+* HI is an explicit alternative model boundary
+The [[file:../modern/include/bdmc/hydrodynamics.hpp][modern HI interface]] wraps retained native dense free-space kernels using
+a separate GSL stream. Brownian Oseen/RPY mode is bounded to N<=128; deterministic
+athermal Stokesian response is bounded to N<=64. Mobility assembly alone is not
+proof of positive definiteness; stepping performs the required factorization
+and candidate checks. Raw stresslets are not a complete suspension stress.
+
+The modern adapter does not replace the default core's scalar mobility with a
+general periodic network HI controller. An internal BD–MC reference preserves
+a later native simulator edition, including its CLI and
+free-draining recording/force work. Its periodic FD image recorder does not
+supply periodic HI sums, thermal SD or HMM exchange quantities. Read this
+package's [[file:HI_SD.md][HI scope]] before making any coupling claim; a copied =bd-mc= child
+does not need another checkout to execute its frozen HI adapter.
+
+The [[file:HI_EQUILIBRIUM.org][equilibrium HI benchmark]] reuses the force and
+mobility functions from this template. Its thermal pair solver compares
+equilibrium and relaxation. Its fixed-density size ladder uses matched
+static samples to resolve the free-space size dependence independently
+of the pair dynamics.
+
+* Python observations, restart and bounded runs
+Bindings return independent C-contiguous NumPy copies. A Python array remains
+valid after a later step or destruction of the native object, and editing it
+cannot mutate that object's internal coordinates. Native work can release the
+GIL while the simulation protects itself with its own mutex; Python array/dict
+construction happens after the GIL is reacquired.
+
+Observation metadata records units, RNG policy, force sign, boundary geometry,
+axis order and recording phase. An observation is not a restart checkpoint.
+Default-core checkpoints additionally capture geometry, topology, absolute
+clock, random engine and Gaussian cache. Custom force/callback models are
+refused rather than restored as a different default model. Numeric NPZ plus
+JSON avoids executable pickle; checksums detect changed bytes, not publisher
+identity or scientific truth. Exact replay across builds/backends still needs
+verification.
+
+A run ID identifies an execution; a condition ID identifies physical settings;
+a lineage ID identifies shared continuation history. A lineage string is not
+restart state and does not prove independence. Ensemble workers receive value
+specifications and return compact named observables. The parent records output
+under an explicit budget. A writer lock serializes cooperating disk writers and
+rechecks the shared baseline inside the lock; otherwise two preflights could
+spend the same remaining space. This is a cooperative guard, not a filesystem
+quota. It does not authorize a new budget or protect writers bypassing the API.
+
+* What “ML friendly” means here
+The implemented path is simulation → defined observable → grouped dataset →
+training-only preprocessing → fitted numeric state → saved/reloaded inference.
+This supplies an interface for a scientific learning task; it does not choose
+the final target or implement an adopted learned kinetic controller.
+
+=Dataset= owns detached finite numeric arrays, named feature/target columns,
+units/task metadata and independent source groups. Seeds remain provenance,
+not physical predictive features. Several frames from one run are correlated.
+Run, continuation and optional condition labels are joined transitively before
+splitting; an indirect shared continuation must not leak across partitions.
+For new-condition generalization, declare condition holdout rather than merely
+using a different time frame from a familiar condition.
+
+Scalers fit only training rows. =train(..., evaluate_test=False)= keeps the
+test partition unscored during method development. The convenience =compare=
+currently reports test metrics through =train='s default; do not use its test
+scores to select a method and then call the same test an untouched evaluation.
+=evaluate_learning_efficiency= pairs methods on the same nested whole-component
+training budgets and keeps validation/test allocation fixed. Its optional final
+test names one method/repeat in advance. Many time rows are not many independent
+simulation purchases.
+
+Ridge, fixed-kernel GP and optional PyTorch MLP share a fit/predict contract.
+Training libraries export finite numeric arrays and JSON configuration; MLP
+inference can use NumPy weights rather than a live PyTorch model. Registering a
+new method executes trusted local callables and is not a deserialization plugin
+mechanism. Saved-state checks include shape/version/digest consistency.
+GP uncertainty is uncalibrated latent-function standard deviation under the
+chosen kernel. It is not finite-replica physical noise, timestep error or a
+guarantee of coverage in a new regime.
+
+* Purpose-first observables
+Use [[file:POSTPROCESSING.md][the estimator definitions]] before selecting a plot or a training target.
+The current comments retain valid alternatives instead of treating every
+historical convention as a defect.
+
+- A chain-weighted bridge tensor counts parallel chains; a distinct-edge
+  tensor counts a particle pair once. Loop count is reported separately.
+  Labeled-chain correlations follow the same chain across transfer events;
+  they are not unlabeled edge survival.
+- A selected-distance probability density divides by its probability measure
+  and bin width/volume. RDF g uses a spatial ideal-gas reference and finite-N
+  convention. A distance histogram cannot become RDF just by renaming an axis.
+  The native spatial observer keeps counts, exact shell measures and expected
+  counts so coordination can use the matching normalization density.
+- FFT correlation is linear, zero-padded and divided by the declared number
+  of origins at each lag. =all_origins= and the retained legacy fixed window
+  are different declared estimators. FFT speed does not choose the estimator.
+- Random-force recording columns are diagnostics, not conservative stress.
+  The isotropic stress projection retains its defined 1/5 and 1/30 factors.
+  Green–Kubo conversion requires equilibrium, connected correlation, volume
+  and consistent thermal energy; a finite running integral does not establish
+  a viscosity plateau or include solvent/instantaneous contributions.
+- Exact image counters retain winding. Coarse wrapped snapshots alone cannot
+  recover an unknown number of crossings; evolving shear requires image
+  history. MSD consumes explicitly unwrapped coordinates, while diffusion
+  fitting requires a declared physical regime and fit window.
+- Conservative virial reconstruction includes unlinked repulsive pairs as
+  well as multiplicity-weighted connectors and preserves its stored sign and
+  energy convention. It is a separate calculation from total suspension stress.
+
+* A concrete extension: add a deterministic drive without rewriting the stepper
+This existing native seam is a small example of the template's purpose. It
+shows a controlled change of the force model, not a full network controller:
+#+begin_src cpp :eval never
+#include "bdmc/core.hpp"
+
+bdmc::SimulationSpec spec;
+spec.n_particles = 1;
+spec.dimension = 1;
+spec.box_lengths = {10.0};
+spec.dt = 0.01;
+spec.mobility = 0.5;
+spec.diffusivity = 0.0;
+bdmc::Simulation simulation(spec, {0.2}, {99});
+simulation.add_force_term(bdmc::ConstantForce{{3.0}});
+simulation.advance(2);
+const auto frame = simulation.observe();
+// Expected unwrapped x: 0.2 + 2 * 0.5 * 3.0 * 0.01 = 0.23.
+// ID remains 99; force is 3.0; this periodic drive adds no potential energy.
+#+end_src
+
+The existing =wrapping_and_component_composition= and
+=harmonic_force_and_old_state_update= cases in [[file:../modern/tests/test_core.cpp][test_core.cpp]] show how to
+check additive drift, stable ID, wrapping, simultaneous updates and an energy
+finite difference. A new conservative =ForceTerm= should similarly supply an
+independent =-gradient(U)= check, equal/opposite pair forces where applicable,
+and invalid-domain behavior. Keep topology/RNG mutation outside that force term.
+
+Run the existing native suite from the package root using the commands in
+[[file:BUILD_AND_USAGE.md][build/use]]. These examples do not register a Python callback. A custom force
+also deliberately makes the default checkpoint unsupported; a future extension
+must define a component identifier, parameters and restore procedure rather
+than silently dropping that force during restart.
+
+For a learning extension, define a physically meaningful target and units first,
+then add an explicit observable adapter. Preserve source/condition/continuation
+labels, construct a fixed group split, fit only training rows and verify the
+saved/reloaded predictions. The current ensemble observable table and recorder
+are explicit code, not a generic runtime registration API. Extend both and use
+[[file:../tests/python/test_ensemble_data.py][the adapter tests]] to protect names, scalar shape, failures and group identity.
+
+* Maintenance and explanation provenance
+Place a short reason beside the code boundary it protects. Keep the component
+contracts, licenses, tests and explanations usable from the package root.
+
+Gunwoo Park's original software, methodological direction and the performed
+checks have separate evidence. See [[file:VALIDATION.md][Validation]] for the
+covered cases and scientific limits.

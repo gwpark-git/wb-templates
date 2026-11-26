@@ -1,0 +1,303 @@
+#+title: mBLA Level 3 — Scientific Composability for Multiscale Simulation
+#+date: 2026-11-25
+#+language: en
+
+* Implemented transport scope
+The [[file:../modern-lv3/README.md][Level 3 package]] builds the unity-provider
+example and checks its outputs against the built-in Level 2 unity closures.
+The [[file:../modern-lv2/src/case_driver.h][C++ case driver header]] declares
+=EquilibriumTransport=. The [[file:../modern-lv2/src/dispersion_properties.cpp][closure dispatch]]
+uses it for paired =LIVE= diffusivity and viscosity selections. The retained native BD–MC/mBLA
+benchmark exercised live and pretabulated providers for a 5 kPa, 10 nm non-cake
+case at low particle Péclet number. The cached linear provider reproduced
+all 250 axial and 1,440 radial printed values from the live provider in
+the matched case. The [[file:../README.md][modernization overview]] summarizes the observed scope.
+
+** Provider contract during numerical trials
+=run_cases= borrows the provider for the run. The driver constructs
+=DISP_TYPE= after parsing the case. Both transport laws must select =LIVE=
+when a provider is supplied. The constructor calls =validate_case= with
+the freeze fraction and reference particle Péclet number. Each call to
+=evaluate= receives a scalar volume fraction and returns both reduced
+values. Diffusivity and viscosity use separate call sites, so a provider
+can receive repeated evaluations at the same state. The dispatcher rejects
+a nonpositive or nonfinite returned value. Osmotic pressure is dispatched
+by its own law.
+
+The RK radial march in [[file:../modern-lv2/src/ported_lib.cpp][ported_lib.cpp]]
+evaluates trial concentrations as well as accepted physical states.
+A checked 5 kPa, 10 nm non-cake case on the small 25 × 120 grid queried
+outside =[0, phi_freeze]=. A provider that rejects every such query stopped
+at its first negative trial. An injected unity provider with a defined value
+for every finite trial reproduced the built-in unity law byte-for-byte
+in the axial, integral and radial outputs. The dispatcher has no implicit
+range repair. An adapter for tabulated or simulated properties needs a
+documented numerical-trial policy with its own sensitivity check. The
+allowed domain of the physical data remains a separate contract.
+
+* Original design objective and scope
+The research objective is *Scientific Composability for Multiscale Simulation*.
+Connect independent models when a validated result at one scale supplies a
+quantity required at another scale. In the first workflow, particle-scale
+simulation and analysis supply transport properties to the dispersion-averaged
+mBLA continuum solver. Python coordinates this workflow. Compiled numerical
+steps support the continuum solver where profiling shows a benefit. The
+existing strict-FP Level 2 C++ solver supplies the full reference execution.
+
+This is a design for review. The smallest working slice is a matched no-cake
+case using one replaceable material property. First feed a tabulation of the
+known law through that interface. Then qualify one particle-derived quantity
+before using a new physical closure. The compatibility path keeps the Level 2
+laws, boundaries, grids and state-transition rules. Changing one of those
+conditions requires a labeled comparison at the appropriate scope.
+[[file:../modern-lv2/docs/LEVEL_2.org][Level 2 operation map]]
+[[file:../modern-lv2/docs/FIXED_POINT_METHOD.org][Fixed-point method and applicability]]
+
+* Modernization and additional development
+Exposing the existing Level 2 law through a replaceable property interface,
+then checking its tabulated representation against direct evaluation, is
+Level 3 modernization. Its reference is the existing continuum solution
+under the matched scientific contract. Feeding a new particle-derived
+constitutive law adds a scientific capability. Validate the estimate,
+interpolation and downstream response against their own references.
+For the initial comparison with the new law, keep the continuum discretization,
+solver and other property laws fixed. The compatibility summary shows Level 2
+and Level 3 under the existing law. The new-closure study reports its own
+scope and differences.
+
+* Design from the research workflow
+A scientist should be able to load an original case, make boundary and law
+choices visible, run it from Python or the CLI, inspect convergence and
+conservation, and compare the resulting profiles with a separate Level 2
+run. A case sweep reuses this workflow with explicit inputs and associated
+continuation files. The validated JCP example uses the existing 200 × 400
+grid, CASE2 b = 1, the same pressure conventions and eight representative
+pressure conditions. Select outputs by physical meaning and units.
+The interface returns physical mean permeate velocity, mean TMP and the
+full axial sample table before any visualization or follow-on analysis.
+[[file:../modern-lv2/docs/VALIDATION.org][Existing benchmark and reporting conditions]]
+
+* Scientific coupling across scales
+#+begin_example
+Independent particle simulation (BD–MC, LAMMPS or GROMACS)
+        -> property estimation and microscopic validation
+        -> versioned material-property table on a qualified state domain
+        -> interpolation at the local continuum state
+        -> dispersion-averaged mBLA solver
+
+Later option: train and validate a surrogate offline
+        -> inference through the same material-property interface
+#+end_example
+
+** Property quantities and state contract
+The interface consumes named constitutive quantities with physical semantics.
+Match the estimator, particle model and loading protocol to the quantity
+required by the continuum equations before selecting a simulation engine.
+
+| Consumed by mBLA | Upstream result and adapter responsibilities |
+|------------------+----------------------------------------------|
+| Collective diffusivity D_c / D_0 | Supply the collective transport coefficient for the assigned scale, regime and direction, with its estimator and units (m²/s for dimensional D_c). Self-diffusion from individual particle displacement is a different observable. Normalize with the declared D_0 only after checking that the solvent, temperature and hydrodynamic radius agree. |
+| Relative viscosity η / η_0 | Supply a viscosity (Pa s) compatible with the fluid model and declared shear regime. A zero-shear table can feed a concentration-only law. Rate-driven and stress-driven data have distinct inputs. An adapter between them requires a validated constitutive relation in the intended regime. |
+| Osmotic pressure Π | The first slice retains the existing pressure law. Any future external pressure source must specify its definition and units (Pa) and check consistency with the selected collective diffusivity, including a shared thermodynamic factor when that factor enters the estimator. |
+
+The state begins with particle volume fraction and the fixed material and
+solvent conditions of the selected study. Add temperature or shear rate or
+stress as independent coordinates only when the chosen closure requires
+them. State dimensions, units, normalizations, averaging conventions and
+valid ranges explicitly. Record isotropy assumptions for a scalar closure
+and check their scope when simulations include a direction or shear.
+In the existing solver, shear-dependent diffusion takes the lagged rate
+and viscosity takes the lagged stress. The existing tabulated closures use
+only concentration and keep their legacy behavior in the compatibility path.
+[[file:../modern-lv2/docs/SCIENTIFIC_GUIDE.org][Existing mBLA units and table conventions]]
+
+BD–MC is a candidate wb-template for the microscopic study. LAMMPS and
+GROMACS are alternative simulation sources through adapters for reviewed
+editions, which can include project-specific changes. Record the simulator,
+model, force or interaction law, hydrodynamic or thermostat assumptions when
+relevant, imposed conditions, estimator, run settings and realization lineage.
+Engine compatibility depends on evidence for the required physical quantity.
+[[file:../../wb-bd-mc/README.md][Existing BD–MC template and scope]]
+
+** Offline generation, interpolation and optional inference
+First compare a small set of particle-scale calculations with an appropriate
+reference or limiting relation. Check sampling, size or time sensitivity
+and uncertainty as appropriate for the estimator. Then precompute the
+material-property table over the state domain exercised by the intended
+continuum runs. Store the measured quantities, units, uncertainties where
+available, sampling conditions, validation results and source identities.
+The standard continuum run uses an immutable table and interpolates local
+states. It does not start particle simulations during iteration.
+
+Check interpolation at held-out states and examine its effect on the
+continuum observables. Report states outside the qualified domain, including
+holes in coverage. A separate explicit run may extend the dataset. A new
+provider does not silently extrapolate, clamp to an unrelated state, or
+substitute an alternative law. Compatibility behavior stays labeled.
+
+Later, an ML surrogate can implement inference using the same state and
+quantity contract, after separate validation against independent or held-out
+particle data and the accepted interpolator. Track accuracy, applicability
+and end-to-end cost in the continuum use case. The surrogate evaluation
+includes error propagation to mean permeate velocity and wall or cake
+profiles. Online simultaneous coupling remains a separately scoped option
+for a demonstrated need.
+
+* Proposed responsibilities and interfaces
+#+begin_example
+Legacy .inp / Python configuration -> validated case + scales + grid
+                                             |
+                                      Python solve loop
+                                        /          \
+                     reference numerical steps      compiled steps
+                                        \          /
+                                 states and diagnostics
+                                             |
+                              result / plots / data adapters
+#+end_example
+
+| Responsibility | Proposed contract |
+|----------------+-------------------|
+| Case and grid | Validate dimensions, pressure/velocity inlet, closure identifiers and continuation. Record SI inputs, effective scales and actual axial/radial coordinate vectors. Use the inherited cumulative axial and logarithmic radial grids in the compatibility mode. |
+| Constitutive laws | Expose named property inputs and values at a qualifying state. Provide built-in laws and an offline table adapter under the same contract. Record law or table identity, parameters and range, including CASE2 b = 1 when selected. Keep conversions at the property boundary. |
+| Numerical step | Advance a fixed-point iteration using explicit saved fields and a reusable workspace. Keep pressure, transverse marching, integral evaluation, cake search and wall/shear updates independently testable by named input and output. |
+| Solver and observations | Python chooses the backend, runs the step sequence, applies the termination policy and returns statuses. Callers can request copies of selected diagnostics without sharing mutable solver arrays. Backend selection and observation frequency are explicit configuration. |
+| Legacy adapter | Parse =.inp= and continuity seeds. Export the legacy axial table plus =.Rout= and =.Fval= when requested. Keep legacy storage conventions and output phase at this boundary. Native arrays expose named quantities and units directly. |
+| Scientific validation | A separate caller compares matched runs, computes physical diagnostics and emits figures or HTML from stored observations. It consumes results without changing the solve. |
+
+A possible public Python entry point is
+=solve(case, properties=..., backend=..., continuation=..., observer=...)=.
+The property source and the continuum computation backend can be selected
+independently. Companion
+functions load the legacy input and export legacy-format tables. The
+command line calls the same job entry point as notebooks and batch runs.
+Use a separate Level 3 package directory for implementation. Keep the
+verified Level 2 executable available to the validation runner as an
+independent reference.
+
+* State and numerical ordering
+Use double-precision arrays with explicit axial and radial dimensions.
+Axial vectors are indexed by =z=. Transverse fields are indexed by
+=(z, y)= with radial coordinate =y/R= increasing from the membrane. The
+saved iteration owns wall fraction divided by bulk fraction, cake
+resistance ratio, and the rate and stress fields with Level 2 scaling.
+Keep iteration index, onset diagnostic, convergence latch and latest
+resistance diagnostic as explicit scalar state. A reusable workspace
+owns pressure, axial and wall velocity factors and temporary radial
+integrals. Avoid copying workspace matrices on every step. A completed
+step publishes only the data needed by its observer.
+
+The compatibility step has stable state timing.
+
+1. Snapshot the previous wall, cake and shear fields before computing
+   osmotic pressure and the hydraulic solution.
+2. Evaluate the inlet flux integrals from that state.
+3. Sweep in increasing axial order. At each station, use the same
+   previous fields and the already updated upstream wall in the history
+   predicate. Preserve relaxation, negative-value fallback, the strict
+   onset diagnostic and the inclusive cake-search threshold. Preserve
+   the carried resistance below the threshold.
+4. Update shear rate before shear stress and evaluate termination with
+   the inherited strict inequalities and sticky stop criterion.
+5. Record iteration-side observations before final analysis recomputes
+   the hydraulic profile. Export each observation with its phase.
+
+An existing continuation table initializes wall concentration as in
+Level 2. A future full checkpoint must retain the state required to restart
+the exact iteration, including shear, resistance and the stop latch.
+Make the two inputs explicit in the interface and document the behavior
+of interrupted and iteration-limited runs.
+
+* Backend choice and performance
+Use an inspectable Python reference implementation of small cases and
+profile the end-to-end solver before setting a performance target. Use
+the verified Python/Numba cake search as the first candidate for a compiled
+step. Hoist the proven trial-invariant terms and keep radial reduction
+order where path preservation is claimed. Compare CPU backends with the
+same arrays and conditions. Disable fast math in the compatibility tests.
+
+Give the backend a fixed-point step interface. Prototype that interface with
+the compiled inner search first, then measure the cost of per-station
+dispatch. If it limits performance, move the entire sequential axial sweep
+into the compiled step. Use small unit calls to debug and validate individual
+kernels. Treat a new linear algebra library, a different reduction
+order, vectorized station updates or a new root search as separately
+tested choices. The accepted backend will follow measurements of the
+full case, including startup, runtime, peak memory, optional report
+writing and cost of many cases with warmed code. The measured Numba
+gain for the inner resistance search is evidence at that scale.
+[[file:../modern-lv2/docs/PYTHON_CAKE.org][Measured inner kernel scope]]
+
+* Output and future ML use
+The [[file:../modern-lv3/docs/PYTHON_NUMBA_ML.org][Python/Numba and PyTorch worked guide]] shows batch inference,
+scientific-notation property storage and an interpolation kernel on synthetic data.
+Expose named fields, units, coordinate arrays, physical and numerical
+configuration, law/version identity, backend and solver revision,
+input/continuation lineage, run status and observation phase. A sample
+schema should distinguish a full checkpoint from a selected profile.
+Choose ordinary arrays and versioned metadata for both material-property
+datasets and solver observations. A future inference adapter reads the
+qualified local state and supplies constitutive values. A downstream
+analysis adapter consumes recorded solver results. Group correlated
+particle trajectories and related TMP or continuation cases by lineage
+when constructing training and held-out sets. The first slice uses
+tabulation. Active cake thresholds and history rules require separate
+treatment in any future differentiable study.
+
+* Acceptance and implementation order
+| Order | Working slice | Required comparison |
+|-------+---------------+---------------------|
+| 1 | No-cake continuum slice with built-in law and equivalent property table | Use one nonconstant concentration-dependent property at a fixed material condition. Compare direct law and interpolated table at nodes and between nodes. Compare closed-form pressure, solvent limits, frozen no-cake outputs and legacy I/O. |
+| 2 | One qualified particle-derived property | Select a single property after checking the microscopic estimator and available engine. Validate it independently, precompute its qualified domain, check held-out interpolation and exercise the table through one continuum run. Compare to the built-in closure and report the downstream effect as a property-source change. |
+| 3 | Ordered wall/shear and active cake update | Compare one controlled step, including candidate, guard, resistance and shear state. Exercise freeze equality, first positive onset, carried resistance and stop latch. Run the compact mild-cake and demanding-cake traces. |
+| 4 | Broader comparison and measured performance | For compatibility, repeat the eight selected JCP points with matched original inputs and continuation. Compare all stations, outlet samples and case means. For a new property source, hold the continuum numerics fixed and evaluate the supported study separately. Compare cold and warm full-solver performance before deciding which steps to compile. Show Level 2 and Level 3 in the overall summary with residuals and scope. |
+| Later | ML property inference through the same interface | Validate against grouped held-out or independent particle data and accepted interpolation, then compare continuum observables, domain coverage and runtime. |
+
+Use the existing Level 2 printed regression allowances for the frozen
+fixtures when their printer and comparison contract match. Record
+expectations for any new observation and its units before the run.
+Compare prior and candidate at each station as well as against applicable
+physical checks. The inlet is included in numerical replay, while the
+finite inlet development region retains its separate physical limit.
+Screen the high-TMP early-cake cases as agreed and report mean velocity
+and cake coverage for extensive-cake cases. Keep both branch history and
+an independent physical check when considering an intentionally different
+algorithm. Re-evaluate grid accuracy if a discretization changes.
+
+** First cross-package acceptance test
+:PROPERTIES:
+:CUSTOM_ID: cross-package-acceptance-test
+:END:
+Retain the Level 2 unit, regression and physical checks that apply to
+the no-cake case. Pin the property producer, its adapter, the mBLA consumer
+and the existing Level 2 executable. Choose a finite-concentration case that
+exercises the first selected property and stays within the qualified table
+domain. Keep the grid, stopping rule, material conditions, other property laws
+and input settings fixed.
+
+| Trial | Run and observable acceptance condition |
+|-------+-----------------------------------------|
+| Equivalent input | Evaluate the retained law directly for the Level 2 baseline. Produce a table of the same law through the actual producer/adapter entrypoint and consume it through mBLA's normal entrypoint. Check the values at nodes and held-out states. Compare convergence, mean permeate velocity, full axial permeate-velocity profile and wall volume fraction with tolerances declared before the run. |
+| Active property | Pass a controlled change to the one selected property over the exercised concentration range. Compare the response with a direct controlled substitution or independent expectation under the same numerical conditions. Record the consumed table identity and the downstream observable that detects an ignored table. |
+| Invalid exchange | Supply an incompatible unit or a table that leaves a visited concentration uncovered. Check the diagnostic and rejection at the property boundary. Verify that no successful result is produced using extrapolation or a silent fallback. |
+| Qualified particle property | Run one selected particle package and a validated estimator through their documented entrypoints. Check its property independently, retain its uncertainty and domain, and trace estimation and interpolation error to the continuum outputs. Report the change from the built-in law as a new-closure result. |
+
+Use the appropriate independent continuum limit alongside paired regression.
+For example, a pure-solvent limit can check pressure/flux conventions, while
+the finite-concentration test detects whether the property is used.
+Keep producer and consumer commands, property artifact identity and
+comparison outputs together. These trials are planned. The property, producer
+edition and scientific acceptance bounds are open design decisions.
+
+* Decisions still open
+- First particle-derived property and loading regime, with a qualified
+  estimator and independent reference. Choose table axes and spacing
+  from that study and the continuum states it must cover.
+- How much of one step to compile follows the full-solver profile. Start
+  with the existing inner kernel and test the cost of the call boundary.
+- Choice of linear algebra backend and checkpoint storage follows the
+  first compatibility and reproducibility checks.
+- Mesh convergence and entrance matching retain their existing scope.
+  Reusing a validated replay does not establish those claims.
+
+Scientific source and project direction: Gunwoo Park.

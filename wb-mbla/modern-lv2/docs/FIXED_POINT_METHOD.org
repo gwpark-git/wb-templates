@@ -1,0 +1,82 @@
+#+title: mBLA C++ — fixed-point history, cake persistence and applicability
+#+date: 2026-11-14
+#+language: en
+
+* Scientific scope and ownership
+This note explains the inherited C++ algorithm; it does not introduce a generalized cake model. The researcher clarified that the present method has an applicability limit where the physical wall-concentration profile is non-monotonic, and associated that behavior with their JCP 2020 analysis. That statement owns the intended scientific scope. No new equation number or detailed paper citation is inferred from this clarification. The existing researcher-established non-cake Python/C++ agreement remains prior reported verification; a newly chosen coarse comparison and its new allowance do not replace that history. Python has no cake extension.
+
+The model is a dispersion-averaged continuum calculation. Concentration-dependent constitutive properties enter the flow/transport update. The history-dependent cake rule below belongs to this implementation of that calculation, not a particle-resolved simulation or a universal treatment of all possible cake configurations.
+
+* What one fixed-point step actually does
+The driver in [[file:../src/calculation_CP_profile.cpp][calculation_CP_profile.cpp]] copies the previous wall concentration, resistance, shear-rate and shear-stress state, computes osmotic pressure from that state, and calls [[file:../src/ported_lib.cpp::long phiw_update][phiw_update]]. The update uses the preceding resistance to obtain membrane permeability, axial pressure and velocities. At each downstream axial point it computes a raw wall-concentration candidate using the supplied previous state and the already established inlet functional.
+
+** Exact history-safety predicate
+Let c_i denote the raw current candidate, p_i the previous iteration's wall concentration at the same axial node, u_i the already updated upstream value at node i−1, and f=phi_freeze/phi_bulk. The active predicate is c_i<f AND p_i>=f AND u_i>=f. If all three conditions hold, the candidate c_i is replaced by u_i before relaxation. This prevents a below-freeze numerical hole after upstream cake when the same point also carried cake in the preceding iteration. All these variables use the inherited normalization by phi_bulk.
+
+This predicate is a local history-dependent cake-persistence safeguard. It does not examine or prove global nondecreasing behavior of the whole wall profile, and it is not activated merely by any downward slope. The variable count_negative_phiw counts this particular substitution; its historical name and printed “COUNT force replace phiw” label do not mean that every event is a negative concentration. No name, predicate or printed result has been changed here.
+
+** Relaxation, threshold and resistance order
+After the history-safety substitution the code under-relaxes the candidate with the previous value. A negative relaxed candidate is replaced by its previous value through a separate safety condition. When the relaxed concentration reaches or exceeds freeze, the wall value is clamped to freeze, the inherited cake-resistance search runs, and the resistance receives its own under-relaxation. Otherwise the code accepts the relaxed wall value; this else branch does not explicitly reset the stored new resistance. The previous iteration therefore remains part of the state and branch selection.
+
+The diagnostic onset marker uses a strict “greater than freeze” test, whereas
+the active cake update uses “greater than or equal to freeze.” Level 1 computed
+an unused minimum of old and current onset indices. Level 2 removes that dead
+calculation and leaves the two active predicates in their original order.
+
+** Inner search and outer stopping
+The inner search computes transverse concentration/property integrals from the supplied state, then varies trial resistance in its inherited increments. It reduces step size when the residual changes sign or its trend/range condition triggers, and retains its warning/fallback path. The geometric factor is based on the supplied previous resistance outside that inner search. The added finite/nonfinite guards report failure without replacing a valid search sequence.
+
+The outer iteration monitors an RMS wall-update increment and, when the outlet resistance is positive, a relative outlet-resistance change. The stop flag can latch before the inherited minimum iteration count. The printed convergence status names this event; it does not require stable onset history, a global conservation residual or a mesh-refinement criterion. The final table is then recomputed from the final state, while optional sidecars describe the iteration state before that final analysis.
+
+* Applicability and interpretation
+The researcher identifies physically non-monotonic wall-concentration regions as outside this method's present applicability. The code does not provide a general automatic classifier for that physical regime. A smooth or monotonic result after a safety substitution is not proof that the unconstrained physical solution would satisfy the method's assumptions. Generalizing the method requires a separate scientific specification and comparison; removing the safeguard or changing cake persistence is not an interface repair.
+
+A large recorded particle-flux drift is evidence that the particular calculation has not met its stated numerical diagnostic. It does not by itself identify which ingredient is responsible. Grid spacing, field discretization, lagged quantities, the thresholded search, history safety and stopping are distinct possible contributors. The existing demanding and refined cases remain explicitly unaccepted for full cake accuracy; a source-preserving regression is still useful without becoming a conservation or published-result reproduction claim.
+
+** Inlet development and extensive cake coverage
+:PROPERTIES:
+:CUSTOM_ID: inlet-development-and-cake-coverage
+:END:
+The researcher identifies the inlet development region as outside the
+physical and numerical interpretation of the current approximation.
+The inlet uses a parabolic bulk flow profile. The downstream matched
+asymptotic solution in =z/L= omits the finite development region in which
+the inlet and permeable-wall boundary conditions meet. Interpreting that
+region would require an entrance solution and a matching condition to the
+downstream solution.
+
+When cake approaches the inlet, screen the result as entrance-sensitive.
+Cake at the first interior axial node is a clear warning, and strong
+enrichment there can already indicate sensitivity before the resistance
+becomes positive. The node index depends on the grid. An entrance length
+requires its own physical or mathematical basis. A finer grid or a converged
+iteration can characterize numerical behavior in these runs.
+
+For reporting, keep the mean permeate flux when cake covers more than half
+of the membrane surface and explicitly qualify its interpretation. Treat the
+effect of extensive coverage as potentially material. For a cylindrical
+membrane with constant circumference and contiguous cake to the outlet,
+estimate the covered fraction from the first positive cake resistance to
+the outlet and retain the grid interval in which onset occurs. Interpret
+physical observables separately in cases with downstream onset or no cake,
+subject to the established model scope.
+
+* Floating-point and branch sensitivity
+Existing controlled experiments found a demanding-cake output difference after a bounds-only engineering edit under the checked default contraction policy. A common -ffp-contract=off build restores printed original/modern parity for the selected cases, and remains the explicit maintained policy. That result does not reproduce the original default-FMA output or identify a uniquely correct physical edition.
+
+Freeze comparisons, the history-safety predicate, search residual sign/trend tests and the latched stopping event are plausible amplification sites for small arithmetic differences. Actual first branch divergence was not traced. Treat a claim that any one of these mechanisms caused the observed FMA difference or flux drift as a hypothesis until it has direct evidence. Instrumentation can itself affect optimization, so any later finite branch-trace experiment must keep its actual source/build identity and compare its outputs before interpreting the trace.
+
+The retained standard-case counter can establish that the safeguard executed, not which individual branch first diverged or whether the physical applicability criterion was satisfied. A count alone is not a physical error estimate, and comparing counts between different cases does not establish a cause of their different flux drifts.
+
+* Fast checks and what they establish
+The standard unit executable uses independently specified hyperbolic solutions of the zero-osmotic axial pressure equation on uniform 25- and 49-node axial grids over the same endpoints. It checks the original pressure/pressure boundary case, a prescribed uniform cake-permeability coefficient Ln=1/4, and the velocity/pressure inlet alternative. Both coordinate order and spacing are explicit: z/L=i/(Nz−1), with h halved between the two grids. These quick checks detect sign, coefficient and inlet-row errors and require second-order pressure-error reduction at the existing independently chosen bounds.
+
+These are linear pressure boundary-value tests, not nonlinear cake-onset or full-model grid convergence. They neither reproduce the logarithmic transverse sampling of a publication calculation nor establish the applicability of a monotonic cake method. The immutable small non-cake/mild-cake/demanding-cake regressions separately protect the selected strict-FP outputs and exercise the active safeguard. More costly scientifically matched cases require their own grid, physical-regime, stopping, conservation and duration contract; no longer campaign is implied by this note.
+
+* Engineering corrections kept separate
+The late-write failure correction checks write/flush/close success for the main table and both sidecars before the CLI can report success. A solver that reaches its stopping event but loses output now reports an execution error. It does not change how the state is calculated. The iteration-count correction consumes the same full finite integral value already accepted by configuration validation, including 2.4e3 and 0x960 for 2400. It does not change the iteration limit for ordinary decimal inputs.
+
+The detailed method, floating-point policy, physical coefficients, stencil, stopping rules and immutable fixtures remain unchanged by those fixes. [[file:VALIDATION.org][Validation]] separates interface failure detection, independent pressure checks, source regression and unresolved scientific acceptance.
+
+* Documentation provenance
+The researcher supplied a scientific clarification on 2026-11-14. Source locations refer to the supplied 2026 C++ edition and the maintained functions. The source manifest retains original identities. This note grants no publication or scientific adoption authority.

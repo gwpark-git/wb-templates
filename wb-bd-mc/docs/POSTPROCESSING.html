@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Physical post-processing contracts</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="POSTPROCESSING.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#physical-post-processing-contracts"
+id="toc-physical-post-processing-contracts">Physical post-processing
+contracts</a></li>
+</ul></nav>
+    <main>
+      <section id="physical-post-processing-contracts" class="level1">
+      <h1>Physical post-processing contracts</h1>
+      <p><a href="VALIDATION.html">Overall scope</a>.</p>
+      <p><strong>Scientific workflow validation pending.</strong> Unit,
+      estimator and retained-data reconstruction checks are development
+      evidence for the specific operations and cases tested. The
+      publication analysis and transport estimates require separate
+      scientific validation on their intended datasets and
+      conditions.</p>
+      <p>Use <code>from bdmc import postprocessing as pp</code>.
+      Numerical kernels require NumPy; the 2D RDF transform additionally
+      requires SciPy. Read the function docstrings for argument/return
+      schemas.</p>
+      <table>
+      <colgroup>
+      <col style="width: 50%" />
+      <col style="width: 50%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Purpose</th>
+      <th>API and physical contract</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Read network frames</td>
+      <td><code>iter_legacy_frames</code> consumes synchronized
+      <code>.traj/.hash/.weight</code> and optional labeled
+      <code>.chain</code> frames before start/stride selection. Ragged
+      sparse rows are valid; partial/extra EOF, malformed rows and
+      conflicting labels are errors. Split appended runs explicitly.
+      Auxiliary columns are not physical velocities.</td>
+      </tr>
+      <tr>
+      <td>Geometry</td>
+      <td><code>legacy_geometry</code> reads the actual current HEUR
+      clock convention: simple shift =
+      <code>Wi_tau_C * L_gradient * time</code>, with no extra C; step
+      shift = <code>gamma_0 * L_gradient</code>.
+      <code>minimum_image</code> finds the Euclidean nearest image of
+      rectangular/Lees–Edwards lattices, including repeated crossings.
+      Current interacting legacy shear is 3D xy.</td>
+      </tr>
+      <tr>
+      <td>Topology</td>
+      <td><code>topology_statistics</code> separates loops, bridge
+      chains, distinct edges and components including isolates. Self
+      weight is two ends per loop; off-diagonal weights are reciprocal
+      bridge multiplicities. End conservation is
+      <code>sum(ends)=2*(loops+bridges)</code>. Components do not
+      establish spatial percolation.</td>
+      </tr>
+      <tr>
+      <td>Bond tensors</td>
+      <td><code>bond_observables</code> uses unordered bridges and
+      explicit <code>chains</code> versus <code>distinct_edges</code>
+      measures. <code>RR_sum=sum(w*q*q.T)</code>; per-particle and
+      per-bridge denominators are different. Empty bridge means are
+      undefined.</td>
+      </tr>
+      <tr>
+      <td>Chain midpoint/history</td>
+      <td><code>chain_midpoints</code> uses PBC connectors and stable
+      endpoint IDs. It is a geometric proxy, not resolved polymer COM or
+      diffusion. <code>connector_correlation</code> follows the same
+      labeled chains, not unlabeled edge survival.</td>
+      </tr>
+      <tr>
+      <td>Distributions</td>
+      <td><code>histogram_density</code> uses selected total weight and
+      exact bin measure, retaining outside mass.
+      <code>empirical_cdf</code> combines duplicate samples; spline
+      derivatives are not automatically positive PDFs.
+      <code>spherical_bond_density</code> uses exact
+      <code>(b^3-a^3)/3*dmu*dphi</code> volume with explicit
+      zero-direction mass. For an apolar angular distribution include
+      +q/-q with half weights.</td>
+      </tr>
+      <tr>
+      <td>Distance streams</td>
+      <td><code>distance_stream</code> reads ragged selected samples and
+      optionally the known six-decimal printer grammar for glued tokens.
+      It infers neither absent zeros nor frame boundaries.
+      Selected-distance PDFs are not all-pair RDFs.</td>
+      </tr>
+      <tr>
+      <td>Temporal correlations</td>
+      <td><code>correlation</code> computes linear
+      <code>&lt;x(t)y(t+lag)&gt;</code> with conjugated, zero-padded FFT
+      or direct sums. Declare centering, actual origins and all-origin
+      versus historical fixed-window estimation. Require a uniform
+      increasing clock; do not silently regularize historical
+      resets/drift.</td>
+      </tr>
+      <tr>
+      <td>Stress</td>
+      <td><code>stress_components</code> requires an explicit energy
+      schema. Symmetric columns are <code>xx yy zz xy xz yz</code>.
+      <code>stress_correlation</code> preserves the correct isotropic
+      projection <code>&lt;dev(A):dev(B)&gt;/10</code>, equivalent to
+      off-diagonal weights 1/5 and normal-difference weights 1/30.
+      Connector/repulsive decomposition needs both ordered cross
+      terms.</td>
+      </tr>
+      <tr>
+      <td>Equilibrium response</td>
+      <td><code>green_kubo</code> requires connected correlation,
+      declared equilibrium and consistent volume/thermal energy. It
+      returns finite configurational <code>G=V*C/kBT</code> and running
+      integral, not converged total viscosity. Random-force RF remains a
+      stochastic diagnostic; singular/solvent terms need separate
+      theory.</td>
+      </tr>
+      <tr>
+      <td>Virial</td>
+      <td><code>conservative_virial</code> includes every repulsive pair
+      and correct bridge multiplicity, Gaussian/modified/FENE laws and
+      units. Current HEUR energy unit is <code>C*kBT</code>, stress unit
+      <code>C*kBT/length^d</code>; thermal energy in recorded units is
+      <code>1/C</code>. Stored
+      <code>RF/V=sum(q outer force_on_i)/V</code> has the opposite sign
+      to pressure virial. The legacy repulsive polynomial is consistent
+      here at cutoff 1; invalid FENE extension/coincident radial forces
+      are rejected.</td>
+      </tr>
+      <tr>
+      <td>Transport</td>
+      <td><code>unwrap_positions</code> uses exact counters; unsheared
+      small-step inference requires explicit
+      <code>assume_small_steps=True</code>. Evolving shear requires
+      compatible image counters/per-frame shifts. Sparse wrapped samples
+      cannot identify missed winding.
+      <code>mean_square_displacement</code> uses explicitly unwrapped
+      coordinates, declared time origins and optional integrated affine
+      history. <code>diffusion_fit</code> needs a justified interval and
+      computes slope/(2d); a positive slope alone does not establish a
+      diffusive regime or uncertainty.</td>
+      </tr>
+      <tr>
+      <td>Structure factor</td>
+      <td><code>structure_factor</code> includes the self term; the
+      finite direct q=0 value is N. <code>rdf_to_structure_factor</code>
+      uses the truncated bulk transforms
+      <code>1+4*pi*rho*integral(r^2*(g-1)*sinc(qr/pi))</code> in 3D and
+      <code>1+2*pi*rho*integral(r*(g-1)*J0(qr))</code> in 2D. Their q=0
+      integral limit differs from the finite forward peak.</td>
+      </tr>
+      <tr>
+      <td>Bell diagnostic</td>
+      <td><code>bell_factor</code> is the selected Gaussian bridge
+      expectation <code>mean(exp(d*alpha^2*r*lcap))</code>, not an
+      automatically established rate or MC probability.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>For positional RDF/directional/planar pair density and
+      coordination, use <code>bdmc.analysis</code> with its explicit
+      dimension, shell, density and finite-N/bulk normalization
+      contracts. A count→g→coordination round trip checks internal
+      normalization; an independent geometry/count example is needed for
+      an independent oracle. The structural gradient-first shear
+      convention and Euclidean nearest image agree in the
+      half-shortest-box radial domain and can differ farther into a skew
+      cell.</p>
+      <p>Use the declared observables for a concrete dataset and follow
+      the <a href="VALIDATION.html">diagnostic procedure</a> when results
+      disagree.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

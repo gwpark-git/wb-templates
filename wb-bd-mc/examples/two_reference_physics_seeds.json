@@ -1,0 +1,8 @@
+{
+  "schema": "bdmc.two-reference-physics-seeds.v1",
+  "purpose": "Independent physical validation; excluded from ML training and tuning",
+  "hookean": [931001, 931019, 931033, 931051],
+  "fene": [932003, 932021, 932039, 932057],
+  "repulsive": [933007, 933023, 933041, 933059, 933077, 933097, 933113, 933137],
+  "rule": "Same manifest at both time steps; no reseeding/retry. Equal seeds with different dt do not imply identical paths."
+}

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>wb-python interface preset</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../index.html">wb-templates</a>
+      <a href="README.html">Documentation</a>
+      <a data-source-link href="wb-python-preset.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#wb-python-interface-preset"
+id="toc-wb-python-interface-preset">wb-python interface preset</a>
+<ul>
+<li><a href="#jupyter-integration-in-wb-applications"
+id="toc-jupyter-integration-in-wb-applications">Jupyter integration in
+wb-applications</a></li>
+<li><a href="#author-and-project-information"
+id="toc-author-and-project-information">Author and project
+information</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section id="wb-python-interface-preset" class="level1">
+      <h1>wb-python interface preset</h1>
+      <p><a href="#ai-assistance">AI-generated text</a></p>
+      <p><a href="../wb-python/README.html">Complete wb-python manual and
+      reference</a></p>
+      <p>The <code>wb-python</code> preset gives Python scripts access
+      to selected Workbench operations. It provides a reusable
+      integration base for future <code>wb-applications</code> packages
+      that need to work with profiles and native threads without
+      building a new session registry.</p>
+      <table>
+      <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Script task</th>
+      <th>Preset interface</th>
+      <th>Scope</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Inspect Session Profiles</td>
+      <td><code>ProfileAccess.list()</code> uses the existing
+      workspace’s approved Profile helper.</td>
+      <td>Read metadata for authorized profiles. Access to the helper
+      and workspace comes from the local operator.</td>
+      </tr>
+      <tr>
+      <td>Reuse an existing conversation</td>
+      <td><code>Workbench.attach(..., resume=False)</code> checks a
+      selected profile and native thread reference.</td>
+      <td>Attachment can be read-only. Explicit resume and request
+      submission use the configured local runtime.</td>
+      </tr>
+      <tr>
+      <td>Select an Agent Profile for a task</td>
+      <td><code>Workbench.create_session(profile, agent_profile, task)</code>
+      uses the configured local bootstrap.</td>
+      <td>Use an explicitly selected existing Agent Profile. This
+      operation can start a native session and requires the configured
+      bootstrap and the operator’s authorization.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>A <strong>Session Profile</strong> groups work and recovery
+      records in a workspace. An <strong>Agent Profile</strong> supplies
+      the persona and invocation settings for an agent. Both stay under
+      the existing Workbench lifecycle. Returned code and messages are
+      available for inspection as text.</p>
+      <p>The maintained preset lives in <code>wb-templates</code> and is
+      planned for an independent release. This collection includes the
+      manual, API reference and a worked readback guide. For execution,
+      obtain the full runtime separately and follow the Sandbox setup in
+      the <a href="../wb-python/docs/READER_GUIDE.html">Reader Guide</a>.
+      <code>wb-client</code> is a separate project for Host-side access
+      and its own release.</p>
+      <section id="jupyter-integration-in-wb-applications"
+      class="level2">
+      <h2>Jupyter integration in wb-applications</h2>
+      <p><code>wb-applications</code> owns the separate
+      <code>wb-jupyter</code> package. It carries its own reader’s
+      guide, dependency declarations, tests and clean first-use
+      notebook. Select it when a workflow needs the IPython
+      <code>%wb</code> and <code>%%wb</code> commands. These commands
+      use a configured <code>wb-client</code> to select an existing
+      Profile and Thread, submit explicit requests, and inspect the
+      result. Inside the Sandbox, the configured Client can use
+      <code>wb-python</code>’s local transport.</p>
+      <p>The notebook starts in an unconfigured mode. Reviewing returned
+      text and inserting an unexecuted cell are distinct actions in the
+      supported Lab/Kernel configuration.</p>
+      <p>A standalone release of <code>wb-jupyter</code> is under
+      consideration. For most Host-facing wb-applications packages, the
+      release plan is individual distribution after security review.</p>
+      <p><a href="examples/python-package/preview.html">Read a retained
+      Workbench request from a Python script</a></p>
+      <p><a href="README.html#documentation-families">Python package guide
+      source and other documentation formats</a></p>
+      <p><a href="collection-guide/report.html">Collection guide and
+      functional reference</a></p>
+      </section>
+      <section id="author-and-project-information" class="level2">
+      <h2>Author and project information</h2>
+      <p><strong>Author and Project Director:</strong> Gunwoo Park.</p>
+      <p>Project overview: <a
+      href="https://github.com/gwpark-git/agentic-workbench-knowledge"
+      class="uri">https://github.com/gwpark-git/agentic-workbench-knowledge</a><br />
+      wb-templates repository (planned): <a
+      href="https://github.com/gwpark-git/wb-templates"
+      class="uri">https://github.com/gwpark-git/wb-templates</a></p>
+      <section id="ai-assistance" class="level3">
+      <h3>AI assistance</h3>
+      <p>OpenAI Codex assisted with drafting and editing this
+      documentation under Gunwoo Park’s direction.</p>
+      </section>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

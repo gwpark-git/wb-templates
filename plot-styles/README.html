@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>wb plot-styles</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../index.html">wb-templates</a>
+      <a href="../documentation/README.html">Documentation</a>
+      <a data-source-link href="README.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#wb-plot-styles" id="toc-wb-plot-styles">wb
+plot-styles</a></li>
+</ul></nav>
+    <main>
+      <section id="wb-plot-styles" class="level1">
+      <h1>wb plot-styles</h1>
+      <p>One reusable personal Matplotlib style, with
+      <strong>color</strong> and <strong>monochrome</strong> modes. Both
+      modes share geometry, typography, line widths and inward ticks.
+      Source author/year labels belong to provenance, not to style
+      selection.</p>
+      <pre class="python"><code>import matplotlib.pyplot as plt
+from wb_plot_styles import style_context
+
+with style_context(color_mode=&quot;monochrome&quot;) as rendering:
+    fig, ax = plt.subplots(figsize=rendering[&quot;defaults&quot;][&quot;figsize&quot;])
+    ax.plot([0, 1], [0, 1], marker=&quot;o&quot;, label=&quot;A&quot;)
+    ax.plot([0, 1], [1, 0], marker=&quot;s&quot;, label=&quot;B&quot;)
+    ax.set(xlabel=&quot;x&quot;, ylabel=&quot;y&quot;)
+    ax.legend()
+    fig.savefig(&quot;figure.png&quot;, dpi=rendering[&quot;defaults&quot;][&quot;dpi&quot;], bbox_inches=&quot;tight&quot;)</code></pre>
+      <p><code>style_context()</code> defaults to
+      <code>color_mode="color"</code> and the common
+      <code>personal</code> style. Color uses authentic batlow colors.
+      Monochrome uses black and cycles solid, dashed, dash-dot and
+      dotted lines; callers select markers/fills explicitly. A mode
+      supplies defaults: explicit artist colors/styles still win.
+      <code>plot_defaults()</code> returns size/export defaults. For
+      example,
+      <code>style_context(overrides={"markersize": 10}, color_mode="color")</code>
+      changes marker size. Caller settings are restored on exit,
+      including after an exception.</p>
+      <p>The retained common baseline is 6×6 inches, 2.5 pt lines, 15 pt
+      labels/ticks, inward ticks and batlow .2/.7. The 300 dpi export
+      setting was added explicitly; it was not recovered from original
+      scripts. This is a reusable default selected from the researcher’s
+      helpers, not a claim that every historical figure matched.</p>
+      <p>Version 0.2.0 removes author/year selectors and aliases.
+      Earlier scripts that explicitly selected an edition need migration
+      to the common style plus the desired color mode and explicit size
+      overrides. Python package/import names stay
+      <code>wb-plot-styles</code> / <code>wb_plot_styles</code>. No
+      plotting companion or agent is required.</p>
+      <p>Install this child with Python 3.10+, NumPy 1.24+, Matplotlib
+      3.6+ and cmcrameri 1.10+ in the chosen environment. Then, from an
+      independent copy:</p>
+      <pre class="sh"><code>python3 -m pip install .
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+PYTHONDONTWRITEBYTECODE=1 python3 examples/render_examples.py --output /tmp/wb-style-demos</code></pre>
+      <p>The output directory must be new. Synthetic examples show both
+      color modes, vertically merged axes, multiple symbols per legend
+      entry and a matrix legend. They do not reproduce scientific
+      calculations. For CSV parsing use the separate
+      <code>wb-scientific-io</code> adapter. Data meaning, units,
+      transformations, scales and axis ranges remain explicit standard
+      Matplotlib/user choices.</p>
+      <p><a href="docs/DEVELOPER.html">Developer/API</a> / <a
+      href="provenance.json">Provenance</a> / <a
+      href="NOTICE.html">Attribution</a> / <a href="LICENSE">MIT
+      license</a></p>
+      <p>Project-owned style and adaptations use the collection MIT
+      grant. The Matplotlib and cmcrameri notices carry their upstream
+      terms.</p>
+      <p>Gunwoo Park authored the original scripts and style and
+      directed the reusable adaptation.</p>
+      <p><a href="REFERENCES.html">Style/paper and batlow references</a>.
+      The actual checked cmcrameri1.10 MIT notice is retained in <a
+      href="THIRD_PARTY_NOTICES/cmcrameri-1.10-LICENSE.txt">THIRD_PARTY_NOTICES</a>.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

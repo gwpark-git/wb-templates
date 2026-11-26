@@ -1,0 +1,73 @@
+{
+  "schema": "wb.templates.catalog.v1",
+  "name": "wb-templates",
+  "version": "0.5.0",
+  "templates": [
+    {
+      "id": "plot-styles",
+      "path": "plot-styles",
+      "entry": "README.md",
+      "rights": "MIT for project-owned plotting source; retained third-party notices",
+      "version": "0.2.0",
+      "style": "personal",
+      "color_modes": [
+        "color",
+        "monochrome"
+      ]
+    },
+    {
+      "id": "wb-style",
+      "path": "wb-style",
+      "entry": "README.md",
+      "rights": "MIT for project-owned plotting source; retained third-party notices",
+      "python_import": "wb_style",
+      "version": "0.2.0"
+    },
+    {
+      "id": "scientific-io",
+      "path": "scientific-io",
+      "entry": "README.md",
+      "rights": "See the package LICENSE and NOTICE.md."
+    },
+    {
+      "id": "bd-mc",
+      "path": "wb-bd-mc",
+      "entry": "README.md",
+      "rights": "See the package LICENSE and NOTICE.md."
+    },
+    {
+      "id": "documentation-quarto",
+      "path": "documentation/examples/quarto-comparison",
+      "entry": "README.md",
+      "rights": "MIT for first-party sources; renderer library notices accompany built HTML."
+    },
+    {
+      "id": "wb-python",
+      "path": "wb-python",
+      "entry": "README.md",
+      "kind": "documentation",
+      "rights": "Collection MIT for the authored documentation."
+    },
+    {
+      "id": "mbla-cpp",
+      "path": "wb-mbla",
+      "entry": "README.md",
+      "shared_license_copy": "LICENSE.NEW",
+      "rights": "See LICENSE and NOTICE. Inherited scientific source and fixtures have separate release terms."
+    },
+    {
+      "id": "mbla-cpp-modern-lv1",
+      "path": "wb-mbla/modern-lv1",
+      "entry": "README.md",
+      "shared_license_copy": "LICENSE.NEW",
+      "rights": "See LICENSE and NOTICE. Inherited scientific source and fixtures have separate release terms."
+    },
+    {
+      "id": "mbla-cpp-modern-lv2",
+      "path": "wb-mbla/modern-lv2",
+      "entry": "README.md",
+      "shared_license_copy": "LICENSE.NEW",
+      "rights": "See LICENSE and NOTICE. Inherited scientific source and fixtures have separate release terms."
+    }
+  ]
+}

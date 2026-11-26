@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "Please cite the original repository and identify this AI-modulated derivative's exact version/commit. The derivative is incompletely validated and does not replace the original source."
+type: software
+title: AI_modulated_bd_mc
+version: 0.1.0
+authors:
+  - family-names: Park
+    given-names: Gunwoo
+abstract: "A modernization of dynamics_of_networks_and_colloids under the original researcher's direction. Basic and selected tests do not establish exhaustive simulation, unit-test or regression coverage."
+references:
+  - type: software
+    title: dynamics_of_networks_and_colloids
+    authors:
+      - family-names: Park
+        given-names: Gun Woo
+    repository-code: "https://github.com/gwpark-git/dynamics_of_networks_and_colloids.git"
+    commit: 105fd3c96cd289b2f502ace04a332a2555e3307e
+    notes: "Original project; recorded source branch colloidal_dynamics. This revision is not authenticated as the original doctoral or publication-used snapshot."

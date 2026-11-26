@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>Read a saved Workbench request</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../../index.html">wb-templates</a>
+      <a href="../../README.html">Documentation</a>
+      <a data-source-link href="guide.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#purpose" id="toc-purpose">Purpose</a></li>
+<li><a href="#installation" id="toc-installation">Installation</a></li>
+<li><a href="#first-use" id="toc-first-use">First useful run</a></li>
+<li><a href="#api-reference" id="toc-api-reference">API
+reference</a></li>
+<li><a href="#troubleshooting" id="toc-troubleshooting">Troubleshooting
+and scope</a></li>
+<li><a href="#author-and-project-information"
+id="toc-author-and-project-information">Author and project
+information</a></li>
+</ul></nav>
+    <main>
+      <h1>Read a saved Workbench request</h1>
+      <p><a href="#ai-assistance">AI-generated text</a></p>
+      <section id="purpose" class="level2">
+      <h2>Purpose</h2>
+      <p>Your research script has the receipt from an earlier Workbench
+      request. Use <code>wb-python</code> to attach to the selected
+      existing Thread from an ordinary Python process, read that
+      request’s status, and retrieve its result when complete. Keeping
+      the original receipt lets the script identify the exact request on
+      subsequent runs.</p>
+      <p>A Session Profile groups a workspace’s work and recovery
+      records. A Thread identifies one conversation within that Profile.
+      A receipt identifies the specific request inside the Thread.</p>
+      </section>
+      <section id="installation" class="level2">
+      <h2>Installation</h2>
+      <p>Read or render this guide without a Workbench runtime. To run
+      the example, use Python 3.11 or later in a configured Sandbox and
+      a writable directory. Set <code>WB_PYTHON_SOURCE</code> to a
+      complete wb-python source directory or wheel supplied by the
+      operator. In a full development checkout you can use its
+      <code>wb-python/</code> source package. The public
+      <code>wb-python/</code> entry contains the manual and references.
+      With pip available, install the runtime into a fresh virtual
+      environment:</p>
+      <pre class="sh"><code>python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install &quot;$WB_PYTHON_SOURCE&quot;</code></pre>
+      <p>Set the following environment variables from the existing
+      operator and request records. Keep the actual values in your own
+      environment.</p>
+      <table>
+      <colgroup>
+      <col style="width: 50%" />
+      <col style="width: 50%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Setting</th>
+      <th>Value to supply</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td><code>WB_WORKSPACE</code>, <code>WB_HELPER</code>,
+      <code>WB_HELPER_SHA256</code></td>
+      <td>Configured workspace root, installed Session Protocols helper
+      path, and its reviewed SHA-256 pin</td>
+      </tr>
+      <tr>
+      <td><code>WB_PROFILE</code>, <code>WB_THREAD</code></td>
+      <td>Selected Session Profile name and the exact admitted Thread
+      already confirmed for it</td>
+      </tr>
+      <tr>
+      <td><code>WB_SOCKET</code></td>
+      <td>Existing local socket for an operator-selected supported
+      native runtime (Codex 0.171.0 or 0.172.0)</td>
+      </tr>
+      <tr>
+      <td><code>WB_RECEIPTS</code>, <code>WB_RECEIPT</code></td>
+      <td>The original private SDK receipt directory and the
+      64-character receipt hash saved with the request</td>
+      </tr>
+      </tbody>
+      </table>
+      </section>
+      <section id="first-use" class="level2">
+      <h2>First useful run</h2>
+      <p>Discover the existing Profile names before selecting
+      <code>WB_PROFILE</code> and its confirmed
+      <code>WB_THREAD</code>:</p>
+      <pre class="sh"><code>wb-python --workspace &quot;$WB_WORKSPACE&quot; --helper &quot;$WB_HELPER&quot; \
+  --helper-sha256 &quot;$WB_HELPER_SHA256&quot; profiles</code></pre>
+      <p>Save the following as <code>read_retained_request.py</code> and
+      run <code>python read_retained_request.py</code> in the same
+      environment.</p>
+      <pre class="python"><code>import json
+import os
+
+from wb_python import ProfileAccess, ReceiptLog, Workbench
+
+profile = os.environ[&quot;WB_PROFILE&quot;]
+thread = os.environ[&quot;WB_THREAD&quot;]
+profiles = ProfileAccess(
+    os.environ[&quot;WB_WORKSPACE&quot;], os.environ[&quot;WB_HELPER&quot;],
+    os.environ[&quot;WB_HELPER_SHA256&quot;],
+)
+reference = ReceiptLog(os.environ[&quot;WB_RECEIPTS&quot;]).read(os.environ[&quot;WB_RECEIPT&quot;])
+
+with Workbench(profiles, os.environ[&quot;WB_SOCKET&quot;], allowed_threads=(thread,),
+               enabled_operations=(&quot;read&quot;,)) as workbench:
+    selected = workbench.attach(profile, thread, resume=False)
+    if reference.session != selected:
+        raise SystemExit(&quot;Receipt belongs to a different Session reference.&quot;)
+
+    snapshot = workbench.status(reference)
+    summary = {&quot;state&quot;: snapshot[&quot;state&quot;]}
+    if snapshot[&quot;state&quot;] == &quot;completed&quot;:
+        result = workbench.result(reference)
+        summary.update(message_count=len(result[&quot;messages&quot;]),
+                       code_execution=result[&quot;code_execution&quot;])
+    print(json.dumps(summary))</code></pre>
+      <p>For a completed request with one response, the script prints
+      <code>{"state": "completed", "message_count": 1, "code_execution": "inert_text_only"}</code>.
+      The message count depends on the original request.
+      <code>result["messages"]</code> holds the text for the calling
+      script to review. The example prints only the count and uses
+      native read operations.</p>
+      </section>
+      <section id="api-reference" class="level2">
+      <h2>API reference</h2>
+      <table>
+      <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Callable</th>
+      <th>Input</th>
+      <th>Result</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td><code>ProfileAccess(workspace, helper_path, helper_sha256)</code></td>
+      <td>Operator-selected configuration and verified helper pin</td>
+      <td>Access to existing Session Profiles</td>
+      </tr>
+      <tr>
+      <td><code>ReceiptLog(directory).read(receipt_hash)</code></td>
+      <td>Original private SDK receipt store and hash</td>
+      <td>The retained request reference</td>
+      </tr>
+      <tr>
+      <td><code>Workbench.attach(profile, thread_id, resume=False)</code></td>
+      <td>Chosen existing Profile and admitted Thread</td>
+      <td>Validated Session reference</td>
+      </tr>
+      <tr>
+      <td><code>Workbench.status(reference)</code> and
+      <code>Workbench.result(reference)</code></td>
+      <td>Exact retained request reference</td>
+      <td>Current request state and its terminal result when
+      available</td>
+      </tr>
+      </tbody>
+      </table>
+      </section>
+      <section id="troubleshooting" class="level2">
+      <h2>Troubleshooting and scope</h2>
+      <p>If the state is <code>queued</code>, <code>inProgress</code>,
+      or <code>unresolved</code>, retain the original receipt and check
+      it later. <code>failed</code> and <code>interrupted</code>
+      identify terminal outcomes. If the binding or receipt differs,
+      confirm the intended Profile, Thread and receipt with the operator
+      before running again. The rendered example documents this
+      configured workflow. It contains no workspace or receipt data.</p>
+      </section>
+      <section id="author-and-project-information" class="level2">
+      <h2>Author and project information</h2>
+      <p>Gunwoo Park directs Agentic Workbench and its
+      <code>wb-templates</code> collection.</p>
+      <p>Project overview: <a
+      href="https://github.com/gwpark-git/agentic-workbench-knowledge"
+      class="uri">https://github.com/gwpark-git/agentic-workbench-knowledge</a><br />
+      wb-templates repository (planned): <a
+      href="https://github.com/gwpark-git/wb-templates"
+      class="uri">https://github.com/gwpark-git/wb-templates</a></p>
+      <section id="ai-assistance" class="level3">
+      <h3>AI assistance</h3>
+      <p>OpenAI Codex assisted with drafting this example under Gunwoo
+      Park’s direction.</p>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

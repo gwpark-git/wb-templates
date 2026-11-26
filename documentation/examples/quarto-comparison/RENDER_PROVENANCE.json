@@ -1,0 +1,46 @@
+{
+  "document": "wb-templates-documentation",
+  "edition": "2026-11-26",
+  "quarto": "1.8.26",
+  "format_verification": {
+    "pdf_pages": 6,
+    "local_pdf_links": 4,
+    "reveal_slides": 6,
+    "project_overview_links": 1,
+    "package_repository_links": 1
+  },
+  "mode": "documentation-only",
+  "example_data": "synthetic",
+  "figure_style": "wb_plot_styles personal / monochrome / Mathtext; red candidate",
+  "project_director": "Gunwoo Park",
+  "render_command": "sh render.sh /path/to/new-build-directory",
+  "source_sha256": {
+    "LICENSE": "1757fa550d559f842269318f383b4e3e2d9a4d5174183087618bbdd4016d89c0",
+    "README.md": "52b0b98ccf0690f3ea4cfa4b4465422fd3fb6ad342039f804aa2966363919db9",
+    "_quarto.yml": "8ccbd5c36821835a2bae0441fa14ffccf36ec8d25860314a0328e42d62606df3",
+    "report.qmd": "c0e575a96188e4c56fdc0381a18422c404f628f9039678a148552757f7b74743",
+    "slides.qmd": "a13dc360f1bfb283a8506c266200cbd5b357ba6812c865fbd9064e2b96a8385c",
+    "slide-navigation.html": "b0237bc724b9ffc284852cc62c1ae6528af02c92f7b617c77f7073ff45ca5614",
+    "title-slide.html": "539fbbf7011732c79a8cea01a4a102ea7aa67aed44f31c398baac637d304b048",
+    "render.sh": "5e79ad5b80d2e4d363efccb5eb83c4b732b913a0f21d56342df18f85662f1f3d",
+    "_guide.md": "60c7acb783fd7024ebf067d192ca4f82a1b69f7ff7afb8110a90121596e509b7",
+    "_methods.md": "11741891236dc0c7d944397283c3482610f5770c0549682983abfe99b44cec83",
+    "_results.md": "66f662ccef866f02474ae828221eb800fa0c1ada61db4bb4b32820e84db93870",
+    "_code.md": "9463eec3c922c1018a1203d58ce04841ee89b1d245b14c1e9fcb4c465c6958ca",
+    "_review.md": "5c6f6506952081bdcd18ad9df1a32c809fac185ea77306dc4dabffbf98dd0338",
+    "models/reference.py": "f3e3891c46a46e86ecee059a7db1ed6498814eac4ba404b0025217826bd00be6",
+    "models/candidate.py": "efe527600938fa8d9708916c666f5f4d4702b043a25cf25595b3fa143cd39fed",
+    "tools/make_example.py": "fd12c0f17234127d59d2a9ac576c168128a9898ebb8747de10cd804f134fe6ef",
+    "tools/portable_pdf.py": "b530901caf563672d49ae794b8077e3d82648051972bb40642759fef0513c05f",
+    "data/comparison.csv": "7c6bd982f613375c9e2d1e491cc987f40abec1586d6604c3d909956bebc03620",
+    "figures/comparison.png": "ee6f49784143beb13094328a72c0e49dbcfaf3d37331c82ed53342c536a5cc4c",
+    "figures/comparison.pdf": "b977120be8844a7146191432a6c0506762575e71bb6be2de7d2e159c9c65f22a",
+    "THIRD_PARTY_NOTICES.md": "c4f87528ff600b9415310bc743897748a7187381c021d96f10bef3ef9d1f10df",
+    "_publication-info.md": "9ffba3bba7910a72eed4cb9de7a879c5f21066904ecc377a78ab2c68fdede705"
+  },
+  "output_sha256": {
+    "report.html": "7019fc5e1ba5dace1cc2fec107c29d4fb78e0291c0b5f4ffc42d2137b268099e",
+    "slides.html": "a543a8dc932a50fbf48e0492c70d94fb950c1b3aff952fc5cdda36004542e2d7",
+    "slides.pdf": "995dd04a0bd03636fc5616da5022e25bf3d8b49ece64ac525a55af4a1d606897"
+  }
+}

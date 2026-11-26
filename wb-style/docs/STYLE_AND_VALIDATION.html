@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>wb-style — appearance and neutral-data contract</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="STYLE_AND_VALIDATION.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#source-and-responsibility"
+id="toc-source-and-responsibility">Source and responsibility</a></li>
+<li><a href="#presentation" id="toc-presentation">Presentation</a></li>
+<li><a href="#neutral-example-and-verification"
+id="toc-neutral-example-and-verification">Neutral example and
+verification</a></li>
+<li><a href="#implementation-and-example-units"
+id="toc-implementation-and-example-units">Implementation and example
+units</a></li>
+<li><a href="#configuration-and-data-fields"
+id="toc-configuration-and-data-fields">Configuration and data
+fields</a></li>
+</ul></nav>
+    <main>
+      <h1>wb-style — appearance and neutral-data contract</h1>
+      <section id="source-and-responsibility" class="level1">
+      <h1>Source and responsibility</h1>
+      <p>The original paper style and its Python scripts are
+      researcher-authored by Gunwoo Park. The paper citation in
+      CITATION.cff identifies that source. No personal archive locations
+      or original dataset schema are required.</p>
+      </section>
+      <section id="presentation" class="level1">
+      <h1>Presentation</h1>
+      <p>wb<sub>style</sub>/style.json owns inward ticks,1.5pt spines
+      and explicit dash tuples. Plot defaults are8x6in,3pt lines,8pt
+      hollow markers with1.5pt edges,20pt labels. No scientific axis
+      ranges, units or transformations are style defaults. Arial falls
+      back to DejaVu Sans; portable mode uses Mathtext, existing TeX is
+      opt-in. The context restores caller settings even after
+      exceptions.</p>
+      </section>
+      <section id="neutral-example-and-verification" class="level1">
+      <h1>Neutral example and verification</h1>
+      <p>The exact CSV header is
+      x,series<sub>a</sub>,series<sub>b</sub>. The default creates81
+      deterministic rows: x on[0,4], exp(-x),
+      and0.7exp(-x/2)+0.1cos(2pi*x). These are synthetic scalar
+      illustrations, unrelated to any paper data or model. Explicit CSV
+      input requires finite numeric rows with the same three columns.
+      Values and row order are retained. Comparison markers select
+      actual array coordinates, including the last point;
+      nonuniform-grid tests check this independently. Invalid inputs and
+      existing output directories are refused before rendering output.
+      PNG/PDF/metadata stay outside maintained source. Tests cover
+      actual artists, state restoration and data boundaries. These
+      checks establish appearance/data handling, not solver validity,
+      pixel identity or paper-figure reproduction. References/rights
+      remain separate.</p>
+      </section>
+      <section id="implementation-and-example-units" class="level1">
+      <h1>Implementation and example units</h1>
+      <table>
+      <thead>
+      <tr>
+      <th>Source</th>
+      <th>Unit</th>
+      <th>Contract</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>wb<sub>style</sub>/_<sub>init</sub>__.py</td>
+      <td>configuration</td>
+      <td>Read a fresh editable JSON mapping from the installed
+      resource.</td>
+      </tr>
+      <tr>
+      <td>wb<sub>style</sub>/_<sub>init</sub>__.py</td>
+      <td>dash<sub>pattern</sub></td>
+      <td>Resolve one name to a zero-offset point-length tuple. An
+      unknown name raises KeyError.</td>
+      </tr>
+      <tr>
+      <td>wb<sub>style</sub>/_<sub>init</sub>__.py</td>
+      <td>font<sub>selection</sub></td>
+      <td>Resolve the requested font locally and report
+      requested/selected names and fallback.</td>
+      </tr>
+      <tr>
+      <td>wb<sub>style</sub>/_<sub>init</sub>__.py</td>
+      <td>style<sub>context</sub></td>
+      <td>Use Mathtext by default. Explicit TeX requires latex/mathrsfs
+      and uses the local executable. Restore rcParams on exit.</td>
+      </tr>
+      <tr>
+      <td>examples/plot<sub>example</sub>.py</td>
+      <td>synthetic<sub>series</sub>, load<sub>series</sub></td>
+      <td>Produce the deterministic example or validate an explicitly
+      supplied UTF-8 CSV. Preserve finite numeric values and row
+      order.</td>
+      </tr>
+      <tr>
+      <td>examples/plot<sub>example</sub>.py</td>
+      <td>marker<sub>indices</sub></td>
+      <td>Return sorted unique indices with constant index stride and
+      the final point.</td>
+      </tr>
+      <tr>
+      <td>examples/plot<sub>example</sub>.py</td>
+      <td>render</td>
+      <td>Validate data and output boundary before writing. Render
+      paired artifacts and report a CSV hash. Close the figure after
+      success or error.</td>
+      </tr>
+      <tr>
+      <td>examples/plot<sub>example</sub>.py</td>
+      <td>main</td>
+      <td>Parse explicit file, fresh output path and opt-in TeX
+      arguments. Print the rendering record.</td>
+      </tr>
+      <tr>
+      <td>tests/test<sub>style</sub>.py</td>
+      <td>StyleBehavior</td>
+      <td>Check restoration, actual artists, configuration freshness,
+      nonuniform data and CSV roundtrip, invalid inputs, fresh output
+      and TeX refusal. Read method docstrings for each oracle.</td>
+      </tr>
+      </tbody>
+      </table>
+      </section>
+      <section id="configuration-and-data-fields" class="level1">
+      <h1>Configuration and data fields</h1>
+      <p><code class="verbatim">wb_style/style.json</code> is UTF-8
+      JSON. <code class="verbatim">rc_params</code> holds tick settings
+      and axes linewidth in points plus the font family. <code
+      class="verbatim">original_font</code> and <code
+      class="verbatim">portable_fallback_font</code> are font-name
+      strings. <code class="verbatim">plot_defaults</code> holds <code
+      class="verbatim">figsize_inches</code> as width then height,
+      numeric <code class="verbatim">*_pt</code> values in points and
+      Matplotlib color strings for lines and marker faces. <code
+      class="verbatim">dash_patterns</code> maps a name to an ordered
+      sequence of alternating on/off lengths in points. For example,
+      <code class="verbatim">dashdotdotted</code> is <code
+      class="verbatim">[3,5,1,5,1,5]</code> with API offset zero.</p>
+      <p>Compared with the Matplotlib v3.10.7 gallery, this package
+      retains seven of the twelve shared names unchanged. Its local
+      lengths for <code class="verbatim">dotted</code>, <code
+      class="verbatim">loosely dotted</code>, <code
+      class="verbatim">loosely dashed</code>, <code
+      class="verbatim">loosely dashdotted</code> and <code
+      class="verbatim">loosely dashdotdotted</code> are respectively
+      <code class="verbatim">[1,1]</code>, <code
+      class="verbatim">[1,6]</code>, <code
+      class="verbatim">[5,6]</code>, <code
+      class="verbatim">[3,6,1,6]</code> and <code
+      class="verbatim">[3,6,1,6,1,6]</code>. <code
+      class="verbatim">-..</code>, <code class="verbatim">-...</code>
+      and <code class="verbatim">:</code> are local lookup aliases. See
+      <a href="../REFERENCES.html">Matplotlib source and notice</a>.</p>
+      <p><code class="verbatim">pyproject.toml</code> defines runtime
+      requirements, packaging and license files. <code
+      class="verbatim">provenance.json</code> identifies the style,
+      article, synthetic example, source license and gallery provenance.
+      <code class="verbatim">series.csv</code> contains the ordered
+      three columns <code class="verbatim">x</code>, <code
+      class="verbatim">series_a</code> and <code
+      class="verbatim">series_b</code> as finite numbers. Synthetic
+      values are unitless. For an external CSV, its caller supplies
+      units separately. There are no missing-value sentinels. Output
+      retains 17 significant digits. <code
+      class="verbatim">render.json</code> records <code
+      class="verbatim">data_origin</code>, <code
+      class="verbatim">rows</code>, ordered <code
+      class="verbatim">columns</code>, <code
+      class="verbatim">series_count</code>, <code
+      class="verbatim">row_order_and_values_transformed</code>, the
+      font/text-engine <code class="verbatim">rendering</code> object,
+      <code class="verbatim">scientific_simulation_rerun</code>, <code
+      class="verbatim">pixel_equivalence</code> and the <code
+      class="verbatim">csv_sha256</code> digest of the exact exported
+      bytes.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

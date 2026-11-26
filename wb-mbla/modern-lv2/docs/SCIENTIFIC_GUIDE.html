@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>mBLA C++ — scientific contract, configuration and
+output</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../../index.html">wb-templates</a>
+      <a href="../../../documentation/README.html">Documentation</a>
+      <a data-source-link href="SCIENTIFIC_GUIDE.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#scope-and-unchanged-model"
+id="toc-scope-and-unchanged-model">Scope and unchanged model</a></li>
+<li><a href="#fixed-point-method-and-applicability"
+id="toc-fixed-point-method-and-applicability">Fixed-point method and
+applicability</a></li>
+<li><a href="#responsibilities-and-source-landmarks"
+id="toc-responsibilities-and-source-landmarks">Responsibilities and
+source landmarks</a></li>
+<li><a href="#units-and-scaling" id="toc-units-and-scaling">Units and
+scaling</a></li>
+<li><a href="#configuration-grammar-and-supported-controls"
+id="toc-configuration-grammar-and-supported-controls">Configuration
+grammar and supported controls</a></li>
+<li><a href="#constitutive-choices-and-tables"
+id="toc-constitutive-choices-and-tables">Constitutive choices and
+tables</a>
+<ul>
+<li><a href="#runtime-equilibrium-transport"
+id="toc-runtime-equilibrium-transport">Runtime equilibrium
+transport</a></li>
+</ul></li>
+<li><a href="#ten-column-inherited-output"
+id="toc-ten-column-inherited-output">Ten-column inherited
+output</a></li>
+<li><a href="#documentation-provenance"
+id="toc-documentation-provenance">Documentation provenance</a></li>
+</ul></nav>
+    <main>
+      <h1>mBLA C++ — scientific contract, configuration and output</h1>
+      <section id="scope-and-unchanged-model" class="level1">
+      <h1>Scope and unchanged model</h1>
+      <p>The source is the researcher's 2026 JCP C++ mBLA edition. It
+      models steady cross-flow ultrafiltration in a cylindrical hollow
+      fibre, with an axial pressure solve, transverse matched
+      concentration profiles, concentration/shear-dependent transport
+      closures and a thresholded cake hydraulic-resistance extension.
+      This template changes engineering interfaces and numerical failure
+      reporting; it does not adopt a new physical closure. The public
+      Python model lacks the cake extension. Agreement with Python is
+      meaningful only for matched non-cake conditions, closure editions
+      and numerical accuracy.</p>
+      <p>The maintained source manifest identifies the 21 copied .cpp/.h
+      files by portable source ID and SHA-256. Original datasets,
+      backups, object files, plotting scripts and manuscript material
+      are not part of this template.</p>
+      </section>
+      <section id="fixed-point-method-and-applicability" class="level1">
+      <h1>Fixed-point method and applicability</h1>
+      <p>The inherited history-safety predicate, its ordering before
+      relaxation/clamping, resistance persistence and stopping semantics
+      are explained in <a href="FIXED_POINT_METHOD.html">the fixed-point
+      method owner</a>. The researcher identifies physically
+      non-monotonic wall-concentration regions as outside this method's
+      present applicability. The code does not automatically validate
+      that physical regime; modernization preserves the safeguard.</p>
+      </section>
+      <section id="responsibilities-and-source-landmarks"
+      class="level1">
+      <h1>Responsibilities and source landmarks</h1>
+      <table>
+      <thead>
+      <tr>
+      <th>Component</th>
+      <th>Responsibility / extension boundary</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>file<sub>IO</sub></td>
+      <td>Strict key=value parser and setting validation; no input
+      exec</td>
+      </tr>
+      <tr>
+      <td>parameters</td>
+      <td>SI-to-dimensionless scales and inherited boundary
+      conventions</td>
+      </tr>
+      <tr>
+      <td>matrix</td>
+      <td>Vector-owned row-major storage, legacy access interface and
+      GSL LU view</td>
+      </tr>
+      <tr>
+      <td>dispersion<sub>properties</sub></td>
+      <td>Selected analytic closures or declared property tables</td>
+      </tr>
+      <tr>
+      <td>transport<sub>properties*</sub> /
+      osmotic<sub>pressureCS</sub></td>
+      <td>Inherited scientific constitutive equations</td>
+      </tr>
+      <tr>
+      <td>ported<sub>lib</sub></td>
+      <td>Pressure/velocity assembly, transverse RK stepping, flux
+      functional and cake search</td>
+      </tr>
+      <tr>
+      <td>boost<sub>matrix</sub></td>
+      <td>Reusable auxiliary arrays; the name does not mean Boost is a
+      dependency</td>
+      </tr>
+      <tr>
+      <td>calculation<sub>CPprofile</sub></td>
+      <td>Serial case orchestration, fixed-point stopping and
+      output</td>
+      </tr>
+      <tr>
+      <td>tools/inspect<sub>output</sub>.py</td>
+      <td>Strict reader, CSV export and independent printed Darcy/flux
+      diagnostics</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>MATRIX::data remains a non-owning public alias for
+      compatibility with GSL. Do not reassign it, change public
+      dimensions or hold a view across initial(), copy<sub>obj</sub>()
+      or destruction. Copies own independent vector storage; indexing
+      rejects invalid row/column/flat indices. GSL LU overwrites its
+      matrix argument. Unused historical matrix helper APIs are
+      retained, but the tests cover the solver's active subset, not
+      every old printer/diagonalization helper.</p>
+      </section>
+      <section id="units-and-scaling" class="level1">
+      <h1>Units and scaling</h1>
+      <p>Inputs use metres, seconds, kelvin, pascal and volume
+      fractions. R<sub>channel</sub> is channel radius,
+      L<sub>channel</sub> is axial length, a<sub>particle</sub> is
+      excluded-volume radius and gamma=a<sub>H</sub>/a is
+      hydrodynamic/excluded radius ratio. eta0 is Pa s and Lp is m/(Pa
+      s). Pressure-inlet DLP=Pin-Pout; ref<sub>Pout</sub> is absolute
+      outlet pressure.</p>
+      <p>Inherited scales are u0=R<sup>2</sup> DLP/(4 eta0 L), vw0=Lp
+      DTP<sub>HP</sub>, k=4 sqrt(L<sup>2</sup> Lp eta0/R<sup>3</sup>),
+      D0=kT/(6 pi eta0 a<sub>H</sub>), Pi<sub>ast</sub>=kT/Va and Va=4
+      pi a<sup>3</sup>/3. get<sub>Pper</sub> preserves
+      Pper=Pout+DLP/2-ref<sub>DTP</sub>; ref<sub>DTP</sub> is the linear
+      Hagen-Poiseuille reference pressure parameter, not measured
+      suspension mean TMP. The pure-solvent mean pressure applies 2
+      tanh(k/2)/k separately. Velocity-inlet u<sub>inlet</sub> sets the
+      corresponding Hagen-Poiseuille DLP scale; actual Pin can differ
+      after solving the Neumann inlet condition.</p>
+      <p>The GSL physical constant is deliberately unchanged. GSL 2.8
+      supplies k<sub>B</sub>=1.3806504e-23 J/K, rather than the current
+      exact SI value. A library/constant update changes numerical
+      identity and needs a labelled comparison.</p>
+      </section>
+      <section id="configuration-grammar-and-supported-controls"
+      class="level1">
+      <h1>Configuration grammar and supported controls</h1>
+      <p>Each nonempty line is key=value; whitespace and # comments are
+      allowed. N<sub>iter</sub> consumes the complete finite integral
+      numeric value checked by the parser: 2400, 2.4e3 and 0x960 all
+      mean 2400; nonintegral values fail. Duplicate/unknown keys,
+      partially parsed numbers, nonfinite values, missing required
+      fields and unsupported law names fail. Paths are literal
+      filesystem paths relative to the process working directory, not
+      the input file directory; there is no shell expansion. Serial
+      positional inputs run in argument order; a failed case stops the
+      remaining batch.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Required fields</th>
+      <th>Meaning</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>N<sub>iter</sub>, weight</td>
+      <td>Maximum fixed-point iterations; under-relaxation in (0,1]</td>
+      </tr>
+      <tr>
+      <td>Nz, Nr</td>
+      <td>Axial and logarithmic transverse nodes, each &gt;=3</td>
+      </tr>
+      <tr>
+      <td>R<sub>channel</sub>, L<sub>channel</sub>, Lp, eta0, T</td>
+      <td>Positive geometry, permeability, solvent viscosity,
+      temperature</td>
+      </tr>
+      <tr>
+      <td>ref<sub>Pout</sub>, ref<sub>DTP</sub></td>
+      <td>Outlet pressure and positive reference TMP parameter</td>
+      </tr>
+      <tr>
+      <td>DLP or u<sub>inlet</sub></td>
+      <td>Positive inlet scale selected by inlet<sub>BC</sub></td>
+      </tr>
+      <tr>
+      <td>phi<sub>bulk</sub>, phiw<sub>init</sub>,
+      phi<sub>freeze</sub></td>
+      <td>Feed, initial wall concentration and freezing threshold;
+      0&lt;phi<sub>bulk</sub>&lt;phi<sub>freeze</sub>&lt;1</td>
+      </tr>
+      <tr>
+      <td>a<sub>particle</sub>, gamma</td>
+      <td>Positive excluded radius and 0&lt;gamma&lt;=1</td>
+      </tr>
+      <tr>
+      <td>TOL<sub>phiw</sub>, TOL<sub>deltaf</sub></td>
+      <td>Positive inherited fixed-point/search stopping settings</td>
+      </tr>
+      <tr>
+      <td>fcn<sub>DcdivD0</sub>, fcn<sub>etadiveta0</sub>,
+      fcn<sub>Pi</sub></td>
+      <td>Named closure or property-table filename</td>
+      </tr>
+      <tr>
+      <td>fout</td>
+      <td>Main output destination; existing file is overwritten</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Optional inlet<sub>BC</sub> defaults to pressure; velocity is
+      the other supported value. CONT, DETAILED<sub>REPORT</sub> and
+      ACCOUNT<sub>CAKETHICKNESS</sub> default to FALSE and accept only
+      TRUE/FALSE. CONT=TRUE requires FN<sub>CONT</sub>: a finite
+      rectangular table with exactly Nz rows and &gt;=2 columns; column
+      2 initializes the wall concentration. The caller must ensure
+      matching axial coordinates/physical conditions.
+      ACCOUNT<sub>CAKETHICKNESS</sub>=TRUE requires positive
+      membrane<sub>thickness</sub> (metres). Without this flag,
+      resistance is still calculated; geometric cake thickness stays
+      zero. Numerical limits are Nz&lt;=400, Nr&lt;=4000 and
+      N<sub>iter</sub>&lt;=100000. These are finite default bounds, not
+      a performance guarantee; select smaller limits and a time/data
+      budget in a destination.</p>
+      <p>TOL<sub>phiw</sub> is applied to RMS differences of
+      phi<sub>wall</sub>/phi<sub>bulk</sub>, including the fixed inlet
+      (whose increment is zero), even though the inherited log labels it
+      like a relative norm. TOL<sub>deltaf</sub> enters resistance
+      increment/search and relative outlet-resistance stopping. The
+      inherited stopping flag can latch before the mandatory minimum
+      iteration count. Exit 0/MBLA<sub>STATUS</sub>=converged therefore
+      names the inherited stopping event only. Exit
+      3/iteration<sub>limit</sub> means exhausted iterations; output is
+      retained for diagnosis. Invalid input/output (including a failed
+      write, flush or close), nonfinite numerics or a stalled cake
+      search fail with exit 2. Do not equate any exit-0 result with
+      conservation or grid acceptance.</p>
+      </section>
+      <section id="constitutive-choices-and-tables" class="level1">
+      <h1>Constitutive choices and tables</h1>
+      <p>Diffusion supports SPHS/HS (both mapped to the inherited SPHS
+      diffusion), SID and CT (unity). Viscosity supports SPHS, HS, TEST,
+      TEST<sub>EQ</sub> and CT. TEST variants are inherited
+      shear-stress-dependent research options, not separately validated
+      production models. Osmotic pressure supports CS and NO, or a
+      table. The code preserves the source's high-frequency-viscosity
+      expression; it does not replace its multiplication by a published
+      denominator or unify the HS/SPHS variants.</p>
+      <p>A property table has exactly two finite numeric columns, at
+      least three rows, strictly increasing volume fraction, and
+      coverage of [0,phi<sub>freeze</sub>]. Blank lines and # comments
+      are accepted. Diffusion/viscosity ordinates must be positive; they
+      are dimensionless D/D0 and eta/eta0. Osmotic-pressure ordinates
+      are in Pa, then normalized by Pi<sub>ast</sub>. The inherited
+      natural cubic spline caps concentration above
+      phi<sub>freeze</sub>; values below its domain fail. A valid table
+      need not be a physically acceptable constitutive law; cubic
+      interpolation can overshoot.</p>
+      <section id="runtime-equilibrium-transport" class="level2">
+      <h2>Runtime equilibrium transport</h2>
+      <p>An application can link <code
+      class="verbatim">mbla_case_driver</code> and call <code
+      class="verbatim">mbla::run_cases</code> with a caller-owned <code
+      class="verbatim">mbla::EquilibriumTransport</code>. Both transport
+      selectors must be <code class="verbatim">LIVE</code>. The driver
+      supplies the case's freeze fraction and reference Péclet number
+      for provider admission. During the serial solve the provider
+      receives the local volume fraction and returns positive finite
+      collective <code class="verbatim">D_c/D0</code> and relative <code
+      class="verbatim">eta/eta_s</code>. Here the solvent viscosity
+      <code class="verbatim">eta_s</code> is the same scale as the
+      legacy input <code class="verbatim">eta0</code>. The provider owns
+      sampling, interpolation if any, and the supported concentration
+      range. It does not receive a local shear rate or stress because
+      the interface is for local equilibrium closures. Osmotic pressure
+      keeps its independently selected law. An ordinary CLI invocation
+      with LIVE, a partial LIVE selection, or an invalid provider
+      response fails with the existing execution-error exit status. <a
+      href="../src/case_driver.h">Runtime interface</a></p>
+      <p>phi<sub>cake</sub> and porosity are accepted legacy metadata
+      with an explicit warning: the inherited implementation ignores
+      these inputs and fixes phi<sub>cake</sub>=0.64. Changing this
+      behavior requires a separately reviewed physical/model change.</p>
+      </section>
+      </section>
+      <section id="ten-column-inherited-output" class="level1">
+      <h1>Ten-column inherited output</h1>
+      <p>The main file is whitespace-delimited, no header, one axial
+      sample per row, with six digits after the decimal point in
+      scientific notation. Column numbers below are one-based. Do not
+      silently reinterpret column 8 as cake thickness.</p>
+      <table>
+      <thead>
+      <tr>
+      <th>Column</th>
+      <th>Stored quantity</th>
+      <th>Unit / meaning</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>1</td>
+      <td>z</td>
+      <td>m</td>
+      </tr>
+      <tr>
+      <td>2</td>
+      <td>phi<sub>wall</sub></td>
+      <td>volume fraction</td>
+      </tr>
+      <tr>
+      <td>3</td>
+      <td>P</td>
+      <td>Pa</td>
+      </tr>
+      <tr>
+      <td>4</td>
+      <td>v<sub>wall</sub></td>
+      <td>m/s, positive permeation direction</td>
+      </tr>
+      <tr>
+      <td>5</td>
+      <td>u0 times dimensionless axial pressure-gradient factor</td>
+      <td>m/s; not cross-sectional mean velocity</td>
+      </tr>
+      <tr>
+      <td>6</td>
+      <td>osmotic pressure</td>
+      <td>Pa</td>
+      </tr>
+      <tr>
+      <td>7</td>
+      <td>inherited integrated particle-volume flux</td>
+      <td>m<sup>3</sup>/s</td>
+      </tr>
+      <tr>
+      <td>8</td>
+      <td>(Rcake/Rmem) times R<sub>channel</sub></td>
+      <td>m as a mixed-normalization storage convention</td>
+      </tr>
+      <tr>
+      <td>9</td>
+      <td>P-Pper</td>
+      <td>Pa</td>
+      </tr>
+      <tr>
+      <td>10</td>
+      <td>geometric cake thickness/R<sub>channel</sub></td>
+      <td>dimensionless; zero when thickness accounting is disabled</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>Recover Rcake/Rmem by dividing column 8 by the configured
+      radius. Hydraulic permeability is Lp/(1+Rcake/Rmem); thus a useful
+      independently reconstructed printed-value check is
+      v<sub>wall</sub>=Lp*(column9-column6)/(1+column8/R).</p>
+      <p>With DETAILED<sub>REPORT</sub>=TRUE, inherited .Rout has six
+      columns: yt/R<sub>channel</sub>, phi, dimensionless shear rate,
+      dimensionless shear stress, D/D0 and eta/eta0. yt already means
+      y/R; the extra division makes its first column y/R<sup>2</sup>
+      (1/m). Multiply by R<sub>channel</sub> to recover y/R. This known
+      source mistake is retained. .Fval has z/L, F1, F2 and modified F2.
+      These sidecars describe the iteration state before final analysis
+      and can lag its final recomputation; they are not a complete
+      synchronized 2D field export. Inspect that contract before
+      adapting.</p>
+      </section>
+      <section id="documentation-provenance" class="level1">
+      <h1>Documentation provenance</h1>
+      <p>Equations and source ownership remain with the researcher.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

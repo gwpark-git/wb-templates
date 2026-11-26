@@ -1,0 +1,56 @@
+#+title: wb-python validation scope
+#+author: Gunwoo Park
+#+language: en
+
+[[file:../README.md::#ai-assistance][AI-generated text]]
+
+* Source checks
+From the complete reviewed wb-python source package, run its existing unit tests
+with Python 3.11 or later. The public collection provides documentation and
+uses a separately supplied source or wheel for runtime use.
+
+#+begin_src sh
+python3 -B -m unittest discover -s tests -v
+#+end_src
+
+The checked package tests used synthetic authorities and fake socket and native
+peers. The checks covered deterministic references and explicit request
+validation, native read and refusal shapes, strict identities and scope, framing,
+unknown acknowledgement and retry handling, receipt integrity, and selected
+result and artifact handling. The synthetic endpoint suite exercised policy
+admission, per-read principal scope, bounded wire validation, stable handles,
+explicit context and inert output. Its short visibility-gap case observed
+read-only polling over the same receipt.
+
+| Check | Evidence scope |
+|-------+----------------|
+| Package and CLI | Reviewed source installation and pure Python examples |
+| Profile and Thread selection | Pinned helper contract, confirmed binding and native identity checks exercised with selected fixtures |
+| Request continuity | Synthetic acknowledgement, receipt readback and status transitions, including uncertain and mismatched cases |
+| In-process restricted transport | Endpoint framing and admission, guarded exchange and close behavior in synthetic tests |
+| Template metadata | Explicit allowlist, one bounded catalog read, deny-default, bad path and malformed input refusals |
+| Native version admission | Exactly 0.171.0 and 0.172.0 accepted in initialization tests, with unsupported editions refused |
+
+* Native evidence and deployment limits
+A selected Sandbox integration exercised ordinary Python Client and
+LocalTransport submission into native 0.172, exit of the submitting process
+and result readback from a fresh process. Later selected notebook requests
+used the same existing Thread in the Sandbox. These observations concern
+their selected operations and tested editions. Adapter version admission
+describes the editions the code can recognize. A specific operation's
+compatibility depends on corresponding native evidence.
+
+For the direct SDK, the documented receipt-readback procedure was checked
+with its actual SDK classes and synthetic Profile and native peers. The
+fixtures exercised a completed request, a request in progress and a
+mismatched receipt. They observed no native mutations or receipt writes.
+
+A real Host SSH deployment still needs evidence for authentication,
+fixed endpoint and policy selection, Host source trust, account restrictions
+and isolation. A receipt identifies acknowledged native work. It does not
+guarantee exactly-once execution, automatic resumption or recovery from a
+service failure. Returned text is an Agent result. Scientific validation
+requires a separate check.
+
+See the [[file:./READER_GUIDE.org::#wbpy-evidence][Reader Guide]] for entry points and the
+[[file:SECURITY.org][data boundaries]] for what can be shared or executed.

@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>wb-templates</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="index.html">wb-templates</a>
+      <a href="documentation/README.html">Documentation</a>
+      <a data-source-link href="README.de.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#wb-templates" id="toc-wb-templates">wb-templates</a>
+<ul>
+<li><a href="#kombinierbare-bausteine-für-mehrskalensimulationen"
+id="toc-kombinierbare-bausteine-für-mehrskalensimulationen">Kombinierbare
+Bausteine für Mehrskalensimulationen</a></li>
+<li><a href="#mit-einer-aufgabe-beginnen"
+id="toc-mit-einer-aufgabe-beginnen">Mit einer Aufgabe beginnen</a></li>
+<li><a href="#validierungsbeispiele"
+id="toc-validierungsbeispiele">Validierungsbeispiele</a></li>
+<li><a href="#vorlagen" id="toc-vorlagen">Vorlagen</a></li>
+<li><a href="#grafikbeispiel-ausprobieren"
+id="toc-grafikbeispiel-ausprobieren">Grafikbeispiel
+ausprobieren</a></li>
+<li><a href="#kopieren-prüfen-und-anpassen"
+id="toc-kopieren-prüfen-und-anpassen">Kopieren, prüfen und
+anpassen</a></li>
+<li><a href="#namensnennung-und-lizenz"
+id="toc-namensnennung-und-lizenz">Namensnennung und Lizenz</a></li>
+<li><a href="#grafikstil-und-farbreferenzen"
+id="toc-grafikstil-und-farbreferenzen">Grafikstil und
+Farbreferenzen</a></li>
+<li><a href="#autor-und-projektinformationen"
+id="toc-autor-und-projektinformationen">Autor und
+Projektinformationen</a></li>
+</ul></li>
+</ul></nav>
+    <main>
+      <section id="wb-templates" class="level1">
+      <h1>wb-templates</h1>
+      <p><a href="#ki-einsatz-bei-der-dokumentation">AI-generated
+      text</a></p>
+      <p><a
+      href="wb-mbla/modern-lv2/tools/profile-explorer.html">Interaktive
+      mBLA-Validierung öffnen</a></p>
+      <p>Wiederverwendbare wissenschaftliche Vorlagen aus
+      <strong>Agentic Workbench (wb)</strong>. Kopieren Sie ein kleines,
+      lauffähiges Paket mit seinen Annahmen, Beispielen, Tests und
+      Herkunftsnachweisen und passen Sie es an Ihre Fragestellung
+      an.</p>
+      <p><a href="README.html">English</a> / <a
+      href="README.de.html">Deutsch</a> / <a
+      href="README.ko.html">한국어</a> / <a
+      href="templates.json">Katalog</a> / <a href="PACKAGING.html">Regeln
+      zum Kopieren</a> / <a href="LICENSE_SCOPE.html">Lizenzumfang</a></p>
+      <p><a href="documentation/README.html">Dokumentation</a> / <a
+      href="documentation/collection-guide/report.html">Ausführliches
+      HTML-Handbuch (Englisch)</a> / <a
+      href="documentation/README.html#documentation-families">Vorschau:
+      Bericht und Python-Handbuch (Englisch)</a></p>
+      <p>Das <a
+      href="documentation/examples/quarto-comparison/README.html">Quarto-Vergleichsbeispiel</a>
+      enthält ein kopierbares Projekt für einen Bericht und eine
+      Präsentation zu Ihrer eigenen Analyse.</p>
+      <p>Die projekteigenen Grafikstile und ihre Anpassungen fallen
+      unter die MIT-Lizenz der Sammlung. Für Matplotlib und cmcrameri
+      gelten ihre jeweiligen Lizenzbedingungen.</p>
+      <section id="kombinierbare-bausteine-für-mehrskalensimulationen"
+      class="level2">
+      <h2>Kombinierbare Bausteine für Mehrskalensimulationen</h2>
+      <p>Diese unabhängigen Vorlagen helfen, Berechnungen vorzubereiten,
+      Ausgaben einzulesen und Ergebnisse darzustellen. Eine
+      Partikelsimulation kann etwa eine Tabelle geprüfter
+      Transporteigenschaften einschließlich Einheiten und
+      Gültigkeitsbereich der Konzentration liefern. Ein Kontinuumslöser
+      kann einen interpolierten Wert aus der Tabelle übernehmen. Eine
+      Grafikvorlage kann anschließend beide Datensätze im selben Stil
+      darstellen.</p>
+      <ul>
+      <li><strong>Level 1 Modernization</strong> erhält eine lauffähige
+      Referenz und dokumentiert ihre Schnittstellen und
+      Architektur.</li>
+      <li><strong>Level 2 Modernization</strong> erhält die numerische
+      Architektur und prüft geänderte Verarbeitungsschritte und
+      beibehaltene Ausgaben.</li>
+      <li><strong>Level 3 Modernization</strong> soll die Kombination
+      wissenschaftlicher Bausteine in Mehrskalensimulationen ermöglichen
+      und prüft, ob unabhängige Komponenten eine definierte
+      physikalische Größe austauschen können.</li>
+      </ul>
+      <p>In einem internen Projekt mit BD–MC und mBLA wurden
+      Transporteigenschaften bereits zur Laufzeit berechnet. Der
+      praktische Ablauf interpoliert eine Tabelle vorberechneter
+      Eigenschaften, um die Auswertung zu beschleunigen. Die Berechnung
+      zur Laufzeit wird auf Bedingungen ausgeweitet, die eine neue
+      Berechnung der Eigenschaft erfordern. Ein künftiges Ersatzmodell
+      auf Basis maschinellen Lernens könnte nach Validierung in seinem
+      Gültigkeitsbereich dieselbe Schnittstelle verwenden.</p>
+      <p>Das Plugin Scientific Modernization aus der ergänzenden
+      Sammlung wb-plugins beschreibt den Ablauf. Eine gemeinsame
+      Validierungsschicht für Druck, Diffusivität und Spannung in
+      weicher Materie ist geplant. Ob ein bestimmtes Ergebnis verwendbar
+      ist, ergibt sich aus den Prüfbelegen der jeweiligen Vorlage.</p>
+      </section>
+      <section id="mit-einer-aufgabe-beginnen" class="level2">
+      <h2>Mit einer Aufgabe beginnen</h2>
+      <ul>
+      <li><strong>Ein wissenschaftliches Ergebnis prüfen.</strong>
+      Öffnen Sie den <a
+      href="wb-mbla/modern-lv2/tools/profile-explorer.html">mBLA Profile
+      Explorer</a> und vergleichen Sie Archiv und Nachrechnung in beiden
+      Schnitten. <strong>Site hollow-fibre reference</strong> zeigt
+      gespeicherte Konzentrations- und Strömungsprofile durch einen
+      gewählten Punkt.</li>
+      <li><strong>Einen älteren Löser wieder in Betrieb nehmen.</strong>
+      Folgen Sie der <a
+      href="wb-bd-mc/docs/BUILD_AND_USAGE.html">BD–MC-Anleitung zu Build
+      und Verifikation</a>, um eine erhaltene Rechnung vor Änderungen
+      auszuführen.</li>
+      <li><strong>Eine Partikelsimulation mit einer Zustandsgleichung
+      vergleichen.</strong> Das <a
+      href="examples/bdmc-eos/README.html">BD–MC-Beispiel zur
+      Carnahan–Starling-Zustandsgleichung</a> enthält die gespeicherten
+      Ergebnisse von BD mit weicher Abstoßung und Hartkugel-MC samt
+      Abbildungen und Angaben zur Stichprobe.</li>
+      <li><strong>Einen Vergleich darstellen.</strong> Erzeugen Sie mit
+      dem <a href="#grafikbeispiel-ausprobieren">CSV-Grafikbeispiel</a>
+      PNG- und PDF-Dateien. Das Quarto-Beispiel zeigt, wie Sie die
+      Methoden und Prüfbelege dokumentieren können.</li>
+      </ul>
+      <p>Die <a
+      href="documentation/collection-guide/report.html#functional-reference">Funktionsreferenz</a>
+      verweist für jeden Bereich auf Implementierung, Konfiguration,
+      Eingaben und Prüfungen.</p>
+      <p>Die <a href="wb-python/README.html">Vorlage für die
+      wb-python-Schnittstelle</a> unterstützt den skriptgesteuerten
+      Umgang mit Session Profiles und Agent Profiles in künftigen
+      wb-applications-Erweiterungen. Eine eigenständige Veröffentlichung
+      der Laufzeitkomponente ist vorgesehen. Diese Sammlung enthält das
+      Handbuch und das Beispiel. Für die Ausführung sind eine
+      konfigurierte Sandbox und die separat bereitgestellte
+      Laufzeitkomponente erforderlich. Die Jupyter-Integration bleibt
+      ein separates Paket in wb-applications. Der Host-Client
+      <code>wb-client</code> ist ein eigenständiges Projekt.</p>
+      </section>
+      <section id="validierungsbeispiele" class="level2">
+      <h2>Validierungsbeispiele</h2>
+      <figure>
+      <img src="wb-mbla/modern-lv2/docs/validation-screenshot.png"
+      alt="mBLA-Zylinderauswahl mit axialem Profil und radialem Auslassprofil" />
+      <figcaption aria-hidden="true">mBLA-Zylinderauswahl mit axialem
+      Profil und radialem Auslassprofil</figcaption>
+      </figure>
+      <p>mBLA-Regressionsvergleich. Der gespeicherte Referenzfall CASE2
+      verwendet einen nominalen TMP von 1,15 kPa und b = 1. <a
+      href="wb-mbla/modern-lv2/tools/profile-explorer.html">mBLA-Profile
+      öffnen</a></p>
+      <figure>
+      <img src="examples/bdmc-eos/equation_of_state.png"
+      alt="Gleichgewichtsdruck im Vergleich zur Carnahan–Starling-Zustandsgleichung" />
+      <figcaption aria-hidden="true">Gleichgewichtsdruck im Vergleich
+      zur Carnahan–Starling-Zustandsgleichung</figcaption>
+      </figure>
+      <p>Vergleich der Gleichgewichtszustandsgleichung. Gezeigt sind
+      ursprüngliche und wiederholte LAMMPS-BD-Läufe mit weichem
+      Kosinuspotential sowie native Metropolis-MC-Läufe mit harten
+      Kugeln, jeweils im Vergleich zu Carnahan–Starling. <a
+      href="examples/bdmc-eos/README.html">Beispiel zur
+      Zustandsgleichung</a></p>
+      </section>
+      <section id="vorlagen" class="level2">
+      <h2>Vorlagen</h2>
+      <table>
+      <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Vorlage</th>
+      <th>Einstieg</th>
+      <th>Prüfumfang und Grenzen</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td><a href="plot-styles/README.html">Grafikstile</a></td>
+      <td>Ein persönlicher Matplotlib-Stil, Farb- und Schwarzweißmodus,
+      Layouts und Legenden</td>
+      <td>Darstellung und synthetische Beispiele. MIT-Lizenz der
+      Sammlung und Hinweise zu übernommenen Bestandteilen.</td>
+      </tr>
+      <tr>
+      <td><a href="wb-style/README.html">wb-style</a></td>
+      <td>Skriptstil des Forschers und neutrales synthetisches
+      CSV-Beispiel</td>
+      <td>Importieren Sie <code>wb_style</code>. MIT-Lizenz der Sammlung
+      und Hinweise zu übernommenen Bestandteilen.</td>
+      </tr>
+      <tr>
+      <td><a href="scientific-io/README.html">CSV-Datenein- und
+      -ausgabe</a></td>
+      <td>Gezielte Spaltenauswahl und Prüfung auf endliche
+      Zahlenwerte</td>
+      <td>CSV-Prüfung anhand der Kopfzeile und explizite Auswahl
+      numerischer Daten.</td>
+      </tr>
+      <tr>
+      <td><a
+      href="documentation/examples/quarto-comparison/README.html">Quarto-Dokumentation</a></td>
+      <td>Durchgehender Bericht, Präsentation und Anleitung zum
+      Bearbeiten der Quellen</td>
+      <td>Vergleiche mit synthetischen Daten für physikalische Größen
+      und deren Quellen, mit lokalen Build-Eingaben.</td>
+      </tr>
+      <tr>
+      <td><a href="wb-bd-mc/README.html">wb-bd-mc</a></td>
+      <td>Beispiel für wissenschaftliche Modernisierung mit C++17 und
+      Python</td>
+      <td>Ausgewählte Prüfungen des ursprünglichen Verhaltens. Die
+      wissenschaftliche Validierung von RPY, SD und Nachbearbeitung
+      steht aus.</td>
+      </tr>
+      <tr>
+      <td><a href="wb-python/README.html">wb-python</a></td>
+      <td>Python-Skripte für Session Profiles, bestehende Anfragen und
+      Agent Profiles</td>
+      <td>Vollständige Anleitung, API, Remote-Schnittstelle und
+      Prüfnachweise auf Englisch.</td>
+      </tr>
+      <tr>
+      <td><a href="wb-mbla/README.html">wb-mbla</a></td>
+      <td>Löserpakete für Level 1 und 2, eine Transportschnittstelle für
+      Level 3, eine Filterkuchensuche mit Python/Numba und ein <a
+      href="wb-mbla/modern-lv2/tools/profile-explorer.html">Offline
+      Profile Explorer</a></td>
+      <td>Der Explorer öffnet den dokumentierten Referenzvergleich mit
+      allen acht vollständigen Fällen und drei Übersichten zur
+      Abdeckung. Siehe <a
+      href="wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.html">Anleitung zum
+      Profile Explorer</a>.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p><a href="wb-bd-mc/docs/MODERNIZATION_LEVELS.html">BD–MC
+      Modernization Levels 1–3</a> erläutert die erhaltene Regression,
+      die aktuellen Löserkomponenten und den abgegrenzten Austausch
+      physikalischer Größen in Level 3. Die <a
+      href="wb-bd-mc/docs/HI_SD.html">Anleitung zur Hydrodynamik</a>
+      beschreibt RPY und SD sowie die noch offene wissenschaftliche
+      Validierung.</p>
+      <p>Der <a
+      href="wb-mbla/docs/MODERNIZATION.html">mBLA-Modernisierungsüberblick</a>
+      erläutert die JCP-Referenz von 2026, die Filterkuchensuche mit
+      Python/Numba und die geprüfte Transportschnittstelle für Level 3.
+      Der <a
+      href="wb-mbla/modern-lv2/tools/profile-explorer.html">interaktive
+      Profile Explorer</a> öffnet den <a
+      href="wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.html#load-the-recorded-cylinder-regression">eingebetteten
+      Referenzvergleich</a> ab CASE2 (<code>b = 1</code>, nominaler TMP
+      1,15 kPa). Beide Profile bleiben sichtbar. Wählen Sie aus 200
+      Axialpositionen oder 400 radialen Punkten am Auslass. Die radiale
+      Anzeige gibt <code>y/R</code>, <code>r/R</code> und
+      <code>y/δ_CP</code> an. Das Level-3-Beispiel benötigt den
+      Level-2-Löser aus demselben mBLA-Paket.</p>
+      </section>
+      <section id="grafikbeispiel-ausprobieren" class="level2">
+      <h2>Grafikbeispiel ausprobieren</h2>
+      <p>Sie benötigen Python 3.10 oder neuer und die angegebenen
+      Abhängigkeiten des jeweiligen Teilpakets. Führen Sie aus dem
+      Verzeichnis dieser Sammlung in Ihrer gewählten Python-Umgebung
+      aus.</p>
+      <pre class="sh"><code>python3 -m pip install ./plot-styles ./scientific-io
+python3 -B examples/plot_csv.py --output /tmp/my-new-wb-plot</code></pre>
+      <p>Das Beispiel erzeugt eine eigene synthetische CSV-Datei und
+      schreibt PNG, PDF und Metadaten zur Darstellung in ein neues
+      Verzeichnis. Es startet keinen wissenschaftlichen Löser. Wählen
+      Sie einen neuen Ausgabepfad, falls das Verzeichnis bereits
+      existiert. Nach Installation der Grafikpakete können Sie mit
+      <code>plot-styles/examples/render_examples.py --output</code> und
+      einem neuen Ausgabepfad auch Layouts und Legenden
+      ausprobieren.</p>
+      <pre class="python"><code>import matplotlib.pyplot as plt
+from wb_plot_styles import style_context
+
+with style_context(color_mode=&quot;monochrome&quot;) as rendering:
+    fig, ax = plt.subplots(figsize=rendering[&quot;defaults&quot;][&quot;figsize&quot;])
+    ax.plot([0, 1], [0, 1], marker=&quot;o&quot;)
+    ax.set(xlabel=&quot;x (synthetic)&quot;, ylabel=&quot;y (synthetic)&quot;)
+    fig.savefig(&quot;my-figure.pdf&quot;, bbox_inches=&quot;tight&quot;)</code></pre>
+      <p>Der gemeinsame Stil <code>personal</code> bietet die
+      Darstellungsmodi <code>color</code> (Standard mit originaler
+      batlow-Farbreihenfolge) und <code>monochrome</code> (Schwarz mit
+      unterscheidbaren Linienstilen). Geometrie, Textgrößen und
+      Linienbreiten sind identisch. Die Quellenangaben enthalten Autor
+      und Jahr. Abweichende Größen lassen sich für ein Projekt gezielt
+      einstellen.</p>
+      </section>
+      <section id="kopieren-prüfen-und-anpassen" class="level2">
+      <h2>Kopieren, prüfen und anpassen</h2>
+      <pre class="sh"><code>python3 tools/verify_manifest.py
+python3 tools/export_template.py --template plot-styles --destination /tmp/my-new-plot-styles</code></pre>
+      <p>Eine eigenständige Kopie enthält ihre Lizenz, Hinweise, Tests
+      und Herkunftsnachweise. Installieren Sie die angegebenen
+      Abhängigkeiten des gewählten Teilpakets separat. Wählen Sie ein
+      neues Zielverzeichnis. Das Kopierwerkzeug akzeptiert reguläre
+      Quelldateien.</p>
+      <p><a href="provenance/VALIDATION.html">Validierung und
+      Reproduktion</a> beschreibt das geprüfte Verhalten und die Befehle
+      zur Wiederholung. Führen Sie die dokumentierten Tests des
+      gewählten Teilpakets aus. Ein Smoke-Test, eine Regression, eine
+      physikalische Konsistenzprüfung und eine wissenschaftliche Abnahme
+      erfassen jeweils unterschiedliche Aspekte. Schriftarten und TeX
+      können abweichen, daher kann sich die Darstellung von
+      veröffentlichten Abbildungen unterscheiden. Die Darstellungsstile
+      arbeiten mit den bereitgestellten Daten. Einheiten,
+      Datentransformationen, Modellwahl und Löservalidierung liegen bei
+      der Analyse.</p>
+      <p>Org-Dateien sind Klartext. Die Markdown-Überschriften
+      <code>#</code> und <code>##</code> entsprechen <code>*</code> und
+      <code>**</code> in Org. <code>[[file:path][label]]</code>
+      bezeichnet einen lokalen Link. Die Sammlung bietet diese
+      Einstiegsseite auf Englisch, Deutsch und Koreanisch. Die
+      technische Dokumentation ist auf Englisch.</p>
+      </section>
+      <section id="namensnennung-und-lizenz" class="level2">
+      <h2>Namensnennung und Lizenz</h2>
+      <p>Erhalten Sie Gunwoo Parks ursprüngliche Autorschaft, die
+      Namensnennung Dritter und die <a
+      href="CITATION.cff">wissenschaftlichen und
+      Software-Quellenangaben</a>. Den Umfang der jeweiligen Prüfungen
+      beschreibt die <a
+      href="provenance/VALIDATION.html">Validierungsanleitung</a>. Die
+      Projektleitung, durchgeführte Prüfungen und eine menschliche
+      Begutachtung werden gesondert ausgewiesen. Die <a
+      href="LICENSE">MIT-Lizenz</a> der Sammlung gilt für neue,
+      gemeinsam genutzte Bestandteile mit den <a
+      href="LICENSE_SCOPE.html">Ausnahmen der Teilpakete</a>. Das aus
+      Apache-lizenzierten Quellen abgeleitete HI-Material behält seine
+      Lizenz und NOTICE. Für separat installierte Abhängigkeiten gelten
+      deren eigene Bedingungen. Die Quellpakete enthalten weder
+      Binärdateien der Abhängigkeiten noch separate Schriftpakete.
+      Gerenderte Dokumente können Teile einer Schriftart einbetten. Für
+      den Grafik-Quellcode gelten die MIT-Lizenz der Sammlung und die
+      jeweils einschlägigen Hinweise der ursprünglichen Quellen.</p>
+      </section>
+      <section id="grafikstil-und-farbreferenzen" class="level2">
+      <h2>Grafikstil und Farbreferenzen</h2>
+      <p>Gunwoo Park schrieb die ursprünglichen Skripte und den Stil für
+      die Abbildungen seiner Publikationen. Die Beispiele verwenden
+      eigenständige synthetische Daten mit eigenen Dateinamen, Schemata
+      und Ergebnissen. Die <a href="wb-style/REFERENCES.html">Quellen zum
+      Stil, den Publikationen und batlow</a> und der <a
+      href="plot-styles/THIRD_PARTY_NOTICES/cmcrameri-1.10-LICENSE.txt">MIT-Lizenzhinweis
+      für cmcrameri 1.10</a> dokumentieren die jeweiligen Ursprünge.</p>
+      </section>
+      <section id="autor-und-projektinformationen" class="level2">
+      <h2>Autor und Projektinformationen</h2>
+      <p><strong>Autor und Projektleiter (Project Director):</strong>
+      Gunwoo Park. <a href="CITATION.cff">Zitationsmetadaten</a></p>
+      <p>Projektübersicht: <a
+      href="https://github.com/gwpark-git/agentic-workbench-knowledge"
+      class="uri">https://github.com/gwpark-git/agentic-workbench-knowledge</a><br />
+      Repository für wb-templates (geplant): <a
+      href="https://github.com/gwpark-git/wb-templates"
+      class="uri">https://github.com/gwpark-git/wb-templates</a></p>
+      <section id="ki-einsatz-bei-der-dokumentation" class="level3">
+      <h3>KI-Einsatz bei der Dokumentation</h3>
+      <p>OpenAI Codex unterstützte unter Leitung von Gunwoo Park den
+      Entwurf, die Überarbeitung und die Übersetzung der Dokumentation.
+      <a
+      href="provenance/DOCUMENTATION_PROVENANCE.json">Herkunftsnachweis
+      der Dokumentation</a></p>
+      </section>
+      </section>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

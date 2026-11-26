@@ -1,0 +1,82 @@
+# mBLA C++ — Level 1 Modernization
+
+A C++17 template for Gunwoo Park's cross-flow ultrafiltration solver, preserving
+its hollow-fibre concentration-polarization and cake-resistance calculations.
+This standalone edition includes the C++ source, CMake and Make build entry
+points, local CLI installation, unit comparisons and frozen regression cases.
+The inherited Level 1 implementation provides owned matrix storage and
+validated configuration and tables. This is internal research
+preparation; **redistribution of the inherited unpublished source needs review**.
+See [license scope](LICENSE), [notices](NOTICE) and
+[third-party evidence](THIRD_PARTY_NOTICES.org).
+
+From this folder, build, test and install into a new directory. The standard
+workflow uses a C++17 compiler, CMake 3.16+, GSL 2+, Python 3 and GNU Make.
+
+```sh
+work_dir="$(mktemp -d "${TMPDIR:-/tmp}/mbla-lv1.XXXXXX")"
+make test install BUILD_DIR="$work_dir/build" PREFIX="$work_dir/install"
+mkdir "$work_dir/run"
+cp examples/cake-mild.inp "$work_dir/run/case.inp"
+(cd "$work_dir/run" && "$work_dir/install/bin/mbla" case.inp)
+```
+
+`make install` installs the CLI and notices, defaulting to `BUILD_DIR/install`.
+Use `make test` to run the standard checks before installation. For a CLI-only
+build, CMake can be used directly with `-DBUILD_TESTING=OFF`. That route needs
+the C++ compiler, CMake and GSL.
+
+```sh
+cmake -S . -B "$work_dir/cli-build" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+cmake --build "$work_dir/cli-build" --parallel 2
+cmake --install "$work_dir/cli-build" --prefix "$work_dir/cli-install"
+```
+
+## What the tests compare
+
+- `mbla_units` checks matrix ownership and bounds, and compares LU, osmotic
+  pressure, dilute transport, cake resistance and pressure boundary solutions
+  against specified values or independent formulas.
+- `mbla_regression` compares the solver's ten-column outputs for non-cake,
+  mild-cake and demanding-cake cases with frozen original-source fixtures
+  under the declared common floating-point policy. The documented output
+  precision determines the regression allowance.
+- `mbla_input_contract` and `mbla_output_contract` check the CLI's input and
+  output behavior, including errors and sidecars.
+
+The [package check receipt](provenance/PACKAGE_CHECKS.json) records the tested
+toolchain, benchmark outcomes and checks through the installed executable.
+
+## Explore saved profiles interactively
+
+Open [the profile explorer](tools/profile-explorer.html) in a local browser.
+It starts with synthetic data. Use **Open profile data** to load selected
+precomputed profiles, then choose grids and an axial node to compare the
+radial curves. [Data format and use](docs/PROFILE_EXPLORER.md)
+
+## Inspect a result
+
+`fout=result.dat` is resolved against the run directory and overwritten. A
+completed run prints `MBLA_STATUS=converged`; this names the inherited stopping
+criterion. Inspect conservation before interpreting its predictions. Run
+`tools/inspect_output.py` from the copied template with the resulting table:
+
+```sh
+python3 tools/inspect_output.py "$work_dir/run/result.dat" \
+  --radius 0.0005 --permeability 6.7e-10 --csv "$work_dir/run/result.csv"
+```
+
+The examples distinguish a non-cake case, a mild cake case, and a demanding
+cake regression. The latter exposes substantial particle-flux error; the mild
+case also lacks a successful refined-grid confirmation. These are useful
+engineering and numerical diagnostics, **not grid-converged cake validation**.
+The inherited output has mixed normalization in its cake column; read the
+[scientific/I/O guide](docs/SCIENTIFIC_GUIDE.org) before using it.
+
+[Fixed-point method](docs/FIXED_POINT_METHOD.org) explains the history-dependent
+cake safety rule and the researcher-stated limit for non-monotonic wall profiles.
+[Validation](docs/VALIDATION.org) records current-source equivalence under an
+explicit common floating-point policy, independent checks, observed failures
+and limits.
+Historical Python/C++ non-cake agreement remains established researcher-reported
+evidence. Fresh Python comparisons are separate; Python has no cake extension.

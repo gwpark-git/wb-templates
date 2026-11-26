@@ -1,0 +1,21 @@
+{
+  "schema": "bdmc.two-reference-seeds.v1",
+  "ensemble_id": "two-reference-20261111-v1",
+  "policy": "Fixed condition/replica identities. Do not replace failed or inaccurate seeds; an intentional reseed creates a separately labelled ensemble.",
+  "repulsive": {
+    "epsilon": [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0],
+    "seeds": [[140100, 140101, 140102], [140200, 140201, 140202], [140300, 140301, 140302], [140400, 140401, 140402], [140500, 140501, 140502], [140600, 140601, 140602], [140700, 140701, 140702], [140800, 140801, 140802], [140900, 140901, 140902]]
+  },
+  "hookean": {
+    "spring_constant": [0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1],
+    "seeds": [[141100, 141101, 141102], [141200, 141201, 141202], [141300, 141301, 141302], [141400, 141401, 141402], [141500, 141501, 141502], [141600, 141601, 141602], [141700, 141701, 141702], [141800, 141801, 141802], [141900, 141901, 141902]]
+  },
+  "fene": {
+    "spring_constant": [0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1],
+    "seeds": [[142100, 142101, 142102], [142200, 142201, 142202], [142300, 142301, 142302], [142400, 142401, 142402], [142500, 142501, 142502], [142600, 142601, 142602], [142700, 142701, 142702], [142800, 142801, 142802], [142900, 142901, 142902]]
+  },
+  "split_seed": 143000,
+  "training_seed": 143001,
+  "reserved_physics_seeds": [144001, 144002, 144003, 144004, 144005, 144006],
+  "physics_seed_note": "Reserved identities are distinct from all ML runs. Independently authored scientific checks may use their own explicitly recorded fixed manifests."
+}

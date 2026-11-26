@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>License scope</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="index.html">wb-templates</a>
+      <a href="documentation/README.html">Documentation</a>
+      <a data-source-link href="LICENSE_SCOPE.md">Markdown source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#license-scope" id="toc-license-scope">License
+scope</a></li>
+</ul></nav>
+    <main>
+      <section id="license-scope" class="level1">
+      <h1>License scope</h1>
+      <p>The root <a href="LICENSE">MIT license</a> is the shared grant
+      for project-owned material identified below. Distinct copyright
+      notices, scope statements and third-party terms remain with the
+      material they cover. A detached export or wheel carries the
+      license and notices applicable to its contents.</p>
+      <table>
+      <colgroup>
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      <col style="width: 33%" />
+      </colgroup>
+      <thead>
+      <tr>
+      <th>Material</th>
+      <th>Grant and attribution</th>
+      <th>Exceptions and standalone copies</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+      <td>Collection guides, templates and <code>wb-python</code>
+      documentation</td>
+      <td>Root MIT for authored material directed by Gunwoo Park</td>
+      <td><code>wb-python</code> is a documentation entry. Its
+      independently distributed runtime has its own package grant.</td>
+      </tr>
+      <tr>
+      <td><code>wb-bd-mc</code></td>
+      <td><a href="wb-bd-mc/LICENSE">Package MIT</a> preserves the
+      original 2020 and current attribution</td>
+      <td>The combined package and its wheels carry this grant. <a
+      href="wb-bd-mc/NOTICE.html">Notices</a> cover retained Apache-2.0
+      HI, PCG32 and other sources.</td>
+      </tr>
+      <tr>
+      <td><code>wb-mbla</code></td>
+      <td><a href="LICENSE">Root MIT</a> for the new authored adaptation
+      where the <a href="wb-mbla/LICENSE">mBLA scope</a> applies it</td>
+      <td>Inherited C++ and fixtures have separate scope. Keep the <a
+      href="wb-mbla/THIRD_PARTY_NOTICES.html">third-party notices</a> and
+      level-specific scope files. CMake installation and detached export
+      carry the shared MIT text as <code>LICENSE.NEW</code>.</td>
+      </tr>
+      <tr>
+      <td>mBLA profile explorer</td>
+      <td>Authored viewer and retained renderer notices</td>
+      <td>React terms and the original reference data are described in
+      the <a href="wb-mbla/modern-lv2/docs/PROFILE_EXPLORER.html">profile
+      explorer data guide</a>. The data are outside the shared MIT
+      grant.</td>
+      </tr>
+      <tr>
+      <td><code>scientific-io</code></td>
+      <td><a href="scientific-io/LICENSE_CSV">CSV MIT scope</a></td>
+      <td>The wheel carries its two license files and <a
+      href="scientific-io/NOTICE.html">notice</a>.</td>
+      </tr>
+      <tr>
+      <td><code>plot-styles</code> and <code>wb-style</code></td>
+      <td>Root MIT for project-owned presets, adapters and examples</td>
+      <td>The wheel build reads local MIT copies and retains the <a
+      href="plot-styles/NOTICE.html">plot-style notices</a> and <a
+      href="wb-style/NOTICE.html">wb-style notices</a>.</td>
+      </tr>
+      <tr>
+      <td>Quarto documentation example</td>
+      <td>Root MIT for first-party source and synthetic data</td>
+      <td>The independently copyable kit carries its copy and <a
+      href="documentation/examples/quarto-comparison/THIRD_PARTY_NOTICES.html">renderer
+      and font notices</a>.</td>
+      </tr>
+      <tr>
+      <td>BD–MC equilibrium EOS example</td>
+      <td>Root MIT covers the new documentation</td>
+      <td>The retained CSV and figures have separate <a
+      href="examples/bdmc-eos/README.html">research provenance</a>.</td>
+      </tr>
+      </tbody>
+      </table>
+      <p>GSL is separately installed GPL software linked by some C++
+      targets. This source candidate does not bundle linked binaries or
+      establish combined binary release rights. NumPy, SciPy,
+      Matplotlib, cycler and cmcrameri retain their actual terms.
+      Authentic batlow data come from installed cmcrameri, not vendored
+      data or an AI substitute. The documentation examples embed font
+      subsets in rendered artifacts. The cited paper’s CC BY notice does
+      not license separate source/data/model files.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

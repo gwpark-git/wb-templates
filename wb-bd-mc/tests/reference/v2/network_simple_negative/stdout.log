@@ -1,0 +1,152 @@
+STOCHASTIC SIMULATION for ASSOCIATING TELECHELIC POLYMERS
+Version: 105fd3c-dirty
+Code developer: Gun Woo Park (gunwoo.park@unina.it)
+### PRINTING ARGUMENTS ###
+CONTINUATION_CHAIN                                : FALSE                                             
+CONTINUATION_CHAIN_FN                             : FALSE                                             
+CONTINUATION_CONNECTION                           : FALSE                                             
+CONTINUATION_HASH_FN                              : FALSE                                             
+CONTINUATION_STEP                                 : -1                                                
+CONTINUATION_TRAJ                                 : FALSE                                             
+CONTINUATION_TRAJ_FN                              : FALSE                                             
+CONTINUATION_WEIGHT_FN                            : FALSE                                             
+Integrator                                        : Euler                                             
+LBx                                               : 6                                                 
+LBy                                               : 6                                                 
+LBz                                               : 6                                                 
+MC_ASSOCIATION_MAP                                : FALSE                                             
+MC_LOG                                            : FALSE                                             
+MC_renewal                                        : FALSE                                             
+MECHANICAL_PERTURBATION                           : SIMPLE_SHEAR                                      
+Method                                            : NAPLE_ASSOCIATION                                 
+N_THREADS_BD                                      : 1                                                 
+N_THREADS_SS                                      : 1                                                 
+N_chains_per_particle                             : 10                                                
+N_dimension                                       : 3                                                 
+N_skip_ener                                       : 10                                                
+N_skip_file                                       : 10                                                
+N_skip_rdist                                      : 100                                               
+N_steps_block                                     : 1                                                 
+Np                                                : 64                                                
+Nt                                                : 101                                               
+Rt                                                : 0.001                                             
+Step                                              : NO_EQUILIBRATION                                  
+Wi_tau_C                                          : -0.5                                              
+allowing_multiple_connections                     : TRUE                                              
+association_probability                           : DEFAULT                                           
+basic_random_seed                                 : 100                                               
+basic_random_seed_SS                              : 150                                               
+box_dimension                                     : 6                                                 
+cell_list                                         : FALSE                                             
+chain_selection                                   : UNIFORM                                           
+connector                                         : Modified_Gaussian                                 
+cutoff_connection                                 : 2.0                                               
+dt/tauB                                           : 0.001                                             
+dt/tauR                                           : 0.001                                             
+effective_distance                                : 1.0                                               
+filename_base                                     : case                                              
+friction_junction                                 : DEFAULT                                           
+gamma_0                                           : 0.5                                               
+l_cap                                             : 0.12                                              
+output_path                                       : .                                                 
+probability_area                                  : FALSE                                             
+record_RDIST                                      : FALSE                                             
+repulsion_coefficient                             : 25                                                
+repulsion_coefficient_base                        : 0.25                                              
+repulsion_coupling                                : PRE_AVERAGE                                       
+repulsion_type                                    : SOFT_REPULSION_P2                                 
+reset_initial_time                                : TRUE                                              
+scale_factor_chain                                : 1.5                                               
+shear_axis                                        : 0                                                 
+shear_grad_axis                                   : 1                                                 
+tolerance_allowing_connections                    : 3                                                 
+tracking_individual_chain                         : TRUE                                              
+transition_probability                            : DISSOCIATION                                      
+GSL_RNG_TYPE=mt19937
+GSL_RNG_SEED=0
+GSL_RNG_TYPE=mt19937
+GSL_RNG_SEED=0
+GSL_RNG_TYPE=mt19937
+GSL_RNG_SEED=0
+### END PRINT ###
+ST:Constructor:CHAIN_INFORMATION
+end_particle_allocation
+END:Constructor:CHAIN_INFORMATION
+### STOCHASTIC SIMULATION FOR HEUR FLOWER ###
+SETTING simulation environment ...	CLIST initialization	check cut-off scheme	dynamic allocating CLIST member variables	allocating neighbor cell list information	DONE
+DISTANCE is using the function GEOMETRY::measure_minimum_distance_simple_shear_fixed_axis
+SET SIMULATION PARAMETERS ...DONE
+START SIMULATION
+
+APPLY SIMPLE_SHEAR
+ PBC VOLUME = 2.16e+02
+##### STEPS = 1	TIME = 0.000000e+00 tau_0	ENERGY = 3.264e+00 (computing time: 5.015e-04)
+time consuming: LV = 4.01e-05 (3.3%), SS = 1.99e-04 (16.4%), AN = 2.50e-07 (0.0%), FILE = 8.26e-04 (68.0%), DIST = 1.49e-04 (12.3%)
+LV: init = 3.9%, force = 91.6% (repulsion = 73.1%, random = 0.0%, connector = 3.8%), update = 4.5%
+SS: index process = 11.2%, LOCKING = 0.0%, check_dissociation = 7.6%, transition = 5.9%, update info. = 5.1%, pre-ASSOCIATION = 31.0%, pre-SUGGESTION = 1.8%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 4, fraction=0.006, dNAS = 4 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 11	TIME = 4.000000e-01 tau_0	ENERGY = 4.859e+00 (computing time: 4.153e-03)
+time consuming: LV = 4.27e-04 (9.0%), SS = 1.90e-03 (40.0%), AN = 4.16e-07 (0.0%), FILE = 1.58e-03 (33.2%), DIST = 8.44e-04 (17.8%)
+LV: init = 4.1%, force = 91.3% (repulsion = 73.4%, random = 0.0%, connector = 5.7%), update = 4.6%
+SS: index process = 13.7%, LOCKING = 0.0%, check_dissociation = 8.8%, transition = 6.7%, update info. = 5.9%, pre-ASSOCIATION = 21.2%, pre-SUGGESTION = 1.6%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 36, fraction=0.056, dNAS = 21 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 21	TIME = 8.000000e-01 tau_0	ENERGY = 5.411e+00 (computing time: 7.715e-03)
+time consuming: LV = 8.21e-04 (9.9%), SS = 3.60e-03 (43.6%), AN = 5.83e-07 (0.0%), FILE = 2.29e-03 (27.8%), DIST = 1.54e-03 (18.6%)
+LV: init = 4.2%, force = 91.2% (repulsion = 73.3%, random = 0.0%, connector = 6.1%), update = 4.6%
+SS: index process = 14.2%, LOCKING = 0.0%, check_dissociation = 8.8%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 20.2%, pre-SUGGESTION = 1.6%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 43, fraction=0.067, dNAS = 20 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 31	TIME = 1.200000e+00 tau_0	ENERGY = 5.730e+00 (computing time: 1.125e-02)
+time consuming: LV = 1.21e-03 (10.3%), SS = 5.31e-03 (45.1%), AN = 7.92e-07 (0.0%), FILE = 3.03e-03 (25.7%), DIST = 2.24e-03 (19.0%)
+LV: init = 4.2%, force = 91.2% (repulsion = 73.3%, random = 0.0%, connector = 6.2%), update = 4.6%
+SS: index process = 14.3%, LOCKING = 0.0%, check_dissociation = 8.9%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.9%, pre-SUGGESTION = 1.6%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 47, fraction=0.073, dNAS = 25 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 41	TIME = 1.600000e+00 tau_0	ENERGY = 5.313e+00 (computing time: 1.480e-02)
+time consuming: LV = 1.61e-03 (10.5%), SS = 7.02e-03 (45.8%), AN = 9.58e-07 (0.0%), FILE = 3.76e-03 (24.6%), DIST = 2.93e-03 (19.1%)
+LV: init = 4.1%, force = 91.4% (repulsion = 73.4%, random = 0.0%, connector = 6.3%), update = 4.5%
+SS: index process = 14.2%, LOCKING = 0.0%, check_dissociation = 8.9%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.9%, pre-SUGGESTION = 1.6%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 52, fraction=0.081, dNAS = 23 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 51	TIME = 2.000000e+00 tau_0	ENERGY = 6.865e+00 (computing time: 1.835e-02)
+time consuming: LV = 2.02e-03 (10.7%), SS = 8.71e-03 (46.2%), AN = 1.12e-06 (0.0%), FILE = 4.48e-03 (23.8%), DIST = 3.64e-03 (19.3%)
+LV: init = 4.1%, force = 91.4% (repulsion = 72.9%, random = 0.0%, connector = 6.5%), update = 4.5%
+SS: index process = 14.3%, LOCKING = 0.0%, check_dissociation = 9.0%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.7%, pre-SUGGESTION = 1.6%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 64, fraction=0.100, dNAS = 33 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 61	TIME = 2.400000e+00 tau_0	ENERGY = 6.313e+00 (computing time: 2.187e-02)
+time consuming: LV = 2.42e-03 (10.8%), SS = 1.04e-02 (46.6%), AN = 1.29e-06 (0.0%), FILE = 5.20e-03 (23.3%), DIST = 4.33e-03 (19.4%)
+LV: init = 4.1%, force = 91.5% (repulsion = 72.8%, random = 0.0%, connector = 6.6%), update = 4.5%
+SS: index process = 14.2%, LOCKING = 0.0%, check_dissociation = 9.0%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.6%, pre-SUGGESTION = 1.6%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 59, fraction=0.092, dNAS = 26 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 71	TIME = 2.800000e+00 tau_0	ENERGY = 6.005e+00 (computing time: 2.540e-02)
+time consuming: LV = 2.81e-03 (10.9%), SS = 1.21e-02 (46.8%), AN = 1.50e-06 (0.0%), FILE = 5.91e-03 (22.9%), DIST = 5.02e-03 (19.4%)
+LV: init = 4.1%, force = 91.5% (repulsion = 72.8%, random = 0.0%, connector = 6.6%), update = 4.4%
+SS: index process = 14.3%, LOCKING = 0.0%, check_dissociation = 9.1%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.5%, pre-SUGGESTION = 1.7%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 57, fraction=0.089, dNAS = 24 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 81	TIME = 3.200000e+00 tau_0	ENERGY = 6.482e+00 (computing time: 2.894e-02)
+time consuming: LV = 3.20e-03 (10.9%), SS = 1.38e-02 (47.0%), AN = 1.62e-06 (0.0%), FILE = 6.64e-03 (22.6%), DIST = 5.71e-03 (19.4%)
+LV: init = 4.1%, force = 91.5% (repulsion = 72.8%, random = 0.0%, connector = 6.6%), update = 4.4%
+SS: index process = 14.3%, LOCKING = 0.0%, check_dissociation = 9.1%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.5%, pre-SUGGESTION = 1.7%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 57, fraction=0.089, dNAS = 28 ####
+
+ PBC VOLUME = 2.16e+02
+##### STEPS = 91	TIME = 3.600000e+00 tau_0	ENERGY = 6.860e+00 (computing time: 3.248e-02)
+time consuming: LV = 3.61e-03 (11.0%), SS = 1.55e-02 (47.2%), AN = 1.83e-06 (0.0%), FILE = 7.34e-03 (22.3%), DIST = 6.42e-03 (19.5%)
+LV: init = 4.1%, force = 91.5% (repulsion = 72.8%, random = 0.0%, connector = 6.6%), update = 4.4%
+SS: index process = 14.3%, LOCKING = 0.0%, check_dissociation = 9.1%, transition = 6.5%, update info. = 5.9%, pre-ASSOCIATION = 19.5%, pre-SUGGESTION = 1.7%)  
+CHECK LAST STATISTICS: N_tot_asso = 640, NAS = 65, fraction=0.102, dNAS = 33 ####
+
+Total simulation time = 3.605e-02, recorded time = 4.367e-05 (record/total = 0.0)

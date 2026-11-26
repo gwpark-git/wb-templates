@@ -1,0 +1,36 @@
+---
+title: "wb-templates | Documentation and verification"
+subtitle: "A detailed guide with a worked scientific comparison"
+author-meta: "Gunwoo Park"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    code-copy: true
+    embed-resources: true
+    html-math-method: mathml
+---
+
+[AI-generated text](#ai-assistance)
+
+::: {.small}
+Package version: 0.5.0  
+Documentation edition: 2026-11-26
+
+[Edit](#edit-source) / [Provenance](#verification-and-provenance)
+:::
+
+[Open the Reveal.js summary](slides.html)
+
+{{< include _guide.md >}}
+
+{{< include _methods.md >}}
+
+{{< include _results.md >}}
+
+{{< include _code.md >}}
+
+{{< include _review.md >}}
+
+{{< include _publication-info.md >}}

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'sha256-9kJm2mx+bBEAo1rBYILf2aqcWzmw+Zg4YfBZSE7QTUQ='; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="author" content="Gunwoo Park">
+  <title>wb-python boundaries and non-guarantees</title>
+  <style>
+    :root { color-scheme: light; color: #162637; background: #f7f9fa; font: 1rem/1.65 system-ui, sans-serif; }
+    body { max-width: 74rem; padding: 0 clamp(1rem, 5vw, 4rem) 3rem; margin: auto; }
+    a { color: #07547b; text-underline-offset: .14em; }
+    a:focus-visible { outline: 3px solid #176766; outline-offset: 3px; }
+    header { border-bottom: 1px solid #cad5de; padding: 1rem 0; }
+    header nav { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; }
+    .layout { display: grid; grid-template-columns: minmax(11rem, 15rem) minmax(0, 1fr); gap: clamp(1rem, 4vw, 3rem); }
+    #TOC { position: sticky; top: 1rem; align-self: start; max-height: 85vh; overflow: auto; margin: 1.5rem 0 0; }
+    #TOC ul { margin: 0; padding-left: .85rem; list-style: none; }
+    #TOC a { text-decoration: none; display: block; line-height: 1.35; padding: .32rem 0; }
+    #TOC a:hover { text-decoration: underline; }
+    #TOC li + li { border-top: 1px solid #e1e7ec; }
+    main { min-width: 0; overflow-wrap: anywhere; }
+    h1, h2, h3 { line-height: 1.25; }
+    h2 { margin-top: 1.6em; }
+    pre { overflow-x: auto; background: #eaf1f5; border-radius: .3rem; padding: .9rem; }
+    code { font: .92em ui-monospace, monospace; }
+    .copy { cursor: pointer; margin-top: .4rem; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #cad5de; padding: .45rem .6rem; text-align: left; vertical-align: top; }
+    @media (max-width: 740px) { .layout { display: block; } #TOC { position: static; max-height: 12rem; } }
+    @media print { header, #TOC, .copy { display: none; } .layout { display: block; } pre { white-space: pre-wrap; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Documentation">
+      <a href="../../index.html">wb-templates</a>
+      <a href="../../documentation/README.html">Documentation</a>
+      <a data-source-link href="SECURITY.org">Org source</a>
+    </nav>
+  </header>
+  <div class="layout">
+    <nav id="TOC" aria-label="Contents"><ul>
+<li><a href="#scope-and-authorization"
+id="toc-scope-and-authorization">Scope and authorization</a></li>
+<li><a href="#explicit-data-boundary"
+id="toc-explicit-data-boundary">Explicit data boundary</a></li>
+<li><a href="#transport-and-evidence"
+id="toc-transport-and-evidence">Transport and evidence</a></li>
+<li><a href="#publication-and-deployment"
+id="toc-publication-and-deployment">Publication and deployment</a></li>
+<li><a href="#wbpy-security-local" id="toc-wbpy-security-local">Optional
+local consumers (0.2)</a></li>
+</ul></nav>
+    <main>
+      <h1>wb-python boundaries and non-guarantees</h1>
+      <p><a href="../README.html#ai-assistance">AI-generated
+      text</a></p>
+      <section id="scope-and-authorization" class="level1">
+      <h1>Scope and authorization</h1>
+      <p>The existing wb Profile/AgentProfile/request/approval/native
+      authorities remain owners. Operator-selected Thread/operation
+      subsets only narrow their access. This local package is trusted
+      same-user code, not an OS sandbox or multiuser authorization
+      server. A private Unix socket does not provide per-capability wb
+      authorization. The restricted stdio endpoint additionally checks a
+      deployment- selected subset/principal namespace on every
+      operation/read; see <a href="REMOTE.html">REMOTE.org</a>. No Host
+      transport, actual SSH policy enforcement or isolation claim is
+      established.</p>
+      <p>Native RPC has many unsafe/general capabilities. This adapter
+      exposes only selected metadata/queue/history methods and ID-only
+      resume; no raw RPC, shell, Python evaluator, filesystem API,
+      model/policy/sandbox override or auto-start exists. Native server
+      approval requests are not approved or reinterpreted by this
+      client; use the existing native review mechanism. The client may
+      report review-required/unknown acceptance and requires
+      reconciliation rather than retry.</p>
+      </section>
+      <section id="explicit-data-boundary" class="level1">
+      <h1>Explicit data boundary</h1>
+      <p>Only selected message/context text enters native UserInput. No
+      ambient files, environment, variables, notebook/kernel state,
+      history, metadata, credential or Host path is automatically
+      attached. Even intentionally selected metadata can be sensitive.
+      Native agent processes run in the existing Sandbox, whose mounts
+      and permissions are separately configured; approved context may be
+      transmitted to an external model inference provider. These are
+      different boundaries.</p>
+      <p>Profile registry metadata is not permission to disclose full
+      private records. The local helper validates the selected recovery
+      hash/owner link and may read that named packet. Its raw record
+      text is not automatically sent to native input. Native results
+      expose selected agent messages; reasoning and raw tool bodies are
+      omitted. Returned code remains inert and requires separate
+      authorized review and execution. No reverse Host tool or
+      persistent Host-browsing MCP is added.</p>
+      </section>
+      <section id="transport-and-evidence" class="level1">
+      <h1>Transport and evidence</h1>
+      <p>The Unix WebSocket implementation verifies the case-sensitive
+      RFC nonce accept, client masking, server framing,
+      fragmentation/control/UTF8 and bounded messages. It supports no
+      compression, binary frames, network URLs, TCP listener or retry.
+      The same local user can still inspect/alter accessible files,
+      memory and sockets; hashes/pins/receipt checks are traceability,
+      not signatures or hostile-owner ACLs.</p>
+      <p>Receipt files retain native IDs/hashes without becoming
+      execution state. A write may be accepted when its acknowledgement
+      is lost; this package reports unknown acceptance and never
+      resubmits automatically. If evidence persistence fails after an
+      acknowledgement, the error includes the known native reference.
+      Reconnect uses snapshots/history, not claimed event replay or
+      invented progress. Queue ID to Turn ID correlation is retained
+      when acknowledged or when a bounded selected history scan finds a
+      unique exact native user-message clientId match. Multiple matches
+      or queued/history conflict refuse; missing mapping remains
+      unresolved. No exactly-once, cancellation, restart or durability
+      promise follows from synthetic tests or a process launch.</p>
+      <p>Artifacts are optional operator-registered exact Turn/item
+      members under an explicit owned output root, with ID scope,
+      no-follow regular single-link reads, size and SHA256 checks.
+      Requests cannot supply paths or register artifacts. Native text
+      alone does not authorize arbitrary file download or code
+      execution.</p>
+      </section>
+      <section id="publication-and-deployment" class="level1">
+      <h1>Publication and deployment</h1>
+      <p>Keep operator configuration, Profiles, native history, receipts
+      and outputs within the authorized workspace. Review the exact
+      independent Client copy before Host import or execution. Use a
+      Host-owned environment and package copy outside Sandbox-writable
+      paths. The <a href="REMOTE.html">restricted endpoint guide</a>
+      describes the separate deployment boundary. The <a
+      href="../../LICENSE_SCOPE.html">collection license scope</a> covers
+      the documentation in this collection.</p>
+      </section>
+      <section id="wbpy-security-local" class="level1">
+      <h1>Optional local consumers (0.2)</h1>
+      <p>LocalTransport wraps the same trusted Endpoint policy rather
+      than bypassing it. Its lock protects only its owned endpoint
+      exchange/close; it does not make all Client/Workbench/native
+      objects thread-safe or change native busy/approval rules. Closing
+      a local transport does not cancel, replay or terminate accepted
+      native work.</p>
+      <p>TemplateCatalog reads only an explicit bounded catalog and
+      admitted metadata. Excluded/traversal routes refuse lexically
+      before path probes; symlink routes and nonregular/multiple-link
+      payloads refuse. Child paths/import names are never followed or
+      executed, and catalog rights/status warnings remain metadata.
+      These same-user file checks do not establish hostile-owner OS
+      confinement. The separate Client's structured-code parser keeps
+      code/dependencies inert and labels validation as agent-reported;
+      exact hashes establish byte identity only.</p>
+      <p>See <a href="VALIDATION.html">validation scope</a> for the
+      checked scenarios.</p>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Keep code blocks inert while offering a clipboard action.
+    for (const code of document.querySelectorAll("main pre > code")) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "copy";
+      button.textContent = "Copy code";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      code.parentElement.before(button, status);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent);
+          status.textContent = " Copied";
+        } catch {
+          status.textContent = " Select the code and copy it manually.";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

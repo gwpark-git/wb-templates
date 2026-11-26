@@ -1,0 +1,133 @@
+{
+  "source_author": "Gunwoo Park",
+  "source_edition": "local researcher-provided 2026 JCP C++ code",
+  "source_license": "No explicit source license recovered; no blanket MIT grant",
+  "files": [
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/boost_matrix.cpp",
+      "target": "src/boost_matrix.cpp",
+      "sha256": "799db8cbd7406233d66b2914d0fe06b3d2a03f695a3746bb03a90222c374380e",
+      "bytes": 28
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/boost_matrix.h",
+      "target": "src/boost_matrix.h",
+      "sha256": "2eb241959fb04ac00e5bacef869abf2f72e4f2a6e598c3eadd0d9265310cf341",
+      "bytes": 2809
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/calculation_CP_profile.cpp",
+      "target": "src/calculation_CP_profile.cpp",
+      "sha256": "70f75cefbfc3b8ff349150d7d341437494865127ea286dc747265d41f5a8ebe7",
+      "bytes": 9918
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/dispersion_properties.cpp",
+      "target": "src/dispersion_properties.cpp",
+      "sha256": "1937a34bde3fa5d6bbb1548ef7f4af86211df225983a98c4373dd2d2707d9869",
+      "bytes": 2908
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/dispersion_properties.h",
+      "target": "src/dispersion_properties.h",
+      "sha256": "b2180c185e2ea9339dba7ba4d9f99d7294d64d6930ab230f0a9ccd306fe4780a",
+      "bytes": 7740
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/file_IO.cpp",
+      "target": "src/file_IO.cpp",
+      "sha256": "09b9d5a631c7f22c1071a60aca1cd1c5abe3eef59efa8133ed7bcb545ad81425",
+      "bytes": 1738
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/file_IO.h",
+      "target": "src/file_IO.h",
+      "sha256": "141bc1314eb8d361512613d3f95393b7d22660aefd04f10d7bddc1c974b804fa",
+      "bytes": 1257
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/matrix.cpp",
+      "target": "src/matrix.cpp",
+      "sha256": "b03c9862bab42ef4a2b85b898b1430eb099c1210c92121082bcb0c9ac772e018",
+      "bytes": 9048
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/matrix.h",
+      "target": "src/matrix.h",
+      "sha256": "f5ffa21d4fd09c9eea99fb80e95b1c397f2bfb5abe78352a658d622a54133ec6",
+      "bytes": 4665
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/osmotic_pressure_CS.cpp",
+      "target": "src/osmotic_pressure_CS.cpp",
+      "sha256": "b2df877f567e6e9c6c38d25b4a05dfc4b2d25eb0450525f7f31676e37dac4c60",
+      "bytes": 633
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/osmotic_pressure_CS.h",
+      "target": "src/osmotic_pressure_CS.h",
+      "sha256": "9a275b3bacb5894d9303eee8df3485ddf35c9aec3ed3b8956ae2ca8b81c3c437",
+      "bytes": 375
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/parameters.cpp",
+      "target": "src/parameters.cpp",
+      "sha256": "5e7b945d2abc55f16e6c987938de6019b451f515e9e858ba254897a73f548f98",
+      "bytes": 6430
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/parameters.h",
+      "target": "src/parameters.h",
+      "sha256": "4174b1d10098cef63ee7ebdcfc849ec3aecafcca084350b1de39756acfcf0a78",
+      "bytes": 1671
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/ported_lib.cpp",
+      "target": "src/ported_lib.cpp",
+      "sha256": "d27554f66efa66474fc5750b2b38fc365cb2d2ef3ccf984e4e0a02597199d801",
+      "bytes": 36074
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/ported_lib.h",
+      "target": "src/ported_lib.h",
+      "sha256": "503cb04167014ac3cb9d3a255035cf0db7a3aa02143495a7e6b06d1c0019acaf",
+      "bytes": 4784
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/transport_properties_INTERPOLATE.cpp",
+      "target": "src/transport_properties_INTERPOLATE.cpp",
+      "sha256": "58047d9fc3ee89664ae0132e43001a8f6688050c4a10480ef37589a28d94492a",
+      "bytes": 1510
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/transport_properties_INTERPOLATE.h",
+      "target": "src/transport_properties_INTERPOLATE.h",
+      "sha256": "d0c6dfd4dc4d86510858b3329b15799a00cb9266a99fe3a91a00e0c915617769",
+      "bytes": 723
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/transport_properties_SID.cpp",
+      "target": "src/transport_properties_SID.cpp",
+      "sha256": "e5fd6bc7f53ae4e9312bb830f3771f07046d899407660b979452251f5e5a763b",
+      "bytes": 3863
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/transport_properties_SID.h",
+      "target": "src/transport_properties_SID.h",
+      "sha256": "59ed66af2004b26c6e7b272fcf910fa0197634d64900f94c86b57be46694cb07",
+      "bytes": 881
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/transport_properties_SPHS.cpp",
+      "target": "src/transport_properties_SPHS.cpp",
+      "sha256": "80a98d7d2939571786684378c6ed3c37d68d275104fe56a5815b9d079d21d5ed",
+      "bytes": 3266
+    },
+    {
+      "source_id": "2026_JCP/mBLA_CPP/scripts_cpp/transport_properties_SPHS.h",
+      "target": "src/transport_properties_SPHS.h",
+      "sha256": "b4beb0298cdb476f6e714d8cc43021b0da4738de25265db7268f28e885b6634f",
+      "bytes": 893
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+# Setuptools builds only the declared Python package and its shipped data.
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+# Distribution identity, supported Python baseline and direct runtime dependencies.
+[project]
+name = "wb-plot-styles"
+version = "0.2.0"
+description = "Researcher-derived appearance-only plotting presets and examples"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "matplotlib>=3.6", "cmcrameri>=1.10"]
+
+# Ship the project MIT grant and preserve the separate upstream notices.
+license = "MIT AND LicenseRef-Matplotlib"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES/*.txt"]
+
+# Identify the package modules independently of the JSON data resource.
+[tool.setuptools]
+packages = ["wb_plot_styles"]
+
+# Runtime reads the strict JSON preset from the installed resource directory.
+[tool.setuptools.package-data]
+wb_plot_styles = ["presets.json"]

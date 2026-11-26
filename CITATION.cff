@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "Cite the specific methods and software actually used; consult each child's provenance and notices. This is a local unreleased candidate."
+title: "Agentic Workbench: wb-templates"
+type: software
+authors:
+  - family-names: Park
+    given-names: Gunwoo
+abstract: "Reusable scientific templates directed by Gunwoo Park. No software DOI or released software version is claimed by this metadata."
