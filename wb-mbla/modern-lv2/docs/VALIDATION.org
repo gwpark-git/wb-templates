@@ -116,9 +116,7 @@ as well as a conserved and physically admissible profile.
 Known inherited numerical/semantic limits remain explicit:
 - The pressure outlet row retains an osmotic forcing contribution, causing
   a small endpoint mismatch (about +0.1 Pa after printing in the non-cake case).
-- Inlet axial velocity uses a first-order forward pressure difference; the
-  outlet uses a second-order backward stencil. Concentration can amplify a
-  small inlet-factor error.
+- Inlet axial velocity uses a first-order forward pressure difference (NOTE that Inlet pressure profile uses a second-order scheme); the outlet uses a second-order backward stencil. Concentration can amplify a small inlet-factor error.
 - Cake search thresholds, safety substitutions and stopping flags can give a
   stopping message despite large flux drift; default-FMA sensitivity is material.
 - phi_cake input is ignored in favor of 0.64; cake thickness accounting is a

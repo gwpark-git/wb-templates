@@ -36,15 +36,6 @@ In addition, I include a Python interface and other functionalities (e.g., Quart
 Gunwoo Park, 26 Nov. 2026
 
 
-## Before going into AI-generated documents
-Here is a brief overview to explain what wb-templates mean for me. Basically, I wanted to build my own Agentic AI environment to boost my research activities. This spans from simplified tests of various modeling techniques to combining different simulations, such as multiscale simulations. Sometimes I want to use the same interface for different scales, such as microscopic and macroscopic scales. Sometimes I want to check some physical quantities with my own styles and definitions. Often, scientific verification follows different customs depending on the field and lab.
-
-In this regard, when I would like to get the final applications, I always face similar issues with my old code. Providing a suitable "development interface" where functionality is partitioned and decayed over time, and only final survival becomes a meaningful contribution. In fact, many of the "tests" themselves are meaningful for reaching the proper protocols, but are not included in the results.
-
-The current wb-templates are designed to reduce this functional overhead on the protocol side, as well as to find an efficient way to start with it. Many templates were inherited from open source, where their architectures and functionalities are outdated, while their physical meanings are proven.
-
-So, based on wb-plugins, I delve into modernization while also integrating with other physical mechanisms in a simplified way. 
-
 
 
 
